@@ -4,4 +4,5 @@ import com.example.webservice.model.Facility;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FacilityRepository extends JpaRepository<Facility, Long> {
+    Facility findByUserName(String userName);
 }
