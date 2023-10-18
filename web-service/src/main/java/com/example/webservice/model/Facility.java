@@ -5,31 +5,35 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "facility")
-public class Facility {
+public class Facility implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int facilityID;
+    public int facilityID;
 
     @Column(name = "latitude")
-    private float latitude;
+    public float latitude;
 
     @Column(name = "longitude")
-    private float longitude;
+    public float longitude;
 
     @Column(name = "public")
-    private boolean isPublic;
+    public boolean isPublic;
 
     @Column(name = "email")
-    private String email;
+    public String email;
 
     @Column(name = "phone")
-    private String phone;
+    public String phone;
 
     @Column(name = "hours")
-    private String hours;
+    public String hours;
 
     public Facility() {
     }
