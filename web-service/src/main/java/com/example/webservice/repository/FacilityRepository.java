@@ -8,5 +8,5 @@ import javax.persistence.*;
 
 @Repository
 public interface FacilityRepository extends JpaRepository<Facility, Long> {
-    Facility findByUserName(String userName);
+//    Facility findByUserName(String userName);
 }
