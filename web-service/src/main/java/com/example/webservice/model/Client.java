@@ -30,5 +30,4 @@ public class Client {
     @JoinColumn(name = "associated_facilityID")
     private Facility associatedFacility;
 
-    // Getter and Setter methods
 }

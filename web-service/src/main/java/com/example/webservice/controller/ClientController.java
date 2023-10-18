@@ -2,7 +2,9 @@ package com.example.webservice.controller;
 
 import com.example.webservice.model.Client;
 import com.example.webservice.repository.ClientRepository;
+import com.example.webservice.service.ClientService;
 import org.apache.velocity.exception.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,43 +13,38 @@ import java.util.List;
 @RequestMapping("client")
 public class ClientController {
 
-    private final ClientRepository clientRepository;
+    private final ClientService clientService;
 
-    public ClientController(ClientRepository clientRepository) {
-        this.clientRepository = clientRepository;
+    @Autowired
+    public ClientController(ClientService clientService) {
+        this.clientService = clientService;
     }
 
     @GetMapping
     public List<Client> getAllClients() {
-        return clientRepository.findAll();
+        return clientService.getAllClients();
     }
 
     @GetMapping("/{id}")
     public Client getClientById(@PathVariable Long id) {
-        return clientRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Client not found with id: " + id));
+        return clientService.getClientById(id);
+
     }
 
     @PostMapping
     public Client createClient(@RequestBody Client client) {
-        return clientRepository.save(client);
+        return clientService.createClient(client);
     }
 
     @PutMapping("/{id}")
     public Client updateClient(@PathVariable Long id, @RequestBody Client updatedClient) {
-        return clientRepository.findById(id)
-                .map(client -> {
-                    // Update fields here
-                    // For example: client.setAuthentication(updatedClient.getAuthentication());
-                    // Update other fields as needed
-                    return clientRepository.save(client);
-                })
-                .orElseThrow(() -> new ResourceNotFoundException("Client not found with id: " + id));
+        return clientService.updateClient(id,updatedClient);
+
     }
 
     @DeleteMapping("/{id}")
     public void deleteClient(@PathVariable Long id) {
-        clientRepository.deleteById(id);
+        clientService.deleteClient(id);
     }
 }
 
