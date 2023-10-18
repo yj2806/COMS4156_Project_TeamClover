@@ -1,19 +1,31 @@
 package com.example.webservice.controller;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import com.example.webservice.model.Facility;
 import com.example.webservice.repository.FacilityRepository;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/facilities")
+@RequestMapping("facility")
 public class FacilityController {
 
-    private final FacilityRepository facilityRepository;
+    @Autowired
+    private FacilityRepository facilityRepository;
 
-    public FacilityController(FacilityRepository facilityRepository) {
-        this.facilityRepository = facilityRepository;
+//    public FacilityController(FacilityRepository facilityRepository) {
+//        this.facilityRepository = facilityRepository;
+//    }
+
+    @RequestMapping("/getAllFacility")
+    @ResponseBody
+    public List<Facility> findAll() {
+        List<Facility> list = new ArrayList<Facility>();
+        list = facilityRepository.findAll();
+        return list;
     }
 
     @RequestMapping("/addFacility")

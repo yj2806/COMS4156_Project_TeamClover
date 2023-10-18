@@ -27,4 +27,7 @@ public class Facility {
     @Column(name = "hours")
     private String hours;
 
+    public Facility() {
+    }
+
 }
