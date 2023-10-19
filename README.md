@@ -10,9 +10,6 @@ The target clients for this service include apps designed for the elderly, apps 
 homeless shelters, as well as apps for first responders and authorities. Through our service, 
 clients can empower their end-users to create care package listings and contribute to community assistance.
 
-## API Documentation: 
-https://docs.google.com/document/d/1TnOYXTdWjFAhxlelCC0xnOsedmn6-TCKWWbLBP9JvrQ/edit?usp=sharing 
-
 ## Tech Stack
 - IDE: IntelliJ IDEA
 - Cloud server: AWS EC2
@@ -35,3 +32,7 @@ mvn install
 # Run the service on `localhost:8080`
 mvn spring-boot:run
 ```
+
+## API Documentation
+Attention: please run the service first  
+http://localhost:8080/swagger-ui/index.html#/ 
