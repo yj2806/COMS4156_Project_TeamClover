@@ -55,7 +55,11 @@ create table if not exists listings
         check (((group_code is not null) and (public is true)) or (public is false))
 );
 
+alter table client
+    drop constraint check_type;
 
+ALTER TABLE client
+    ADD CONSTRAINT check_type CHECK (type IN ('DISTRIBUTOR', 'NON_DISTRIBUTOR'));
 
 
 

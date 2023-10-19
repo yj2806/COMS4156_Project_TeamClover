@@ -1,6 +1,7 @@
 package com.example.webservice.controller;
 
 import com.example.webservice.model.Client;
+import com.example.webservice.model.model.ClientRequestDTO;
 import com.example.webservice.repository.ClientRepository;
 import com.example.webservice.service.ClientService;
 import org.apache.velocity.exception.ResourceNotFoundException;
@@ -31,18 +32,18 @@ public class ClientController {
 
     }
 
-    @PostMapping
-    public Client createClient(@RequestBody Client client) {
+    @PostMapping("/create")
+    public Client createClient(@RequestBody ClientRequestDTO client) {
         return clientService.createClient(client);
     }
 
-    @PutMapping("/{id}")
-    public Client updateClient(@PathVariable Long id, @RequestBody Client updatedClient) {
+    @PutMapping("/update/{id}")
+    public Client updateClient(@PathVariable Long id, @RequestBody ClientRequestDTO updatedClient) {
         return clientService.updateClient(id,updatedClient);
 
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public void deleteClient(@PathVariable Long id) {
         clientService.deleteClient(id);
     }

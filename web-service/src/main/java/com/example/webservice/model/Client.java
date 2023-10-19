@@ -1,5 +1,7 @@
 package com.example.webservice.model;
 
+import com.example.webservice.model.type.ClientType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,14 +9,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 
+import java.io.Serializable;
+
 @Entity
-@Builder(toBuilder = true)
+@Builder(access=AccessLevel.PACKAGE,toBuilder = true)
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-@Setter(value = AccessLevel.PACKAGE)
+@Setter
 @Getter
 @Table(name = "client")
-public class Client {
+public class Client implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "clientID")
@@ -24,9 +28,10 @@ public class Client {
     private String authentication;
 
     @Column(name = "type", nullable = false)
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private ClientType type;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "associated_facilityID")
     private Facility associatedFacility;
 

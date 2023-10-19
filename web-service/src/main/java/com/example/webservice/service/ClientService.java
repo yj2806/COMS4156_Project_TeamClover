@@ -1,22 +1,29 @@
 package com.example.webservice.service;
 
 import com.example.webservice.model.Client;
+import com.example.webservice.model.Facility;
+import com.example.webservice.model.model.ClientRequestDTO;
+import com.example.webservice.model.type.ClientType;
 import com.example.webservice.repository.ClientRepository;
+import com.example.webservice.repository.FacilityRepository;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClientService {
 
     private final ClientRepository clientRepository;
+    private final FacilityRepository facilityRepository;
 
     @Autowired
-    public ClientService(ClientRepository clientRepository) {
+    public ClientService(ClientRepository clientRepository, FacilityRepository facilityRepository) {
         this.clientRepository = clientRepository;
+        this.facilityRepository = facilityRepository;
     }
 
     @Transactional
@@ -31,18 +38,24 @@ public class ClientService {
     }
 
     @Transactional
-    public Client createClient(Client client) {
-        // You can add validation or business logic here if needed
-        return clientRepository.save(client);
+    public Client createClient(ClientRequestDTO client) {
+        ClientType.isValid(client.getType());
+
+        Client newClient = new Client();
+        newClient.setAssociatedFacility(getFacility(client.getAssociatedFacilityId()));
+        newClient.setType(ClientType.fromString(client.getType()));
+        newClient.setAuthentication(client.getAuthentication());
+        return clientRepository.save(newClient);
+
     }
 
     @Transactional
-    public Client updateClient(Long id, Client updatedClient) {
+    public Client updateClient(Long id, ClientRequestDTO updatedClient) {
         return clientRepository.findById(id)
                 .map(client -> {
-                    // Update fields here
-                    // For example: client.setAuthentication(updatedClient.getAuthentication());
-                    // Update other fields as needed
+                    client.setAssociatedFacility(getFacility(updatedClient.getAssociatedFacilityId()));
+                    client.setClientID(id);
+                    client.setType(ClientType.fromString(updatedClient.getType()));
                     return clientRepository.save(client);
                 })
                 .orElseThrow(() -> new ResourceNotFoundException("Client not found with id: " + id));
@@ -51,6 +64,14 @@ public class ClientService {
     @Transactional
     public void deleteClient(Long id) {
         clientRepository.deleteById(id);
+    }
+
+    private Facility getFacility(Long id){
+        Optional<Facility> f = facilityRepository.findById(id);
+        if(f.isPresent()){
+            return f.get();
+        }
+        throw new ResourceNotFoundException("Facility not found with id: " + id);
     }
 }
 
