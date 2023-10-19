@@ -6,7 +6,7 @@ public enum ClientType {
 
     public static boolean isValid(String value) {
         for (ClientType type : values()) {
-            if (type.name().equalsIgnoreCase(value)) {
+            if (type.name().equals(value)) {
                 return true;
             }
         }
@@ -15,7 +15,7 @@ public enum ClientType {
 
     public static ClientType fromString(String value) {
         for (ClientType type : values()) {
-            if (type.name().equalsIgnoreCase(value)) {
+            if (type.name().equals(value)) {
                 return type;
             }
         }

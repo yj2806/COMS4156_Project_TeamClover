@@ -2,9 +2,7 @@ package com.example.webservice.controller;
 
 import com.example.webservice.model.Client;
 import com.example.webservice.model.model.ClientRequestDTO;
-import com.example.webservice.repository.ClientRepository;
 import com.example.webservice.service.ClientService;
-import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
