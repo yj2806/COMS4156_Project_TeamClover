@@ -31,14 +31,14 @@ public class ListingController {
     }
 
     // POST request to create a new listing
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Listing> createListing(@RequestBody Listing listing) {
         Listing newListing = listingRepository.save(listing);
         return new ResponseEntity<>(newListing, HttpStatus.CREATED);
     }
 
     // PUT request to update a listing by its ID
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<Listing> updateListing(@PathVariable Long id, @RequestBody Listing updatedListing) {
         if (listingRepository.existsById(id)) {
             updatedListing.setListingID(id);
@@ -49,7 +49,7 @@ public class ListingController {
     }
 
     // DELETE request to delete a listing by its ID
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteListing(@PathVariable Long id) {
         if (listingRepository.existsById(id)) {
             listingRepository.deleteById(id);
