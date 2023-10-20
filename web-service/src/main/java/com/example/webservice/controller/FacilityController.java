@@ -1,73 +1,62 @@
 package com.example.webservice.controller;
+import com.example.webservice.model.Client;
+import com.example.webservice.model.model.ClientRequestDTO;
+import com.example.webservice.model.model.FacilityRequestDTO;
+import com.example.webservice.repository.FacilityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.example.webservice.model.Facility;
-import com.example.webservice.repository.FacilityRepository;
 import org.springframework.web.bind.annotation.*;
+import com.example.webservice.service.FacilityService;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("facility")
 public class FacilityController {
 
+
+    private final FacilityService facilityService;
+
     @Autowired
-    private FacilityRepository facilityRepository;
-
-//    public FacilityController(FacilityRepository facilityRepository) {
-//        this.facilityRepository = facilityRepository;
-//    }
-
-    @RequestMapping("/getAllFacility")
-    @ResponseBody
-    public List<Facility> findAll() {
-        List<Facility> list = new ArrayList<Facility>();
-        list = facilityRepository.findAll();
-        return list;
-    }
-
-    @RequestMapping("/addFacility")
-    @ResponseBody
-    public Facility addFacility (float latitude, float longitude, boolean isPublic,
-                                 String email, String phone, String hours) {
-
-        Facility facility = new Facility();
-        //to-do
-        facilityRepository.save(facility);
-        return facility;
+    public FacilityController(FacilityService facilityService) {
+        this.facilityService = facilityService;
     }
 
     @GetMapping
     public List<Facility> getAllFacilities() {
-        return facilityRepository.findAll();
+        return facilityService.getAllFacilities();
     }
 
-//    @GetMapping("/{id}")
-//    public Facility getFacilityById(@PathVariable Long id) throws Exception {
-//        return facilityRepository.findById(id)
-//                .orElseThrow(() -> new Exception("Facility not found with id: " + id));
+    @GetMapping("/{id}")
+    public Facility getFacilityById(@PathVariable Long id) {
+        return facilityService.getFacilityById(id);
+
+    }
+
+    @PostMapping("/create")
+    public Facility createFacility(@RequestBody FacilityRequestDTO facility) {
+        return facilityService.createFacility(facility);
+    }
+
+    @PutMapping("/update/{id}")
+    public Facility updateFacility(@PathVariable Long id, @RequestBody FacilityRequestDTO facility) {
+        return facilityService.updateFacility(id,facility);
+
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteFacility(@PathVariable Long id) {
+        facilityService.deleteFacility(id);
+    }
+
+//    @RequestMapping("/getAllFacility")
+//    @ResponseBody
+//    public List<Facility> findAll() {
+//        List<Facility> list = new ArrayList<Facility>();
+//        list = facilityRepository.findAll();
+//        return list;
 //    }
-//
-//    @PostMapping
-//    public Facility createFacility(@RequestBody Facility facility) {
-//        return facilityRepository.save(facility);
-//    }
-//
-//    @PutMapping("/{id}")
-//    public Facility updateFacility(@PathVariable Long id, @RequestBody Facility updatedFacility) throws Exception {
-//        return facilityRepository.findById(id)
-//                .map(facility -> {
-//                    // Update fields here
-//                    return facilityRepository.save(facility);
-//                })
-//                .orElseThrow(() -> new Exception("Facility not found with id: " + id));
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    public void deleteFacility(@PathVariable Long id) {
-//        facilityRepository.deleteById(id);
-//    }
+
 }
 
