@@ -5,9 +5,16 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.*;
+
 import java.io.Serializable;
 
 @Entity
+@Builder(access= AccessLevel.PACKAGE,toBuilder = true)
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@Setter
+@Getter
 @Table(name = "facility")
 public class Facility implements Serializable {
 
@@ -15,7 +22,7 @@ public class Facility implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public int facilityID;
+    public Long facilityID;
 
     @Column(name = "latitude")
     public float latitude;
@@ -34,8 +41,5 @@ public class Facility implements Serializable {
 
     @Column(name = "hours")
     public String hours;
-
-    public Facility() {
-    }
 
 }
