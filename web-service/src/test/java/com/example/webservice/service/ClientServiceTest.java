@@ -94,7 +94,7 @@ public class ClientServiceTest {
     public void testCreateClient() {
         ClientRequestDTO clientRequest = new ClientRequestDTO();
         clientRequest.setType("DISTRIBUTOR");
-        // Set clientRequest properties
+        // TODO:Set clientRequest properties
 
         Facility facility = new Facility();
         Mockito.when(facilityRepository.findById(clientRequest.getAssociatedFacilityId())).thenReturn(Optional.of(facility));
@@ -102,14 +102,14 @@ public class ClientServiceTest {
         Client result = clientService.createClient(clientRequest);
 
         assertEquals(ClientType.DISTRIBUTOR,result.getType());
-        // Perform assertions on the result
+        // TODO: Perform assertions on the result
     }
 
     @Test
     public void testUpdateClient() {
         Long clientId = 1L;
         ClientRequestDTO updatedClient = new ClientRequestDTO();
-        // Set updatedClient properties
+        // TODO: Set updatedClient properties
         updatedClient.setType("DISTRIBUTOR");
 
 //        Client existingClient = new Client();
@@ -120,7 +120,7 @@ public class ClientServiceTest {
         Client result = clientService.updateClient(clientId, updatedClient);
 
         assertEquals(updatedClient.getType(),result.getType().toString());
-        // Perform assertions on the result
+        // TODO: Perform assertions on the result
     }
 
     @Test

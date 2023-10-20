@@ -18,6 +18,7 @@ import java.io.Serializable;
 @Setter
 @Getter
 @Table(name = "client")
+//Entity class for Client
 public class Client implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
