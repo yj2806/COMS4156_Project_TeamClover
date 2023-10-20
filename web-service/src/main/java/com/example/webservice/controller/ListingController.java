@@ -24,22 +24,22 @@ public class ListingController {
 
     // GET request to retrieve a listing by its ID
     @GetMapping("/{id}")
-    public ResponseEntity<Listing> getListingById(@PathVariable Long id) {
+    public ResponseEntity<Listing> getListingById(@PathVariable int id) {
         return listingRepository.findById(id)
                 .map(listing -> new ResponseEntity<>(listing, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     // POST request to create a new listing
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Listing> createListing(@RequestBody Listing listing) {
         Listing newListing = listingRepository.save(listing);
         return new ResponseEntity<>(newListing, HttpStatus.CREATED);
     }
 
     // PUT request to update a listing by its ID
-    @PutMapping("/{id}")
-    public ResponseEntity<Listing> updateListing(@PathVariable Long id, @RequestBody Listing updatedListing) {
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Listing> updateListing(@PathVariable int id, @RequestBody Listing updatedListing) {
         if (listingRepository.existsById(id)) {
             updatedListing.setListingID(id);
             Listing savedListing = listingRepository.save(updatedListing);
@@ -49,8 +49,8 @@ public class ListingController {
     }
 
     // DELETE request to delete a listing by its ID
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteListing(@PathVariable Long id) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteListing(@PathVariable int id) {
         if (listingRepository.existsById(id)) {
             listingRepository.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -61,7 +61,6 @@ public class ListingController {
     // GET request to search listings based on latitude and longitude
     @GetMapping("/search")
     public ResponseEntity<List<Listing>> searchListingsByLocation(@RequestParam Double latitude, @RequestParam Double longitude) {
-        // This method in the repository would still need to be defined.
         return new ResponseEntity<>(listingRepository.findListingsByLocation(latitude, longitude), HttpStatus.OK);
     }
 

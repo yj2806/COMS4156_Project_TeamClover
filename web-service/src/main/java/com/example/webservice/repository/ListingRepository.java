@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ListingRepository extends JpaRepository<Listing, Long> {
+public interface ListingRepository extends JpaRepository<Listing, Integer> {
 
     // Custom query to find listings based on latitude and longitude of associated facility
     @Query("SELECT l FROM Listing l JOIN l.associatedFacility f WHERE f.latitude = :latitude AND f.longitude = :longitude")

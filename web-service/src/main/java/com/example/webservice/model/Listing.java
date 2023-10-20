@@ -10,7 +10,7 @@ public class Listing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "listingID")
-    private Long listingID;
+    private Integer listingID;
 
     @ManyToOne
     @JoinColumn(name = "associated_facilityID")
@@ -37,11 +37,11 @@ public class Listing {
 
     // Getter and Setter methods
 
-    public Long getListingID() {
+    public Integer getListingID() {
         return listingID;
     }
 
-    public void setListingID(Long listingID) {
+    public void setListingID(Integer listingID) {
         this.listingID = listingID;
     }
 
