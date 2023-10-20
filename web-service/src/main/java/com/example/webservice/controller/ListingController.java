@@ -24,7 +24,7 @@ public class ListingController {
 
     // GET request to retrieve a listing by its ID
     @GetMapping("/{id}")
-    public ResponseEntity<Listing> getListingById(@PathVariable int id) {
+    public ResponseEntity<Listing> getListingById(@PathVariable Integer id) {
         return listingRepository.findById(id)
                 .map(listing -> new ResponseEntity<>(listing, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -39,7 +39,7 @@ public class ListingController {
 
     // PUT request to update a listing by its ID
     @PutMapping("/update/{id}")
-    public ResponseEntity<Listing> updateListing(@PathVariable int id, @RequestBody Listing updatedListing) {
+    public ResponseEntity<Listing> updateListing(@PathVariable Integer id, @RequestBody Listing updatedListing) {
         if (listingRepository.existsById(id)) {
             updatedListing.setListingID(id);
             Listing savedListing = listingRepository.save(updatedListing);
@@ -50,7 +50,7 @@ public class ListingController {
 
     // DELETE request to delete a listing by its ID
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteListing(@PathVariable int id) {
+    public ResponseEntity<Void> deleteListing(@PathVariable Integer id) {
         if (listingRepository.existsById(id)) {
             listingRepository.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
