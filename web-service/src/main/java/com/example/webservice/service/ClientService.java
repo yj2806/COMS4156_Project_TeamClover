@@ -26,17 +26,20 @@ public class ClientService {
         this.facilityRepository = facilityRepository;
     }
 
+    // get a list of all clients
     @Transactional
     public List<Client> getAllClients() {
         return clientRepository.findAll();
     }
 
+    // get a client by  ID
     @Transactional
     public Client getClientById(Long id) {
         return clientRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Client not found with id: " + id));
     }
 
+    // Create a new client with given ClientRequestDTO
     @Transactional
     public Client createClient(ClientRequestDTO client) {
         ClientType.isValid(client.getType());
@@ -46,9 +49,9 @@ public class ClientService {
         newClient.setType(ClientType.fromString(client.getType()));
         newClient.setAuthentication(client.getAuthentication());
         return clientRepository.save(newClient);
-
     }
 
+    // Update an existing client based on ID and new client info
     @Transactional
     public Client updateClient(Long id, ClientRequestDTO updatedClient) {
         return clientRepository.findById(id)
@@ -61,11 +64,13 @@ public class ClientService {
                 .orElseThrow(() -> new ResourceNotFoundException("Client not found with id: " + id));
     }
 
+    // Delete a client by ID
     @Transactional
     public void deleteClient(Long id) {
         clientRepository.deleteById(id);
     }
 
+    // Helper method to retrieve a facility by ID
     private Facility getFacility(Long id){
         Optional<Facility> f = facilityRepository.findById(id);
         if(f.isPresent()){
@@ -74,4 +79,3 @@ public class ClientService {
         throw new ResourceNotFoundException("Facility not found with id: " + id);
     }
 }
-
