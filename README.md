@@ -24,16 +24,16 @@ clients can empower their end-users to create care package listings and contribu
 .
 ├── report # -> reports including external api test and style report
 ├── web-service 
-│   ├── src # -> source code
+│   └── src # -> source code
 │       ├── main # -> source code
 │       │   ├── java/com/example/webservice # -> spring boot service codes
 │       │   │   ├── controller # -> controllers
 │       │   │   ├── model # -> models
 │       │   │   ├── repository # -> repositories
 │       │   │   ├── service # -> services
-│       │   │   ├── WebServiceApplication.java # -> spring boot application
+│       │   │   └── WebServiceApplication.java # -> spring boot application
 │       │   └── resources # -> properties configuration
-│       │       ├── application.properties # -> spring boot properties
+│       │       └── application.properties # -> spring boot properties
 │       └── test/java/com/example/webservice # -> tests
 │           ├── controller # -> tests for controller
 │           ├── model/type # -> tests for model/type
