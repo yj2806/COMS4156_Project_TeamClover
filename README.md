@@ -43,7 +43,7 @@ mvn spring-boot:run
   - Response Codes:
     - ```200: Success```
     - ```400: Invalid Input```
-    - ```409: Developer already exists```
+    - ```409: Client already exists```
 
 - `DELETE /client/delete/{id}`
   - Description
@@ -131,7 +131,8 @@ mvn spring-boot:run
     Update listing info, authentication of the client is needed
   - Request Body:
     - `clientID:int`  
-    - `authentication:string`    
+    - `authentication:string`
+    - `listingID:int`
     - `isPublic:boolean`
     - `groupCode:int`  
     - `itemList:string`    
