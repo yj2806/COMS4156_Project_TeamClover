@@ -68,7 +68,7 @@ public class FacilityController {
      * @param facility the updated facility data
      * @return the updated facility
      */
-    @PutMapping("/update/{id}")
+    @PutMapping("/update/{facilityID}")
     public Facility updateFacility(@RequestParam Long clientID, @RequestParam String auth,
                                    @PathVariable Long facilityID, @RequestBody FacilityRequestDTO facility) {
 
