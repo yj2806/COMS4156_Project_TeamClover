@@ -34,10 +34,10 @@ public class FacilityController {
 
     }
 
-    @PostMapping("/create")
-    public Facility createFacility(@RequestBody FacilityRequestDTO facility) {
-        return facilityService.createFacility(facility);
-    }
+//    @PostMapping("/create")
+//    public Facility createFacility(@RequestBody FacilityRequestDTO facility) {
+//        return facilityService.createFacility(facility);
+//    }
 
     @PutMapping("/update/{id}")
     public Facility updateFacility(@PathVariable Long id, @RequestBody FacilityRequestDTO facility) {

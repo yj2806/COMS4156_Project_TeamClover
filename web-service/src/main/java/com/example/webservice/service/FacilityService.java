@@ -35,19 +35,12 @@ public class FacilityService {
                 .orElseThrow(() -> new ResourceNotFoundException("Facility not found with id: " + id));
     }
 
-    @Transactional
-    public Facility createFacility(FacilityRequestDTO facility) {
-
-        Facility newFacility = new Facility();
-        newFacility.setLatitude(facility.getLatitude());
-        newFacility.setLongitude(facility.getLongitude());
-        newFacility.setPublic(facility.getPublic());
-        newFacility.setEmail(facility.getEmail());
-        newFacility.setPhone(facility.getPhone());
-        newFacility.setHours(facility.getHours());
-        return facilityRepository.save(newFacility);
-
-    }
+//    @Transactional
+//    public static Facility createFacility() {
+//        Facility newFacility = new Facility();
+//        return facilityRepository.save(newFacility);
+//
+//    }
 
     @Transactional
     public Facility updateFacility(Long id, FacilityRequestDTO updatedFacility) {

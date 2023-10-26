@@ -45,24 +45,24 @@ public class ClientService {
         ClientType.isValid(client.getType());
 
         Client newClient = new Client();
-        newClient.setAssociatedFacility(getFacility(client.getAssociatedFacilityId()));
+        newClient.setAssociatedFacility(createFacility());
         newClient.setType(ClientType.fromString(client.getType()));
         newClient.setAuthentication(client.getAuthentication());
         return clientRepository.save(newClient);
     }
 
-    // Update an existing client based on ID and new client info
-    @Transactional
-    public Client updateClient(Long id, ClientRequestDTO updatedClient) {
-        return clientRepository.findById(id)
-                .map(client -> {
-                    client.setAssociatedFacility(getFacility(updatedClient.getAssociatedFacilityId()));
-                    client.setClientID(id);
-                    client.setType(ClientType.fromString(updatedClient.getType()));
-                    return clientRepository.save(client);
-                })
-                .orElseThrow(() -> new ResourceNotFoundException("Client not found with id: " + id));
-    }
+//    // Update an existing client based on ID and new client info
+//    @Transactional
+//    public Client updateClient(Long id, ClientRequestDTO updatedClient) {
+//        return clientRepository.findById(id)
+//                .map(client -> {
+//                    client.setAssociatedFacility(getFacility(updatedClient.getAssociatedFacilityId()));
+//                    client.setClientID(id);
+//                    client.setType(ClientType.fromString(updatedClient.getType()));
+//                    return clientRepository.save(client);
+//                })
+//                .orElseThrow(() -> new ResourceNotFoundException("Client not found with id: " + id));
+//    }
 
     // Delete a client by ID
     @Transactional
@@ -77,5 +77,10 @@ public class ClientService {
             return f.get();
         }
         throw new ResourceNotFoundException("Facility not found with id: " + id);
+    }
+
+    private Facility createFacility(){
+        Facility newFacility = new Facility();
+        return facilityRepository.save(newFacility);
     }
 }
