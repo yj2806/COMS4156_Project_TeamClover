@@ -26,11 +26,11 @@ public class ClientController {
 //        return clientService.getAllClients();
 //    }
 
-    // GET request to retrieve a client by their ID
-    @GetMapping("/{id}")
-    public Client getClientById(@PathVariable Long id) {
-        return clientService.getClientById(id);
-    }
+//    // GET request to retrieve a client by their ID
+//    @GetMapping("/{id}")
+//    public Client getClientById(@PathVariable Long id) {
+//        return clientService.getClientById(id);
+//    }
 
     // POST request to create a new client
     @PostMapping("/create")
@@ -46,7 +46,10 @@ public class ClientController {
 
     // DELETE request to delete a client by their ID
     @DeleteMapping("/delete/{id}")
-    public void deleteClient(@PathVariable Long id) {
-        clientService.deleteClient(id);
+    public void deleteClient(@PathVariable Long id, @RequestParam String auth) {
+        Client client =  clientService.getClientById(id);
+        if (auth.equals(client.getAuthentication())) {
+            clientService.deleteClient(id);
+        }
     }
 }

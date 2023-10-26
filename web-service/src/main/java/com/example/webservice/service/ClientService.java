@@ -2,12 +2,15 @@ package com.example.webservice.service;
 
 import com.example.webservice.model.Client;
 import com.example.webservice.model.Facility;
+import com.example.webservice.model.Listing;
 import com.example.webservice.model.model.ClientRequestDTO;
 import com.example.webservice.model.type.ClientType;
 import com.example.webservice.repository.ClientRepository;
 import com.example.webservice.repository.FacilityRepository;
+import com.example.webservice.repository.ListingRepository;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,11 +22,13 @@ public class ClientService {
 
     private final ClientRepository clientRepository;
     private final FacilityRepository facilityRepository;
+    private final ListingRepository listingRepository;
 
     @Autowired
-    public ClientService(ClientRepository clientRepository, FacilityRepository facilityRepository) {
+    public ClientService(ClientRepository clientRepository, FacilityRepository facilityRepository, ListingRepository listingRepository) {
         this.clientRepository = clientRepository;
         this.facilityRepository = facilityRepository;
+        this.listingRepository = listingRepository;
     }
 
     // get a list of all clients
@@ -67,6 +72,13 @@ public class ClientService {
     // Delete a client by ID
     @Transactional
     public void deleteClient(Long id) {
+        Client client = getClientById(id);
+        Long facilityID = client.getAssociatedFacility().getFacilityID();
+        List<Listing> listingID = listingRepository.findListingsByFacilityID(facilityID);
+        for (Listing l : listingID) {
+            listingRepository.deleteById(l.getListingID());
+        }
+        facilityRepository.deleteById(facilityID);
         clientRepository.deleteById(id);
     }
 
@@ -83,4 +95,5 @@ public class ClientService {
         Facility newFacility = new Facility();
         return facilityRepository.save(newFacility);
     }
+
 }
