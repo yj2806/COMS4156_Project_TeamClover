@@ -89,7 +89,6 @@ mvn test
   - Response Codes:
     - ```200: Success```
     - ```400: Invalid Input```
-    - ```409: Client already exists```
 
 - `DELETE /client/delete/{id}`
   - Description
@@ -101,7 +100,6 @@ mvn test
     - ```200: Success```
     - ```401: Invalid authentication code```
     - ```404: Client does not exist```
-    - ```500: Internal Server Error```
 
 - `GET /facility`
   - Description:
@@ -147,7 +145,6 @@ mvn test
   - Response Codes:
     - ```200: Success```
     - ```401: Invalid Token: facility ID```
-    - ```404: Invalid Client ID or authentication```
    
 - `GET /listing/search`
   - Description:
@@ -172,7 +169,7 @@ mvn test
     - path: `id:integer`
   - Response Codes:
     - ```200: Success```
-    - ```401: Invalid Token```
+    - ```404: Invalid Token```
    
 - `POST /listing/create`
   - Description:
@@ -244,6 +241,6 @@ mvn test
     - query: `auth:string`
     - path:`id:integer`
   - Response Codes:
-    - ```200: Success```
+    - ```204: Success```
     - ```401: Invalid Client ID or authentication```
-    - ```500: Internal Server Error```
+    - ```404: Listing not found```
