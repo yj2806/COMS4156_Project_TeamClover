@@ -5,10 +5,12 @@ import com.example.webservice.exception.InvalidTokenException;
 import com.example.webservice.model.Facility;
 import com.example.webservice.model.model.FacilityRequestDTO;
 import com.example.webservice.service.FacilityService;
+import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -34,7 +36,7 @@ public class FacilityController {
     /**
      * Retrieves a list of all facilities.
      *
-     * @return ResponseEntity containing a list of all facilities and a HTTP status.
+     * @return ResponseEntity containing a list of all facilities and an HTTP status.
      *         HttpStatus.OK (200) for success.
      */
     @GetMapping
@@ -47,7 +49,7 @@ public class FacilityController {
      * Retrieves information on facility with a specific ID.
      *
      * @param id the ID of the facility
-     * @return ResponseEntity containing the facility with the given ID and a HTTP status.
+     * @return ResponseEntity containing the facility with the given ID and an HTTP status.
      *         HttpStatus.OK (200) for success.
      *         HttpStatus.UNAUTHORIZED (401) for invalid token.
      */
@@ -56,8 +58,9 @@ public class FacilityController {
         try {
             Facility facility = facilityService.getFacilityById(id);
             return new ResponseEntity<>(facility, HttpStatus.OK);
-        } catch (InvalidTokenException e) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (ResourceNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                    "auth and id does not match");
         }
     }
 
@@ -68,15 +71,16 @@ public class FacilityController {
      * @param auth the authentication string of the client
      * @param facilityID the ID of the facility
      * @param facility the updated facility data
-     * @return ResponseEntity containing the updated facility and a HTTP status.
+     * @return ResponseEntity containing the updated facility and an HTTP status.
      *         HttpStatus.OK (200) for success.
      *         HttpStatus.UNAUTHORIZED (401) for invalid token.
      *         HttpStatus.NOT_FOUND (404) for invalid client ID or authentication.
      */
+    @PutMapping("/update/{facilityID}")
     public ResponseEntity<Facility> updateFacility(
-            @PathVariable Long clientID,
-            @PathVariable String auth,
-            @PathVariable Long facilityID,
+            @RequestParam Long clientID,
+            @RequestParam String auth,
+            @RequestParam Long facilityID,
             @RequestBody FacilityRequestDTO facility) {
         try {
             Facility updatedFacility = facilityService.updateFacility(clientID, auth, facilityID, facility);

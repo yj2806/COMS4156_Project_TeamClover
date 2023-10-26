@@ -8,8 +8,9 @@ import com.example.webservice.repository.ClientRepository;
 import com.example.webservice.repository.FacilityRepository;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -69,21 +70,28 @@ public class ListingService {
                                  ListingRequestDTO listing) {
         // Constraints and validation could be added here if necessary.
         Client c = clientRepository.findById(clientID)
-                .orElseThrow(() -> new ResourceNotFoundException("Client not found with id: " + clientID));
-
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Client not found with id: " + clientID));
         if (!auth.equals(c.getAuthentication())) {
-            throw( new ResourceNotFoundException("wrong auth"));
+            throw (new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "wrong auth"));
         }
 
-        Listing newListing = new Listing();
-        newListing.setAssociatedFacility(c.getAssociatedFacility());
-        newListing.setPublic(listing.getIsPublic());
-        newListing.setGroupCode(listing.getGroupCode());
-        newListing.setItemList(listing.getItemList());
-        newListing.setAgeRequirement(listing.getAgeRequirement());
-        newListing.setVeteranStatus(listing.getVeteranStatus());
-        newListing.setGender(listing.getGender());
-        return listingRepository.save(newListing);
+        try {
+            Listing newListing = new Listing();
+            newListing.setAssociatedFacility(c.getAssociatedFacility());
+            newListing.setPublic(listing.getIsPublic());
+            newListing.setGroupCode(listing.getGroupCode());
+            newListing.setItemList(listing.getItemList());
+            newListing.setAgeRequirement(listing.getAgeRequirement());
+            newListing.setVeteranStatus(listing.getVeteranStatus());
+            newListing.setGender(listing.getGender());
+            return listingRepository.save(newListing);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    e.getMessage());
+        }
+
     }
 
     /**
@@ -97,18 +105,24 @@ public class ListingService {
      */
     public Optional<Listing> updateListing(Long clientID,
                                            String auth,
-                                           Long id, ListingRequestDTO updatedListing) {
+                                           Long id,
+                                           ListingRequestDTO updatedListing) {
         Client c = clientRepository.findById(clientID)
-                .orElseThrow(() -> new ResourceNotFoundException("Client not found with id: " + clientID));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Client not found with id: " + clientID));
 
         if (!auth.equals(c.getAuthentication())) {
-            throw( new ResourceNotFoundException("wrong auth"));
+            throw (new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "wrong auth"));
         }
         if (listingRepository.existsById(id)) {
-            Listing to_update = listingRepository.findById(id).orElseThrow(
-                    () -> new ResourceNotFoundException("Listing not found with id: " + id));
-            if (to_update.getAssociatedFacility().getFacilityID() != c.getAssociatedFacility().getFacilityID()) {
-                throw( new ResourceNotFoundException("Unmatched client and listingID"));
+            Listing toUpdate = listingRepository.findById(id).orElseThrow(
+                    () -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                            "not exist"));
+            if (!toUpdate.getAssociatedFacility().getFacilityID().equals(
+                    c.getAssociatedFacility().getFacilityID())) {
+                throw (new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "unmatched info"));
             }
 
             return Optional.of(listingRepository.findById(id)
@@ -123,7 +137,8 @@ public class ListingService {
                         listing.setGender(updatedListing.getGender());
                         return listingRepository.save(listing);
                     })
-                    .orElseThrow(() -> new ResourceNotFoundException("Listing not found with id: " + id)));
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                            "not exist")));
         }
         return Optional.empty();
     }
@@ -140,17 +155,22 @@ public class ListingService {
                                  String auth,
                                  Long id) {
         Client c = clientRepository.findById(clientID)
-                .orElseThrow(() -> new ResourceNotFoundException("Client not found with id: " + clientID));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                        "auth and id does not match"));
 
         if (!auth.equals(c.getAuthentication())) {
-            throw( new ResourceNotFoundException("wrong auth"));
+
+            throw (new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                    "auth and id does not match"));
         }
 
         if (listingRepository.existsById(id)) {
-            Listing to_delete = listingRepository.findById(id).orElseThrow(
+            Listing toDelete = listingRepository.findById(id).orElseThrow(
                     () -> new ResourceNotFoundException("Listing not found with id: " + id));
-            if (to_delete.getAssociatedFacility().getFacilityID() != c.getAssociatedFacility().getFacilityID()) {
-                throw( new ResourceNotFoundException("Unmatched client and listingID"));
+            if (!toDelete.getAssociatedFacility().getFacilityID().equals(
+                    c.getAssociatedFacility().getFacilityID())) {
+                throw (new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                        "unmatched info"));
             }
             listingRepository.deleteById(id);
             return true;
@@ -166,7 +186,9 @@ public class ListingService {
      * @param range     the range (in units) from the center to search for listings
      * @return a list of listings found within the specified range of the location
      */
-    public List<Listing> searchListingsByLocation(Double latitude, Double longitude, Double range) {
+    public List<Listing> searchListingsByLocation(Double latitude,
+                                                  Double longitude,
+                                                  Double range) {
         return listingRepository.findListingsByLocation(latitude, longitude, range);
     }
 

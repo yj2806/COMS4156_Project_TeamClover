@@ -10,7 +10,7 @@ import lombok.*;
 import java.io.Serializable;
 
 @Entity
-@Builder(access= AccessLevel.PACKAGE,toBuilder = true)
+@Builder(access = AccessLevel.PACKAGE, toBuilder = true)
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Setter
@@ -23,24 +23,24 @@ public class Facility implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public Long facilityID;
+    private Long facilityID;
 
     @Column(name = "latitude")
-    public float latitude;
+    private float latitude;
 
     @Column(name = "longitude")
-    public float longitude;
+    private float longitude;
 
     @Column(name = "public")
-    public boolean isPublic;
+    private boolean isPublic;
 
     @Column(name = "email")
-    public String email;
+    private String email;
 
     @Column(name = "phone")
-    public String phone;
+    private String phone;
 
     @Column(name = "hours")
-    public String hours;
+    private String hours;
 
 }

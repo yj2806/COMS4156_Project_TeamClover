@@ -58,6 +58,7 @@ mvn install -Dmaven.test.skip=true
 ```
 
 ## Run
+- Contact any team member to add IP address to AWS RDS
 - run the service on `localhost:8080`:
 ```
 mvn spring-boot:run -Dmaven.test.skip=true
