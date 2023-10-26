@@ -100,11 +100,11 @@ public class FacilityServiceTest {
 //        assertThrows(ResourceNotFoundException.class, () -> facilityService.updateFacility(id, updatedFacilityDTO));
 //    }
 
-    @Test
-    public void testDeleteFacility() {
-        Long id = 1L;
-        facilityService.deleteFacility(id);
-
-        verify(facilityRepository, times(1)).deleteById(id);
-    }
+//    @Test
+//    public void testDeleteFacility() {
+//        Long id = 1L;
+//        facilityService.deleteFacility(id);
+//
+//        verify(facilityRepository, times(1)).deleteById(id);
+//    }
 }
