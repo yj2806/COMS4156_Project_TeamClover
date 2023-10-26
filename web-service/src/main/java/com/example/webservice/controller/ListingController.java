@@ -64,7 +64,8 @@ public class ListingController {
                                                  @RequestParam String auth,
                                                  @RequestBody ListingRequestDTO listing) {
         // We can include validations here for constraints if needed
-        return ResponseEntity.ok(listingService.createListing(clientID, auth, listing));
+        return ResponseEntity.ok(listingService.createListing(
+                clientID, auth, listing));
     }
 
     /**
@@ -83,7 +84,8 @@ public class ListingController {
     @PutMapping("/update/{id}")
     public ResponseEntity<Listing> updateListing(@RequestParam Long clientID,
                                                  @RequestParam String auth,
-                                                 @PathVariable Long id, @RequestBody ListingRequestDTO updatedListing) {
+                                                 @PathVariable Long id,
+                                                 @RequestBody ListingRequestDTO updatedListing) {
         return listingService.updateListing(clientID, auth, id, updatedListing)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -92,7 +94,7 @@ public class ListingController {
     /**
      * Deletes a specified listing using provided details and authentication.
      *
-     * @param clientID ID of the client requesting the delete.
+     * @param clientID ID of the client requesting delete.
      * @param auth     Client's authentication string.
      * @param id       ID of the listing to be deleted.
      * @return {@link ResponseEntity} with a no content or not found status.
@@ -122,7 +124,9 @@ public class ListingController {
      * 200: Success
      */
     @GetMapping("/search")
-    public ResponseEntity<List<Listing>> searchListingsByLocation(@RequestParam Double latitude, @RequestParam Double longitude, @RequestParam Double range) {
+    public ResponseEntity<List<Listing>> searchListingsByLocation(@RequestParam Double latitude,
+                                                                  @RequestParam Double longitude,
+                                                                  @RequestParam Double range) {
         return ResponseEntity.ok(listingService.searchListingsByLocation(latitude, longitude, range));
     }
 }

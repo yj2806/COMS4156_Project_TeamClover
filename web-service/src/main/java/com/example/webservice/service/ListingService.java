@@ -9,7 +9,6 @@ import com.example.webservice.repository.FacilityRepository;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;
@@ -72,7 +71,7 @@ public class ListingService {
                 .orElseThrow(() -> new ResourceNotFoundException("Client not found with id: " + clientID));
 
         if (!auth.equals(c.getAuthentication())) {
-            throw( new ResourceNotFoundException("wrong auth"));
+            throw (new ResourceNotFoundException("wrong auth"));
         }
 
         Listing newListing = new Listing();
@@ -97,18 +96,20 @@ public class ListingService {
      */
     public Optional<Listing> updateListing(Long clientID,
                                            String auth,
-                                           Long id, ListingRequestDTO updatedListing) {
+                                           Long id,
+                                           ListingRequestDTO updatedListing) {
         Client c = clientRepository.findById(clientID)
                 .orElseThrow(() -> new ResourceNotFoundException("Client not found with id: " + clientID));
 
         if (!auth.equals(c.getAuthentication())) {
-            throw( new ResourceNotFoundException("wrong auth"));
+            throw (new ResourceNotFoundException("wrong auth"));
         }
         if (listingRepository.existsById(id)) {
-            Listing to_update = listingRepository.findById(id).orElseThrow(
+            Listing toUpdate = listingRepository.findById(id).orElseThrow(
                     () -> new ResourceNotFoundException("Listing not found with id: " + id));
-            if (to_update.getAssociatedFacility().getFacilityID() != c.getAssociatedFacility().getFacilityID()) {
-                throw( new ResourceNotFoundException("Unmatched client and listingID"));
+            if (!toUpdate.getAssociatedFacility().getFacilityID().equals(
+                    c.getAssociatedFacility().getFacilityID())) {
+                throw (new ResourceNotFoundException("Unmatched client and listingID"));
             }
 
             return Optional.of(listingRepository.findById(id)
@@ -143,14 +144,15 @@ public class ListingService {
                 .orElseThrow(() -> new ResourceNotFoundException("Client not found with id: " + clientID));
 
         if (!auth.equals(c.getAuthentication())) {
-            throw( new ResourceNotFoundException("wrong auth"));
+            throw (new ResourceNotFoundException("wrong auth"));
         }
 
         if (listingRepository.existsById(id)) {
-            Listing to_delete = listingRepository.findById(id).orElseThrow(
+            Listing toDelete = listingRepository.findById(id).orElseThrow(
                     () -> new ResourceNotFoundException("Listing not found with id: " + id));
-            if (to_delete.getAssociatedFacility().getFacilityID() != c.getAssociatedFacility().getFacilityID()) {
-                throw( new ResourceNotFoundException("Unmatched client and listingID"));
+            if (toDelete.getAssociatedFacility().getFacilityID().equals(
+                    c.getAssociatedFacility().getFacilityID())) {
+                throw (new ResourceNotFoundException("Unmatched client and listingID"));
             }
             listingRepository.deleteById(id);
             return true;
@@ -166,7 +168,9 @@ public class ListingService {
      * @param range     the range (in units) from the center to search for listings
      * @return a list of listings found within the specified range of the location
      */
-    public List<Listing> searchListingsByLocation(Double latitude, Double longitude, Double range) {
+    public List<Listing> searchListingsByLocation(Double latitude,
+                                                  Double longitude,
+                                                  Double range) {
         return listingRepository.findListingsByLocation(latitude, longitude, range);
     }
 

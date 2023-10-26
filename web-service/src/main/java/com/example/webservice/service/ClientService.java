@@ -12,7 +12,6 @@ import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +23,9 @@ public class ClientService {
     private final ListingRepository listingRepository;
 
     @Autowired
-    public ClientService(ClientRepository clientRepository, FacilityRepository facilityRepository, ListingRepository listingRepository) {
+    public ClientService(ClientRepository clientRepository,
+                         FacilityRepository facilityRepository,
+                         ListingRepository listingRepository) {
         this.clientRepository = clientRepository;
         this.facilityRepository = facilityRepository;
         this.listingRepository = listingRepository;
@@ -47,7 +48,7 @@ public class ClientService {
     @Transactional
     public Client createClient(ClientRequestDTO client) {
         boolean validType = ClientType.isValid(client.getType());
-        if(!validType){
+        if (!validType) {
             throw new IllegalArgumentException("Valid type are DISTRIBUTOR and NON_DISTRIBUTOR");
         }
 
@@ -85,15 +86,15 @@ public class ClientService {
     }
 
     // Helper method to retrieve a facility by ID
-    private Facility getFacility(Long id){
+    private Facility getFacility(Long id) {
         Optional<Facility> f = facilityRepository.findById(id);
-        if(f.isPresent()){
+        if (f.isPresent()) {
             return f.get();
         }
         throw new ResourceNotFoundException("Facility not found with id: " + id);
     }
 
-    private Facility createFacility(){
+    private Facility createFacility() {
         Facility newFacility = new Facility();
         return facilityRepository.save(newFacility);
     }

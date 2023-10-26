@@ -15,7 +15,7 @@ public class FacilityRequestDTO {
     private String phone;
     private String hours;
 
-    public boolean getPublic(){
+    public boolean getPublic() {
         return isPublic;
     }
 }
