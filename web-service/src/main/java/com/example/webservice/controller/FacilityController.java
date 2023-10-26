@@ -62,22 +62,26 @@ public class FacilityController {
     /**
      * Updates an existing facility by its ID.
      *
-     * @param id       the ID of the facility to update
+     * @param clientID       the ID of the client associated with the facility
+     * @param auth       the authentication string of the client
+     * @param facilityID       the ID of the facility
      * @param facility the updated facility data
      * @return the updated facility
      */
     @PutMapping("/update/{id}")
-    public Facility updateFacility(@PathVariable Long id, @RequestBody FacilityRequestDTO facility) {
-        return facilityService.updateFacility(id, facility);
+    public Facility updateFacility(@PathVariable Long clientID, @PathVariable String auth,
+                                   @PathVariable Long facilityID, @RequestBody FacilityRequestDTO facility) {
+
+        return facilityService.updateFacility(clientID, auth, facilityID, facility);
     }
 
-    /**
-     * Deletes a facility by its ID.
-     *
-     * @param id the ID of the facility to delete
-     */
-    @DeleteMapping("/delete/{id}")
-    public void deleteFacility(@PathVariable Long id) {
-        facilityService.deleteFacility(id);
-    }
+//    /**
+//     * Deletes a facility by its ID.
+//     *
+//     * @param id the ID of the facility to delete
+//     */
+//    @DeleteMapping("/delete/{id}")
+//    public void deleteFacility(@PathVariable Long id) {
+//        facilityService.deleteFacility(id);
+//    }
 }
