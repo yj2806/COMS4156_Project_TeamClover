@@ -1,18 +1,18 @@
 package com.example.webservice.model;
 
 import com.example.webservice.model.type.ClientType;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.io.Serializable;
 import lombok.*;
 
-import java.io.Serializable;
 
+@SuppressWarnings("CheckStyle")
 @Entity
-@Builder(access=AccessLevel.PACKAGE,toBuilder = true)
+@Builder(access = AccessLevel.PACKAGE, toBuilder = true)
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Setter
@@ -20,11 +20,13 @@ import java.io.Serializable;
 @Table(name = "client")
 //Entity class for Client
 public class Client implements Serializable {
+    @SuppressWarnings("CheckStyle")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "clientID")
     private Long clientID;
 
+    @SuppressWarnings("CheckStyle")
     @Column(name = "authentication", nullable = false)
     private String authentication;
 

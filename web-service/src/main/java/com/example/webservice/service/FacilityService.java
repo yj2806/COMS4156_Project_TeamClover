@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class FacilityService {
@@ -26,7 +25,8 @@ public class FacilityService {
      * @param facilityRepository the facility repository
      */
     @Autowired
-    public FacilityService(ClientRepository clientRepository, FacilityRepository facilityRepository) {
+    public FacilityService(ClientRepository clientRepository,
+                           FacilityRepository facilityRepository) {
         this.clientRepository = clientRepository;
         this.facilityRepository = facilityRepository;
     }
@@ -66,16 +66,18 @@ public class FacilityService {
      * @throws ResourceNotFoundException if no client or facility is found with the given IDs or if authentication fails
      */
     @Transactional
-    public Facility updateFacility(Long clientId, String auth,
-                                   Long id, FacilityRequestDTO updatedFacility) {
+    public Facility updateFacility(Long clientId,
+                                   String auth,
+                                   Long id,
+                                   FacilityRequestDTO updatedFacility) {
         Client c = clientRepository.findById(clientId)
                 .orElseThrow(() -> new ResourceNotFoundException("Client not found with id: " + clientId));
 
         if (!auth.equals(c.getAuthentication())) {
-            throw( new ResourceNotFoundException("wrong auth"));
+            throw (new ResourceNotFoundException("wrong auth"));
         }
         if (!id.equals(c.getAssociatedFacility().getFacilityID())) {
-            throw( new ResourceNotFoundException("wrong facilityID"));
+            throw (new ResourceNotFoundException("wrong facilityID"));
         }
 
         return facilityRepository.findById(id)
@@ -99,7 +101,7 @@ public class FacilityService {
      * @return true if the facility was found and deleted, false otherwise
      */
     public boolean deleteFacility(Long id) {
-        if(facilityRepository.existsById(id)) {
+        if (facilityRepository.existsById(id)) {
             facilityRepository.deleteById(id);
             return true;
         } else {
