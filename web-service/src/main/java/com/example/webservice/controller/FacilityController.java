@@ -5,10 +5,13 @@ import com.example.webservice.exception.InvalidTokenException;
 import com.example.webservice.model.Facility;
 import com.example.webservice.model.model.FacilityRequestDTO;
 import com.example.webservice.service.FacilityService;
+import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 
 /**
@@ -55,8 +58,9 @@ public class FacilityController {
         try {
             Facility facility = facilityService.getFacilityById(id);
             return new ResponseEntity<>(facility, HttpStatus.OK);
-        } catch (InvalidTokenException e) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (ResourceNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                    "auth and id does not match");
         }
     }
 
@@ -72,10 +76,11 @@ public class FacilityController {
      *         HttpStatus.UNAUTHORIZED (401) for invalid token.
      *         HttpStatus.NOT_FOUND (404) for invalid client ID or authentication.
      */
+    @PutMapping("/update/{facilityID}")
     public ResponseEntity<Facility> updateFacility(
-            @PathVariable Long clientID,
-            @PathVariable String auth,
-            @PathVariable Long facilityID,
+            @RequestParam Long clientID,
+            @RequestParam String auth,
+            @RequestParam Long facilityID,
             @RequestBody FacilityRequestDTO facility) {
         try {
             Facility updatedFacility = facilityService.updateFacility(clientID, auth, facilityID, facility);
