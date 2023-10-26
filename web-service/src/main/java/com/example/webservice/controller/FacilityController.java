@@ -86,9 +86,11 @@ public class FacilityController {
             Facility updatedFacility = facilityService.updateFacility(clientID, auth, facilityID, facility);
             return new ResponseEntity<>(updatedFacility, HttpStatus.OK);
         } catch (InvalidTokenException e) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (InvalidClientIDOrAuthException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (ResourceNotFoundException e) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 

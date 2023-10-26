@@ -1,5 +1,6 @@
 package com.example.webservice.service;
 
+import com.example.webservice.exception.InvalidTokenException;
 import com.example.webservice.model.Client;
 import com.example.webservice.model.Facility;
 import com.example.webservice.model.model.FacilityRequestDTO;
@@ -74,10 +75,10 @@ public class FacilityService {
                 .orElseThrow(() -> new ResourceNotFoundException("Client not found with id: " + clientId));
 
         if (!auth.equals(c.getAuthentication())) {
-            throw (new ResourceNotFoundException("wrong auth"));
+            throw (new InvalidTokenException("wrong auth"));
         }
         if (!id.equals(c.getAssociatedFacility().getFacilityID())) {
-            throw (new ResourceNotFoundException("wrong facilityID"));
+            throw (new InvalidTokenException("wrong facilityID"));
         }
 
         return facilityRepository.findById(id)
