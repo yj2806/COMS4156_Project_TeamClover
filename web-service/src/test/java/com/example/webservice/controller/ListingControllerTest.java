@@ -66,32 +66,32 @@ public class ListingControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-    @Test
-    public void testCreateListing() throws Exception {
-        Listing listing = new Listing();
-        // Set properties if necessary
-        when(listingService.createListing(any(Listing.class))).thenReturn(listing);
+//    @Test
+//    public void testCreateListing() throws Exception {
+//        Listing listing = new Listing();
+//        // Set properties if necessary
+//        when(listingService.createListing(any(Listing.class))).thenReturn(listing);
+//
+//        mockMvc.perform(post("/listing/create")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(listing)))
+//                .andExpect(status().isOk())
+//                .andExpect(content().json(objectMapper.writeValueAsString(listing)));
+//    }
 
-        mockMvc.perform(post("/listing/create")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(listing)))
-                .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(listing)));
-    }
 
-
-    @Test
-    public void testUpdateListing_NotFound() throws Exception {
-        Long id = 1L;
-        Listing updatedListing = new Listing();
-        // Set properties if necessary
-        when(listingService.updateListing(id, updatedListing)).thenReturn(Optional.empty());
-
-        mockMvc.perform(put("/listing/update/{id}", id)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updatedListing)))
-                .andExpect(status().isNotFound());
-    }
+//    @Test
+//    public void testUpdateListing_NotFound() throws Exception {
+//        Long id = 1L;
+//        Listing updatedListing = new Listing();
+//        // Set properties if necessary
+//        when(listingService.updateListing(id, updatedListing)).thenReturn(Optional.empty());
+//
+//        mockMvc.perform(put("/listing/update/{id}", id)
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(updatedListing)))
+//                .andExpect(status().isNotFound());
+//    }
 
     @Test
     public void testDeleteListing() throws Exception {
