@@ -1,9 +1,13 @@
 package com.example.webservice.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 
 @Entity
+@Setter
+@Getter
 @Table(name = "listings")
 public class Listing {
 

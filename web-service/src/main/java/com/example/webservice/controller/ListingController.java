@@ -5,6 +5,7 @@ import com.example.webservice.service.ListingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.example.webservice.model.model.ListingRequestDTO;
 
 import java.util.List;
 
@@ -28,21 +29,27 @@ public class ListingController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Listing> createListing(@RequestBody Listing listing) {
+    public ResponseEntity<Listing> createListing(@PathVariable Long clientID,
+                                                 @PathVariable String auth,
+                                                 @RequestBody ListingRequestDTO listing) {
         // We can include validations here for constraints if needed
-        return ResponseEntity.ok(listingService.createListing(listing));
+        return ResponseEntity.ok(listingService.createListing(clientID, auth, listing));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Listing> updateListing(@PathVariable Long id, @RequestBody Listing updatedListing) {
-        return listingService.updateListing(id, updatedListing)
+    public ResponseEntity<Listing> updateListing(@PathVariable Long clientID,
+                                                 @PathVariable String auth,
+                                                 @PathVariable Long id, @RequestBody ListingRequestDTO updatedListing) {
+        return listingService.updateListing(clientID, auth, id, updatedListing)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteListing(@PathVariable Long id) {
-        if (listingService.deleteListing(id)) {
+    public ResponseEntity<Void> deleteListing(@PathVariable Long clientID,
+                                              @PathVariable String auth,
+                                              @PathVariable Long id) {
+        if (listingService.deleteListing(clientID, auth, id)) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();

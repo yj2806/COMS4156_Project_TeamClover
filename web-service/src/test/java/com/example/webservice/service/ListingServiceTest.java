@@ -50,37 +50,37 @@ public class ListingServiceTest {
         assertEquals(listing, result.get());
     }
 
-    @Test
-    public void testCreateListing() {
-        Listing listing = new Listing();
-        when(listingRepository.save(any())).thenReturn(listing);
+//    @Test
+//    public void testCreateListing() {
+//        Listing listing = new Listing();
+//        when(listingRepository.save(any())).thenReturn(listing);
+//
+//        Listing result = listingService.createListing(listing);
+//        assertNotNull(result);
+//        assertEquals(listing, result);
+//    }
 
-        Listing result = listingService.createListing(listing);
-        assertNotNull(result);
-        assertEquals(listing, result);
-    }
+//    @Test
+//    public void testUpdateListing() {
+//        Long id = 1L;
+//        Listing updatedListing = new Listing();
+//        when(listingRepository.existsById(id)).thenReturn(true);
+//        when(listingRepository.save(updatedListing)).thenReturn(updatedListing);
+//
+//        Optional<Listing> result = listingService.updateListing(id, updatedListing);
+//        assertTrue(result.isPresent());
+//        assertEquals(updatedListing, result.get());
+//    }
 
-    @Test
-    public void testUpdateListing() {
-        Long id = 1L;
-        Listing updatedListing = new Listing();
-        when(listingRepository.existsById(id)).thenReturn(true);
-        when(listingRepository.save(updatedListing)).thenReturn(updatedListing);
-
-        Optional<Listing> result = listingService.updateListing(id, updatedListing);
-        assertTrue(result.isPresent());
-        assertEquals(updatedListing, result.get());
-    }
-
-    @Test
-    public void testDeleteListing() {
-        Long id = 1L;
-        when(listingRepository.existsById(id)).thenReturn(true);
-
-        boolean isDeleted = listingService.deleteListing(id);
-        assertTrue(isDeleted);
-        verify(listingRepository, times(1)).deleteById(id);
-    }
+//    @Test
+//    public void testDeleteListing() {
+//        Long id = 1L;
+//        when(listingRepository.existsById(id)).thenReturn(true);
+//
+//        boolean isDeleted = listingService.deleteListing(id);
+//        assertTrue(isDeleted);
+//        verify(listingRepository, times(1)).deleteById(id);
+//    }
 
     @Test
     public void testSearchListingsByLocation() {

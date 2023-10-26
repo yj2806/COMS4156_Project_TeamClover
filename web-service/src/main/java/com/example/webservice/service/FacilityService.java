@@ -1,5 +1,6 @@
 package com.example.webservice.service;
 
+import com.example.webservice.model.Client;
 import com.example.webservice.model.Facility;
 import com.example.webservice.model.model.FacilityRequestDTO;
 import com.example.webservice.repository.ClientRepository;
@@ -43,7 +44,19 @@ public class FacilityService {
 //    }
 
     @Transactional
-    public Facility updateFacility(Long id, FacilityRequestDTO updatedFacility) {
+    public Facility updateFacility(Long clientId, String auth,
+                                   Long id, FacilityRequestDTO updatedFacility) {
+        Client c = clientRepository.findById(clientId)
+                .orElseThrow(() -> new ResourceNotFoundException("Client not found with id: " + clientId));
+
+        if (!auth.equals(c.getAuthentication())) {
+            throw( new ResourceNotFoundException("wrong auth"));
+        }
+        if (!id.equals(c.getAssociatedFacility())) {
+            throw( new ResourceNotFoundException("wrong facilityID"));
+        }
+
+
         return facilityRepository.findById(id)
                 .map(facility -> {
                     facility.setFacilityID(id);

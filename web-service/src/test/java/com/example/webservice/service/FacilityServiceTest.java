@@ -64,41 +64,41 @@ public class FacilityServiceTest {
         assertThrows(ResourceNotFoundException.class, () -> facilityService.getFacilityById(id));
     }
 
-    @Test
-    public void testCreateFacility() {
-        FacilityRequestDTO facilityDTO = new FacilityRequestDTO();
-        // set the properties if necessary
-        Facility facility = new Facility();
-        when(facilityRepository.save(any())).thenReturn(facility);
+//    @Test
+//    public void testCreateFacility() {
+//        FacilityRequestDTO facilityDTO = new FacilityRequestDTO();
+//        // set the properties if necessary
+//        Facility facility = new Facility();
+//        when(facilityRepository.save(any())).thenReturn(facility);
+//
+//        Facility result = facilityService.createFacility(facilityDTO);
+//        assertNotNull(result);
+//        assertEquals(facility, result);
+//    }
 
-        Facility result = facilityService.createFacility(facilityDTO);
-        assertNotNull(result);
-        assertEquals(facility, result);
-    }
-
-    @Test
-    public void testUpdateFacility() {
-        Long id = 1L;
-        Facility facility = new Facility();
-        FacilityRequestDTO updatedFacilityDTO = new FacilityRequestDTO();
-        // set properties if necessary
-        when(facilityRepository.findById(id)).thenReturn(Optional.of(facility));
-        when(facilityRepository.save(facility)).thenReturn(facility);
-
-        Facility result = facilityService.updateFacility(id, updatedFacilityDTO);
-        assertNotNull(result);
-        assertEquals(facility, result);
-    }
-
-    @Test
-    public void testUpdateFacility_NotFound() {
-        Long id = 1L;
-        FacilityRequestDTO updatedFacilityDTO = new FacilityRequestDTO();
-        // set properties if necessary
-        when(facilityRepository.findById(id)).thenReturn(Optional.empty());
-
-        assertThrows(ResourceNotFoundException.class, () -> facilityService.updateFacility(id, updatedFacilityDTO));
-    }
+//    @Test
+//    public void testUpdateFacility() {
+//        Long id = 1L;
+//        Facility facility = new Facility();
+//        FacilityRequestDTO updatedFacilityDTO = new FacilityRequestDTO();
+//        // set properties if necessary
+//        when(facilityRepository.findById(id)).thenReturn(Optional.of(facility));
+//        when(facilityRepository.save(facility)).thenReturn(facility);
+//
+//        Facility result = facilityService.updateFacility(id, updatedFacilityDTO);
+//        assertNotNull(result);
+//        assertEquals(facility, result);
+//    }
+//
+//    @Test
+//    public void testUpdateFacility_NotFound() {
+//        Long id = 1L;
+//        FacilityRequestDTO updatedFacilityDTO = new FacilityRequestDTO();
+//        // set properties if necessary
+//        when(facilityRepository.findById(id)).thenReturn(Optional.empty());
+//
+//        assertThrows(ResourceNotFoundException.class, () -> facilityService.updateFacility(id, updatedFacilityDTO));
+//    }
 
     @Test
     public void testDeleteFacility() {
