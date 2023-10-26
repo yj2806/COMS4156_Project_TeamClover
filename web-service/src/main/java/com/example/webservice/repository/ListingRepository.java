@@ -11,7 +11,6 @@ import java.util.List;
 @Repository
 public interface ListingRepository extends JpaRepository<Listing, Long> {
 
-    // Custom query to find listings based on latitude and longitude of associated facility
-    @Query("SELECT l FROM Listing l JOIN l.associatedFacility f WHERE f.latitude = :latitude AND f.longitude = :longitude")
-    List<Listing> findListingsByLocation(@Param("latitude") Double latitude, @Param("longitude") Double longitude);
+    @Query(value = "SELECT l FROM Listing l WHERE acos(sin(:latitude) * sin(l.latitude) + cos(:latitude) * cos(l.latitude) * cos(l.longitude - :longitude)) * 6371 < :radius", nativeQuery = true)
+    List<Listing> findListingsByLocation(@Param("latitude") Double latitude, @Param("longitude") Double longitude, @Param("radius") Double radius);
 }
