@@ -14,9 +14,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ListingRequestDTO {
 
-    @NotNull(message = "associatedFacilityID is required.")
-    private Long associatedFacilityID;
-
     @NotNull(message = "Public status is required.")
     private Boolean isPublic;
 

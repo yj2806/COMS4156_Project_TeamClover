@@ -88,7 +88,7 @@ mvn test
   - Response Codes:
     - ```200: Success```
     - ```400: Invalid Input```
-    - ```409: Developer already exists```
+    - ```409: Client already exists```
 
 - `DELETE /client/delete/{id}`
   - Description
@@ -211,6 +211,7 @@ mvn test
     - query: `clientID:integer`
     - query: `auth:string`
   - Request Body:
+
     - Fields 
       - `isPublic:boolean`
       - `groupCode:integer`  
