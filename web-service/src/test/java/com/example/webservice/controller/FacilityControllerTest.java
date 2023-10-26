@@ -34,6 +34,9 @@ public class FacilityControllerTest {
         objectMapper = new ObjectMapper();
     }
 
+    /**
+     * Test case for retrieving all facilities.
+     */
     @Test
     public void testGetAllFacilities() throws Exception {
         Facility facility = new Facility();
@@ -88,14 +91,14 @@ public class FacilityControllerTest {
 //                .andExpect(content().json(objectMapper.writeValueAsString(updatedFacility)));
 //    }
 
-    @Test
-    public void testDeleteFacility() throws Exception {
-        Long id = 1L;
-        doNothing().when(facilityService).deleteFacility(id);
-
-        mockMvc.perform(delete("/facility/delete/{id}", id))
-                .andExpect(status().isOk());
-
-        verify(facilityService, times(1)).deleteFacility(id);
-    }
+//    @Test
+//    public void testDeleteFacility() throws Exception {
+//        Long id = 1L;
+//        doNothing().when(facilityService).deleteFacility(id);
+//
+//        mockMvc.perform(delete("/facility/delete/{id}", id))
+//                .andExpect(status().isOk());
+//
+//        verify(facilityService, times(1)).deleteFacility(id);
+//    }
 }

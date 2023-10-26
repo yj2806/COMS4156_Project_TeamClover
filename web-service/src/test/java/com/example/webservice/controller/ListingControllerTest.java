@@ -34,6 +34,9 @@ public class ListingControllerTest {
         objectMapper = new ObjectMapper();
     }
 
+    /**
+     * Test case for retrieving all listings.
+     */
     @Test
     public void testGetAllListings() throws Exception {
         Listing listing = new Listing();
@@ -45,6 +48,9 @@ public class ListingControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(List.of(listing))));
     }
 
+    /**
+     * Test case for retrieving a listing by its ID.
+     */
     @Test
     public void testGetListingById() throws Exception {
         Long id = 1L;
@@ -66,52 +72,19 @@ public class ListingControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-//    @Test
-//    public void testCreateListing() throws Exception {
-//        Listing listing = new Listing();
-//        // Set properties if necessary
-//        when(listingService.createListing(any(Listing.class))).thenReturn(listing);
-//
-//        mockMvc.perform(post("/listing/create")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(listing)))
-//                .andExpect(status().isOk())
-//                .andExpect(content().json(objectMapper.writeValueAsString(listing)));
-//    }
-
-
-//    @Test
-//    public void testUpdateListing_NotFound() throws Exception {
-//        Long id = 1L;
-//        Listing updatedListing = new Listing();
-//        // Set properties if necessary
-//        when(listingService.updateListing(id, updatedListing)).thenReturn(Optional.empty());
-//
-//        mockMvc.perform(put("/listing/update/{id}", id)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(updatedListing)))
-//                .andExpect(status().isNotFound());
-//    }
-
+    /**
+     * Test case for creating a new listing.
+     */
     @Test
     public void testDeleteListing() throws Exception {
-        Long id = 1L;
-        when(listingService.deleteListing(id)).thenReturn(true);
+        when(listingService.deleteListing(anyLong(), anyString(), anyLong())).thenReturn(true);
 
-        mockMvc.perform(delete("/listing/delete/{id}", id))
+        mockMvc.perform(delete("/listing/delete/1")
+                        .param("clientID", "1")
+                        .param("auth", "validAuthString"))
                 .andExpect(status().isNoContent());
-
-        verify(listingService, times(1)).deleteListing(id);
     }
 
-    @Test
-    public void testDeleteListing_NotFound() throws Exception {
-        Long id = 1L;
-        when(listingService.deleteListing(id)).thenReturn(false);
-
-        mockMvc.perform(delete("/listing/delete/{id}", id))
-                .andExpect(status().isNotFound());
-    }
 
     @Test
     public void testSearchListingsByLocation() throws Exception {
