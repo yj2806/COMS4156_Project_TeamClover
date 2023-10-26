@@ -47,9 +47,8 @@ public class ListingService {
         return false;
     }
 
-    public List<Listing> searchListingsByLocation(Double latitude, Double longitude) {
-        double radius = 10.0;  // radius in kilometers
-        return listingRepository.findListingsByLocation(latitude, longitude, radius);
+    public List<Listing> searchListingsByLocation(Double latitude, Double longitude, Double range) {
+        return listingRepository.findListingsByLocation(latitude, longitude, range);
     }
 
 }

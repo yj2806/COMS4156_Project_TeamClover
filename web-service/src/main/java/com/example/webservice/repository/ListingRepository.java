@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public interface ListingRepository extends JpaRepository<Listing, Long> {
 
-    @Query(value = "SELECT l FROM Listing l WHERE acos(sin(:latitude) * sin(l.latitude) + cos(:latitude) * cos(l.latitude) * cos(l.longitude - :longitude)) * 6371 < :radius", nativeQuery = true)
-    List<Listing> findListingsByLocation(@Param("latitude") Double latitude, @Param("longitude") Double longitude, @Param("radius") Double radius);
+    @Query(value = "SELECT l.* FROM listings l JOIN facility f ON l.associated_facilityID = f.facilityID WHERE ABS(f.latitude - :latitude) < :range AND ABS(f.longitude - :longitude) < :range", nativeQuery = true)
+    List<Listing> findListingsByLocation(@Param("latitude") Double latitude, @Param("longitude") Double longitude, @Param("range") Double range);
+
 }
