@@ -75,8 +75,16 @@ mvn test
   - Description:
     Creates a client, if it is a distributor client, a new facitliy is also created and associated with the client (each client associated with one facility)
   - Request Body:
-    - `authentication:string`    
-    - `type:string`
+    - Fields:
+      - `authentication:string`
+      - `type:string`
+    - Example:
+      ```
+        {
+        "authentication": "string",
+        "type": "string"
+        }
+      ```
   - Response Codes:
     - ```200: Success```
     - ```400: Invalid Input```
@@ -85,9 +93,9 @@ mvn test
 - `DELETE /client/delete/{id}`
   - Description
     Deletes a client from database, the associated facility and listings will be deleted as well
-  - Request Body:
-    - `id:int`    
-    - `authentication:string`
+  - Parameters:
+    - path: `id:integer`    
+    - query: `authentication:string`
   - Response Codes:
     - ```200: Success```
     - ```401: Invalid authentication code```
@@ -103,90 +111,136 @@ mvn test
 - `GET /facility/{id}`
   - Description:
     Retrieve information on facility with certain ID
-  - Request Body:
-    - `id:int`
+  - Parameters:
+    - path: `id:integer`
   - Response Codes:
     - ```200: Success```
     - ```401: Invalid Token```
 
-- `PUT /facility/update/{id}`
+- `PUT /facility/update/{facilityID}`
   - Description:
     Update facility info, authentication of the client is needed
-  - Request Body:
-    - `clientID:int`
-    - `authentication:string` 
-    - `facilityID:int`
-    - `latitude:float`
-    - `longitude:float`
-    - `isPublic:boolean`
-    - `email:string`
-    - `phone:string`
-    - `hours:string`
+  - Parameters:
+    - path: `facilityID:integer`
+    - query: `clientID:integer`
+    - query: `auth:string`
+    - Request Body: 
+      - Fields:
+        - `latitude:number`
+        - `longitude:number`
+        - `email:string`
+        - `phone:string`
+        - `hours:string`
+        - `public:boolean`
+      - Example:
+        ```
+        {
+        "latitude": 0,
+        "longitude": 0,
+        "email": "string",
+        "phone": "string",
+        "hours": "string",
+        "public": true
+        }
+        ```
   - Response Codes:
     - ```200: Success```
     - ```401: Invalid Token: facility ID```
     - ```404: Invalid Client ID or authentication```
    
-- `GET /listings/search`
+- `GET /listing/search`
   - Description:
     Get all listings (To-Do: search by distance in next iteration)
+  - Parameters:
+    - query: `latitude:number`
+    - query: `longitude:number`
+    - query: `range:number`
   - Response Codes:
     - ```200: Success```
       
-- `GET /listings/`
+- `GET /listing`
   - Description:
     Get all listings
   - Response Codes:
     - ```200: Success```
 
-- `GET /listings/{id}`
+- `GET /listing/{id}`
   - Description:
-    Retrieve information on listing with certain ID
+    Retrieve information on listing with certain ID 
+  - Parameters:
+    - path: `id:integer`
   - Response Codes:
     - ```200: Success```
     - ```401: Invalid Token```
    
-- `POST /listings/create`
+- `POST /listing/create`
   - Description:
     Creates a listing, authentication of the client is needed
+  - Parameters:
+    - query: `clientID:integer`  
+    - query: `auth:string`
   - Request Body:
-    - `clientID:int`  
-    - `authentication:string`    
-    - `isPublic:boolean`
-    - `groupCode:int`  
-    - `itemList:string`    
-    - `ageRequirement:Integer`
-    - `veteranStatus:boolean`  
-    - `gender:string`
+    - Fields: 
+      - `isPublic:boolean`
+      - `groupCode:integer`  
+      - `itemList:string`    
+      - `ageRequirement:integer`
+      - `veteranStatus:boolean`  
+      - `gender:string`
+    - Example:
+      ```
+      {
+      "isPublic": true,
+      "groupCode": 0,
+      "itemList": "string",
+      "ageRequirement": 0,
+      "veteranStatus": true,
+      "gender": "string"
+      }
+      ```
   - Response Codes:
     - ```200: Success```
     - ```400: Invalid Input```
     - ```404: Invalid Client ID or authentication```
    
-- `PUT /listings/update/{id}`
+- `PUT /listing/update/{id}`
   - Description:
     Update listing info, authentication of the client is needed
+  - Parameters
+    - path:`id:integer`
+    - query: `clientID:integer`
+    - query: `auth:string`
   - Request Body:
-    - `clientID:int`  
-    - `authentication:string`    
-    - `isPublic:boolean`
-    - `groupCode:int`  
-    - `itemList:string`    
-    - `ageRequirement:Integer`
-    - `veteranStatus:boolean`  
-    - `gender:string`
+    - Fields 
+      - `isPublic:boolean`
+      - `groupCode:integer`  
+      - `itemList:string`    
+      - `ageRequirement:integer`
+      - `veteranStatus:boolean`  
+      - `gender:string`
+    - Example:
+      ```
+      {
+      "isPublic": true,
+      "groupCode": 0,
+      "itemList": "string",
+      "ageRequirement": 0,
+      "veteranStatus": true,
+      "gender": "string"
+      }
+      ```
   - Response Codes:
     - ```200: Success```
     - ```400: Invalid Input```
     - ```404: Invalid Client ID or authentication```
 
-- `DELETE /listings/delete/{id}`
+- `DELETE /listing/delete/{id}`
   - Description:
     Deletes a listing
-  - Request Body:
-    - `listingID:int`    
-    - `clientID:int`  
-    - `authentication:string`  
+  - Parameters:
+    - query: `clientID:integer`
+    - query: `auth:string`
+    - path:`id:integer`
   - Response Codes:
     - ```200: Success```
     - ```401: Invalid Client ID or authentication```
