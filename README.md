@@ -54,7 +54,7 @@ mvn spring-boot:run
   - Response Codes:
     - ```200: Success```
     - ```401: Invalid authentication code```
-    - ```404: Developer does not exist```
+    - ```404: Client does not exist```
     - ```500: Internal Server Error```
 
 - `GET /facility`
@@ -144,7 +144,7 @@ mvn spring-boot:run
     - ```404: Invalid Client ID or authentication```
 
 - `DELETE /listings/delete/{id}`
-  - Description
+  - Description:
     Deletes a listing
   - Request Body:
     - `listingID:int`    
