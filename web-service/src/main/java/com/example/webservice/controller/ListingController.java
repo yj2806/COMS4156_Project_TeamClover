@@ -29,16 +29,16 @@ public class ListingController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Listing> createListing(@PathVariable Long clientID,
-                                                 @PathVariable String auth,
+    public ResponseEntity<Listing> createListing(@RequestParam Long clientID,
+                                                 @RequestParam String auth,
                                                  @RequestBody ListingRequestDTO listing) {
         // We can include validations here for constraints if needed
         return ResponseEntity.ok(listingService.createListing(clientID, auth, listing));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Listing> updateListing(@PathVariable Long clientID,
-                                                 @PathVariable String auth,
+    public ResponseEntity<Listing> updateListing(@RequestParam Long clientID,
+                                                 @RequestParam String auth,
                                                  @PathVariable Long id, @RequestBody ListingRequestDTO updatedListing) {
         return listingService.updateListing(clientID, auth, id, updatedListing)
                 .map(ResponseEntity::ok)
@@ -46,8 +46,8 @@ public class ListingController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteListing(@PathVariable Long clientID,
-                                              @PathVariable String auth,
+    public ResponseEntity<Void> deleteListing(@RequestParam Long clientID,
+                                              @RequestParam String auth,
                                               @PathVariable Long id) {
         if (listingService.deleteListing(clientID, auth, id)) {
             return ResponseEntity.noContent().build();
