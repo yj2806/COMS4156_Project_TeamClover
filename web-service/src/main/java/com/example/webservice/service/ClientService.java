@@ -10,7 +10,6 @@ import com.example.webservice.repository.FacilityRepository;
 import com.example.webservice.repository.ListingRepository;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,7 +46,10 @@ public class ClientService {
     // Create a new client with given ClientRequestDTO
     @Transactional
     public Client createClient(ClientRequestDTO client) {
-        ClientType.isValid(client.getType());
+        boolean validType = ClientType.isValid(client.getType());
+        if(!validType){
+            throw new IllegalArgumentException("Valid type are DISTRIBUTOR and NON_DISTRIBUTOR");
+        }
 
         Client newClient = new Client();
         newClient.setAssociatedFacility(createFacility());

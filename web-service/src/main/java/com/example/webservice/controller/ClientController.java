@@ -3,8 +3,12 @@ package com.example.webservice.controller;
 import com.example.webservice.model.Client;
 import com.example.webservice.model.model.ClientRequestDTO;
 import com.example.webservice.service.ClientService;
+import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -35,7 +39,12 @@ public class ClientController {
     // POST request to create a new client
     @PostMapping("/create")
     public Client createClient(@RequestBody ClientRequestDTO client) {
-        return clientService.createClient(client);
+        try{
+            return clientService.createClient(client);
+        }catch (IllegalArgumentException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+
     }
 
 //    // PUT request to update an existing client by their ID
@@ -47,9 +56,18 @@ public class ClientController {
     // DELETE request to delete a client by their ID
     @DeleteMapping("/delete/{id}")
     public void deleteClient(@PathVariable Long id, @RequestParam String auth) {
-        Client client =  clientService.getClientById(id);
-        if (auth.equals(client.getAuthentication())) {
-            clientService.deleteClient(id);
+        try {
+            Client client = clientService.getClientById(id);
+
+            if (auth.equals(client.getAuthentication())) {
+                clientService.deleteClient(id);
+            }else{
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "auth and id does not match");
+            }
+
+        }catch (ResourceNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
+
     }
 }
