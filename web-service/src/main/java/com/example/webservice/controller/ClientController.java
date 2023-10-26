@@ -1,8 +1,9 @@
 package com.example.webservice.controller;
 
 import com.example.webservice.model.Client;
-import com.example.webservice.repository.ClientRepository;
-import org.apache.velocity.exception.ResourceNotFoundException;
+import com.example.webservice.model.model.ClientRequestDTO;
+import com.example.webservice.service.ClientService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,43 +12,44 @@ import java.util.List;
 @RequestMapping("client")
 public class ClientController {
 
-    private final ClientRepository clientRepository;
+    private final ClientService clientService;
 
-    public ClientController(ClientRepository clientRepository) {
-        this.clientRepository = clientRepository;
+    @Autowired
+    public ClientController(ClientService clientService) {
+        this.clientService = clientService;
     }
 
-    @GetMapping
-    public List<Client> getAllClients() {
-        return clientRepository.findAll();
+
+//    // GET request to retrieve all clients
+//    @GetMapping
+//    public List<Client> getAllClients() {
+//        return clientService.getAllClients();
+//    }
+
+//    // GET request to retrieve a client by their ID
+//    @GetMapping("/{id}")
+//    public Client getClientById(@PathVariable Long id) {
+//        return clientService.getClientById(id);
+//    }
+
+    // POST request to create a new client
+    @PostMapping("/create")
+    public Client createClient(@RequestBody ClientRequestDTO client) {
+        return clientService.createClient(client);
     }
 
-    @GetMapping("/{id}")
-    public Client getClientById(@PathVariable Long id) {
-        return clientRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Client not found with id: " + id));
-    }
+//    // PUT request to update an existing client by their ID
+//    @PutMapping("/update/{id}")
+//    public Client updateClient(@PathVariable Long id, @RequestBody ClientRequestDTO updatedClient) {
+//        return clientService.updateClient(id, updatedClient);
+//    }
 
-    @PostMapping
-    public Client createClient(@RequestBody Client client) {
-        return clientRepository.save(client);
-    }
-
-    @PutMapping("/{id}")
-    public Client updateClient(@PathVariable Long id, @RequestBody Client updatedClient) {
-        return clientRepository.findById(id)
-                .map(client -> {
-                    // Update fields here
-                    // For example: client.setAuthentication(updatedClient.getAuthentication());
-                    // Update other fields as needed
-                    return clientRepository.save(client);
-                })
-                .orElseThrow(() -> new ResourceNotFoundException("Client not found with id: " + id));
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteClient(@PathVariable Long id) {
-        clientRepository.deleteById(id);
+    // DELETE request to delete a client by their ID
+    @DeleteMapping("/delete/{id}")
+    public void deleteClient(@PathVariable Long id, @RequestParam String auth) {
+        Client client =  clientService.getClientById(id);
+        if (auth.equals(client.getAuthentication())) {
+            clientService.deleteClient(id);
+        }
     }
 }
-

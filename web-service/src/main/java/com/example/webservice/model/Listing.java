@@ -1,14 +1,12 @@
 package com.example.webservice.model;
 
 import jakarta.persistence.*;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+
 
 @Entity
 @Table(name = "listings")
 public class Listing {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "listingID")
@@ -36,5 +34,24 @@ public class Listing {
     @Column(name = "gender")
     private String gender;
 
+
     // Getter and Setter methods
+
+    public Long getListingID() {
+        return listingID;
+    }
+
+    public void setListingID(Long listingID) {
+        this.listingID = listingID;
+    }
+
+
+    public Facility getAssociatedFacility() {
+        return associatedFacility;
+    }
+
+    public void setAssociatedFacility(Facility associatedFacility) {
+        this.associatedFacility = associatedFacility;
+    }
+
 }
