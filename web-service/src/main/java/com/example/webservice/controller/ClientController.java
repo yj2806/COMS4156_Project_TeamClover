@@ -12,12 +12,21 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+/**
+ * Rest controller for handling client-related operations.
+ * Provides endpoints for creating, updating, retrieving, and deleting clients.
+ */
 @RestController
 @RequestMapping("client")
 public class ClientController {
 
     private final ClientService clientService;
 
+    /**
+     * Constructor for dependency injection of the ClientService.
+     *
+     * @param clientService Service to handle client operations.
+     */
     @Autowired
     public ClientController(ClientService clientService) {
         this.clientService = clientService;

@@ -30,20 +30,35 @@ public class ClientService {
         this.listingRepository = listingRepository;
     }
 
-    // get a list of all clients
+    /**
+     * Retrieves a list of all clients.
+     *
+     * @return the list of all clients
+     */
     @Transactional
     public List<Client> getAllClients() {
         return clientRepository.findAll();
     }
 
-    // get a client by  ID
+    /**
+     * Retrieves a client based on the given ID.
+     *
+     * @param id the ID of the client to retrieve
+     * @return the client with the given ID
+     * @throws ResourceNotFoundException if no client is found with the given ID
+     */
     @Transactional
     public Client getClientById(Long id) {
         return clientRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Client not found with id: " + id));
     }
 
-    // Create a new client with given ClientRequestDTO
+    /**
+     * Creates a new client using the given ClientRequestDTO.
+     *
+     * @param client the client data transfer object containing client details
+     * @return the newly created client
+     */
     @Transactional
     public Client createClient(ClientRequestDTO client) {
         boolean validType = ClientType.isValid(client.getType());
@@ -71,7 +86,12 @@ public class ClientService {
 //                .orElseThrow(() -> new ResourceNotFoundException("Client not found with id: " + id));
 //    }
 
-    // Delete a client by ID
+    /**
+     * Deletes a client with the given ID.
+     * This also deletes associated listings and facility.
+     *
+     * @param id the ID of the client to delete
+     */
     @Transactional
     public void deleteClient(Long id) {
         Client client = getClientById(id);
@@ -84,7 +104,13 @@ public class ClientService {
         clientRepository.deleteById(id);
     }
 
-    // Helper method to retrieve a facility by ID
+    /**
+     * Helper method to retrieve a facility based on its ID.
+     *
+     * @param id the ID of the facility to retrieve
+     * @return the facility with the given ID
+     * @throws ResourceNotFoundException if no facility is found with the given ID
+     */
     private Facility getFacility(Long id){
         Optional<Facility> f = facilityRepository.findById(id);
         if(f.isPresent()){
