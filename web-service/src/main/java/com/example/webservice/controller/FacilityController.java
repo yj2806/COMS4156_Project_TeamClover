@@ -73,7 +73,6 @@ public class FacilityController {
      *         HttpStatus.UNAUTHORIZED (401) for invalid token.
      *         HttpStatus.NOT_FOUND (404) for invalid client ID or authentication.
      */
-    @PutMapping("/update/{id}")
     public ResponseEntity<Facility> updateFacility(
             @PathVariable Long clientID,
             @PathVariable String auth,
@@ -88,6 +87,7 @@ public class FacilityController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteFacility(@PathVariable Long id) {

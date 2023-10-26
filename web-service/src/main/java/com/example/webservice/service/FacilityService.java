@@ -74,7 +74,7 @@ public class FacilityService {
         if (!auth.equals(c.getAuthentication())) {
             throw( new ResourceNotFoundException("wrong auth"));
         }
-        if (!id.equals(c.getAssociatedFacility())) {
+        if (!id.equals(c.getAssociatedFacility().getFacilityID())) {
             throw( new ResourceNotFoundException("wrong facilityID"));
         }
 
