@@ -50,7 +50,7 @@ public class ListingController {
 
     // If the location-based search gets implemented
     @GetMapping("/search")
-    public ResponseEntity<List<Listing>> searchListingsByLocation(@RequestParam Double latitude, @RequestParam Double longitude) {
-        return ResponseEntity.ok(listingService.searchListingsByLocation(latitude, longitude));
+    public ResponseEntity<List<Listing>> searchListingsByLocation(@RequestParam Double latitude, @RequestParam Double longitude, @RequestParam Double range) {
+        return ResponseEntity.ok(listingService.searchListingsByLocation(latitude, longitude, range));
     }
 }

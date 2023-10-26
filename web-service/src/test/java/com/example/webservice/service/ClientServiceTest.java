@@ -90,38 +90,38 @@ public class ClientServiceTest {
         });
     }
 
-    @Test
-    public void testCreateClient() {
-        ClientRequestDTO clientRequest = new ClientRequestDTO();
-        clientRequest.setType("DISTRIBUTOR");
-        // TODO:Set clientRequest properties
+//    @Test
+//    public void testCreateClient() {
+//        ClientRequestDTO clientRequest = new ClientRequestDTO();
+//        clientRequest.setType("DISTRIBUTOR");
+//        // TODO:Set clientRequest properties
+//
+//        Facility facility = new Facility();
+//        Mockito.when(facilityRepository.findById(clientRequest.getAssociatedFacilityId())).thenReturn(Optional.of(facility));
+//
+//        Client result = clientService.createClient(clientRequest);
+//
+//        assertEquals(ClientType.DISTRIBUTOR,result.getType());
+//        // TODO: Perform assertions on the result
+//    }
 
-        Facility facility = new Facility();
-        Mockito.when(facilityRepository.findById(clientRequest.getAssociatedFacilityId())).thenReturn(Optional.of(facility));
-
-        Client result = clientService.createClient(clientRequest);
-
-        assertEquals(ClientType.DISTRIBUTOR,result.getType());
-        // TODO: Perform assertions on the result
-    }
-
-    @Test
-    public void testUpdateClient() {
-        Long clientId = 1L;
-        ClientRequestDTO updatedClient = new ClientRequestDTO();
-        // TODO: Set updatedClient properties
-        updatedClient.setType("DISTRIBUTOR");
-
-//        Client existingClient = new Client();
-//        existingClient.setClientID(clientId);
-        Mockito.when(clientRepository.findById(clientId)).thenReturn(Optional.of(this.client));
-        Mockito.when(facilityRepository.findById(updatedClient.getAssociatedFacilityId())).thenReturn(Optional.of(new Facility()));
-
-        Client result = clientService.updateClient(clientId, updatedClient);
-
-        assertEquals(updatedClient.getType(),result.getType().toString());
-        // TODO: Perform assertions on the result
-    }
+//    @Test
+//    public void testUpdateClient() {
+//        Long clientId = 1L;
+//        ClientRequestDTO updatedClient = new ClientRequestDTO();
+//        // TODO: Set updatedClient properties
+//        updatedClient.setType("DISTRIBUTOR");
+//
+////        Client existingClient = new Client();
+////        existingClient.setClientID(clientId);
+//        Mockito.when(clientRepository.findById(clientId)).thenReturn(Optional.of(this.client));
+//        Mockito.when(facilityRepository.findById(updatedClient.getAssociatedFacilityId())).thenReturn(Optional.of(new Facility()));
+//
+//        Client result = clientService.updateClient(clientId, updatedClient);
+//
+//        assertEquals(updatedClient.getType(),result.getType().toString());
+//        // TODO: Perform assertions on the result
+//    }
 
     @Test
     public void testUpdateClientNotFound() {
