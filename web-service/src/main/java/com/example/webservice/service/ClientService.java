@@ -105,6 +105,7 @@ public class ClientService {
         clientRepository.deleteById(id);
     }
 
+    /**
      * Helper method to retrieve a facility based on its ID.
      *
      * @param id the ID of the facility to retrieve
