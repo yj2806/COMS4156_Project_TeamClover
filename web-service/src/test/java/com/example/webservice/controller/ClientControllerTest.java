@@ -2,21 +2,27 @@ package com.example.webservice.controller;
 
 import com.example.webservice.model.Client;
 import com.example.webservice.model.model.ClientRequestDTO;
+import com.example.webservice.model.type.ClientType;
 import com.example.webservice.service.ClientService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.velocity.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doNothing;
 
 @SpringBootTest
 public class ClientControllerTest {
@@ -31,80 +37,130 @@ public class ClientControllerTest {
 
     @BeforeEach
     public void setup() {
-        MockitoAnnotations.openMocks(this);
+//        MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(clientController).build();
     }
 
-    @Test
-    public void testGetAllClients() throws Exception {
-        List<Client> clients = new ArrayList<>();
-        // TODO:Add test clients to the list
-
-        Mockito.when(clientService.getAllClients()).thenReturn(clients);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/client"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-
-        // TODO: Add assertions for the response content
-    }
-
-    @Test
-    public void testGetClientById() throws Exception {
-        Long clientId = 1L;
-        Client client = new Client();
-        // TODO:Set properties of the test client
-
-        Mockito.when(clientService.getClientById(clientId)).thenReturn(client);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/client/" + clientId))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-
-        // TODO:Add assertions for the response content
-    }
+    static private  ClientRequestDTO clientRequst = new ClientRequestDTO("authentication", "DISTRIBUTOR");
+//    @Test
+//    public void testGetAllClients() throws Exception {
+//        List<Client> clients = new ArrayList<>();
+//        for(int i = 0; i < 5; i ++){
+//            clients.add(new Client());
+//        }
+//
+//        Mockito.when(clientService.getAllClients()).thenReturn(clients);
+//
+//        mockMvc.perform(MockMvcRequestBuilders.get("/client"))
+//                .andExpect(MockMvcResultMatchers.status().isOk());
+//
+//        // TODO: Add assertions for the response content
+//    }
 
     @Test
-    public void testCreateClient() throws Exception {
-        ClientRequestDTO clientRequestDTO = new ClientRequestDTO();
-        // TODO: Set properties of the test client request DTO
+    public void testCreateClient200() throws Exception {
 
         Client createdClient = new Client();
-        // TODO:Set properties of the created client
+        createdClient.setAuthentication(clientRequst.getAuthentication());
+        createdClient.setType(ClientType.fromString(clientRequst.getType()));
 
-        Mockito.when(clientService.createClient(clientRequestDTO)).thenReturn(createdClient);
+        Mockito.when(clientService.createClient(clientRequst)).thenReturn(createdClient);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/client/create")
+        ObjectMapper mapper = new ObjectMapper();
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/client/create")
                         .contentType("application/json")
-                        .content("{\"property1\": \"value1\", \"property2\": \"value2\"}"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                        .content(mapper.writeValueAsString(clientRequst)))
+                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
 
-        //TODO: Add assertions
+        String content = result.getResponse().getContentAsString();
+
+        assertEquals(content, mapper.writeValueAsString(createdClient));
+
     }
 
     @Test
-    public void testUpdateClient() throws Exception {
-        Long clientId = 1L;
-        ClientRequestDTO updatedClientDTO = new ClientRequestDTO();
-        // TODO: Set properties of the updated client request DTO
+    public void testCreateClient400() throws Exception {
 
-        Client updatedClient = new Client();
-        // TODO: Set properties of the updated client
+        ClientRequestDTO request = new ClientRequestDTO();
+        request.setType("bad");
+        request.setAuthentication("authentication");
 
-        Mockito.when(clientService.updateClient(clientId, updatedClientDTO)).thenReturn(updatedClient);
+        Mockito.when(clientService.createClient(request)).thenThrow(new IllegalArgumentException());
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/client/update/" + clientId)
+        ObjectMapper mapper = new ObjectMapper();
+
+        System.out.println(mapper.writeValueAsString(request));
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/client/create")
                         .contentType("application/json")
-                        .content("{\"property1\": \"updatedValue1\", \"property2\": \"updatedValue2\"}"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                        .content(mapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest()).andReturn();
 
-        // TODO: Add assertions for the response content
+    }
+
+//    @Test
+//    public void testUpdateClient() throws Exception {
+//        Long clientId = 1L;
+//        ClientRequestDTO updatedClientDTO = new ClientRequestDTO();
+//        // TODO: Set properties of the updated client request DTO
+//
+//        Client updatedClient = new Client();
+//        // TODO: Set properties of the updated client
+//
+//        Mockito.when(clientService.updateClient(clientId, updatedClientDTO)).thenReturn(updatedClient);
+//
+//        mockMvc.perform(MockMvcRequestBuilders.put("/client/update/" + clientId)
+//                        .contentType("application/json")
+//                        .content("{\"property1\": \"updatedValue1\", \"property2\": \"updatedValue2\"}"))
+//                .andExpect(MockMvcResultMatchers.status().isOk());
+//
+//        // TODO: Add assertions for the response content
+//    }
+
+    @Test
+    public void testDeleteClient401() throws Exception {
+        Long clientId = 1L;
+
+//        Client client = clientService.createClient(new ClientRequestDTO("authentication","DISTRIBUTION"));
+        Client client = new Client();
+        doNothing().when(clientService).deleteClient(clientId);
+
+        Mockito.when(clientService.getClientById(clientId)).thenReturn(client);
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete("/client/delete/" + clientId).param("auth","auth"))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized()).andReturn();
+
+        // TODO:Add assertions
     }
 
     @Test
-    public void testDeleteClient() throws Exception {
+    public void testDeleteClient200() throws Exception {
         Long clientId = 1L;
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/client/delete/" + clientId))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+//        Client client = clientService.createClient(new ClientRequestDTO("authentication","DISTRIBUTION"));
+        Client client = new Client();
+        client.setAuthentication("auth");
+        doNothing().when(clientService).deleteClient(clientId);
+
+        Mockito.when(clientService.getClientById(clientId)).thenReturn(client);
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete("/client/delete/" + clientId).param("auth","auth"))
+                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+
+        // TODO:Add assertions
+    }
+
+    @Test
+    public void testDeleteClient404() throws Exception {
+        Long clientId = 1L;
+
+//        Client client = clientService.createClient(new ClientRequestDTO("authentication","DISTRIBUTION"));
+        Client client = new Client();
+        client.setAuthentication("auth");
+        doNothing().when(clientService).deleteClient(clientId);
+
+        Mockito.when(clientService.getClientById(clientId)).thenThrow(new ResourceNotFoundException(""));
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete("/client/delete/" + clientId).param("auth","auth"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound()).andReturn();
 
         // TODO:Add assertions
     }

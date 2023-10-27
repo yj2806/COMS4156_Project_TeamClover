@@ -6,7 +6,6 @@ import com.example.webservice.service.ClientService;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -19,7 +18,6 @@ import java.util.List;
 @RestController
 @RequestMapping("client")
 public class ClientController {
-
     private final ClientService clientService;
 
     /**
@@ -45,24 +43,36 @@ public class ClientController {
 //        return clientService.getClientById(id);
 //    }
 
-    // POST request to create a new client
+    /**
+     * Create a new client.
+     * @param client client info
+     * @return the created client.
+     */
     @PostMapping("/create")
     public Client createClient(@RequestBody ClientRequestDTO client) {
-        try{
+        try {
             return clientService.createClient(client);
-        }catch (IllegalArgumentException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                                            e.getMessage());
         }
 
     }
 
 //    // PUT request to update an existing client by their ID
 //    @PutMapping("/update/{id}")
-//    public Client updateClient(@PathVariable Long id, @RequestBody ClientRequestDTO updatedClient) {
+//    public Client updateClient(@PathVariable Long id,
+//                              @RequestBody ClientRequestDTO updatedClient) {
 //        return clientService.updateClient(id, updatedClient);
 //    }
 
     // DELETE request to delete a client by their ID
+
+    /**
+     * Delete client.
+     * @param id client id, auth
+     * @param auth client authentication
+     */
     @DeleteMapping("/delete/{id}")
     public void deleteClient(@PathVariable Long id, @RequestParam String auth) {
         try {
@@ -70,12 +80,14 @@ public class ClientController {
 
             if (auth.equals(client.getAuthentication())) {
                 clientService.deleteClient(id);
-            }else{
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "auth and id does not match");
+            } else {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                        "auth and id does not match");
             }
 
-        }catch (ResourceNotFoundException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (ResourceNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    e.getMessage());
         }
 
     }
