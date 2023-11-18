@@ -91,10 +91,10 @@ public class ClientControllerTest {
         ObjectMapper mapper = new ObjectMapper();
 
         System.out.println(mapper.writeValueAsString(request));
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/client/create")
+        mockMvc.perform(MockMvcRequestBuilders.post("/client/create")
                         .contentType("application/json")
                         .content(mapper.writeValueAsString(request)))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest()).andReturn();
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
 
     }
 
@@ -126,10 +126,8 @@ public class ClientControllerTest {
         doNothing().when(clientService).deleteClient(clientId);
 
         Mockito.when(clientService.getClientById(clientId)).thenReturn(client);
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete("/client/delete/" + clientId).param("auth","auth"))
-                .andExpect(MockMvcResultMatchers.status().isUnauthorized()).andReturn();
-
-        // TODO:Add assertions
+        mockMvc.perform(MockMvcRequestBuilders.delete("/client/delete/" + clientId).param("auth","auth"))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 
     @Test
@@ -142,10 +140,8 @@ public class ClientControllerTest {
         doNothing().when(clientService).deleteClient(clientId);
 
         Mockito.when(clientService.getClientById(clientId)).thenReturn(client);
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete("/client/delete/" + clientId).param("auth","auth"))
-                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
-
-        // TODO:Add assertions
+        mockMvc.perform(MockMvcRequestBuilders.delete("/client/delete/" + clientId).param("auth","auth"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
@@ -159,9 +155,8 @@ public class ClientControllerTest {
 
         Mockito.when(clientService.getClientById(clientId)).thenThrow(new ResourceNotFoundException(""));
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete("/client/delete/" + clientId).param("auth","auth"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound()).andReturn();
+        mockMvc.perform(MockMvcRequestBuilders.delete("/client/delete/" + clientId).param("auth","auth"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
 
-        // TODO:Add assertions
     }
 }

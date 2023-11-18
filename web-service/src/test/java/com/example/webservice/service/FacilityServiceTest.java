@@ -1,5 +1,6 @@
 package com.example.webservice.service;
 
+import com.example.webservice.model.Client;
 import com.example.webservice.model.Facility;
 import com.example.webservice.model.model.FacilityRequestDTO;
 import com.example.webservice.repository.ClientRepository;
@@ -76,35 +77,100 @@ public class FacilityServiceTest {
 //        assertEquals(facility, result);
 //    }
 
-//    @Test
-//    public void testUpdateFacility() {
-//        Long id = 1L;
-//        Facility facility = new Facility();
-//        FacilityRequestDTO updatedFacilityDTO = new FacilityRequestDTO();
-//        // set properties if necessary
-//        when(facilityRepository.findById(id)).thenReturn(Optional.of(facility));
-//        when(facilityRepository.save(facility)).thenReturn(facility);
-//
-//        Facility result = facilityService.updateFacility(id, updatedFacilityDTO);
-//        assertNotNull(result);
-//        assertEquals(facility, result);
-//    }
-//
-//    @Test
-//    public void testUpdateFacility_NotFound() {
-//        Long id = 1L;
-//        FacilityRequestDTO updatedFacilityDTO = new FacilityRequestDTO();
-//        // set properties if necessary
-//        when(facilityRepository.findById(id)).thenReturn(Optional.empty());
-//
-//        assertThrows(ResourceNotFoundException.class, () -> facilityService.updateFacility(id, updatedFacilityDTO));
-//    }
+    @Test
+    public void testUpdateFacility() {
+        Long clientID = 1L;
+        String auth = "admin";
+        Long id = 1L;
+        Facility facility = new Facility();
+        facility.setFacilityID(id);
+        FacilityRequestDTO updatedFacilityDTO = new FacilityRequestDTO();
+        updatedFacilityDTO.setEmail("a@a.com");
+        updatedFacilityDTO.setPublic(true);
+        updatedFacilityDTO.setPhone("1234567890");
+        updatedFacilityDTO.setLongitude(1.1F);
+        updatedFacilityDTO.setLatitude(1.1F);
+        updatedFacilityDTO.setHours("12");
+        // set properties if necessary
+        when(facilityRepository.findById(id)).thenReturn(Optional.of(facility));
+        when(facilityRepository.save(facility)).thenReturn(facility);
+        Client client = new Client();
+        client.setAuthentication(auth);
+        client.setAssociatedFacility(facility);
+        when(clientRepository.findById(clientID)).thenReturn(Optional.of(client));
 
-//    @Test
-//    public void testDeleteFacility() {
-//        Long id = 1L;
-//        facilityService.deleteFacility(id);
-//
-//        verify(facilityRepository, times(1)).deleteById(id);
-//    }
+        Facility result = facilityService.updateFacility(clientID, auth, id, updatedFacilityDTO);
+        assertNotNull(result);
+        assertEquals("1234567890", result.getPhone());
+        assertEquals("a@a.com", result.getEmail());
+    }
+
+    @Test
+    public void testUpdateFacility_WrongAuth() {
+        Long clientID = 1L;
+        String auth = "admin";
+        Long id = 1L;
+        Facility facility = new Facility();
+        facility.setFacilityID(id);
+        FacilityRequestDTO updatedFacilityDTO = new FacilityRequestDTO();
+        // set properties if necessary
+        when(facilityRepository.findById(id)).thenReturn(Optional.of(facility));
+        when(facilityRepository.save(facility)).thenReturn(facility);
+        Client client = new Client();
+        client.setAuthentication(auth+"abc");
+        client.setAssociatedFacility(facility);
+        when(clientRepository.findById(clientID)).thenReturn(Optional.of(client));
+
+        assertThrows(ResourceNotFoundException.class, () -> facilityService.updateFacility(clientID, auth, id, updatedFacilityDTO));
+    }
+
+    @Test
+    public void testUpdateFacility_WrongFacilityID() {
+        Long clientID = 1L;
+        String auth = "admin";
+        Long id = 1L;
+        Long id2 = 2L;
+        Facility facility = new Facility();
+        facility.setFacilityID(id2);
+        FacilityRequestDTO updatedFacilityDTO = new FacilityRequestDTO();
+        // set properties if necessary
+        when(facilityRepository.findById(id)).thenReturn(Optional.of(facility));
+        when(facilityRepository.save(facility)).thenReturn(facility);
+        Client client = new Client();
+        client.setAuthentication(auth+"abc");
+        client.setAssociatedFacility(facility);
+        when(clientRepository.findById(clientID)).thenReturn(Optional.of(client));
+
+        assertThrows(ResourceNotFoundException.class, () -> facilityService.updateFacility(clientID, auth, id, updatedFacilityDTO));
+    }
+
+    @Test
+    public void testUpdateFacility_NotFound() {
+        Long clientID = 1L;
+        String auth = "admin";
+        Long id = 1L;
+        FacilityRequestDTO updatedFacilityDTO = new FacilityRequestDTO();
+        // set properties if necessary
+        when(facilityRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> facilityService.updateFacility(clientID, auth, id, updatedFacilityDTO));
+    }
+
+    @Test
+    public void testDeleteFacility() {
+        Long id = 1L;
+        when(facilityRepository.existsById(id)).thenReturn(true);
+        facilityService.deleteFacility(id);
+
+        verify(facilityRepository, times(1)).deleteById(id);
+    }
+
+    @Test
+    public void testDeleteFacility_NotFound() {
+        Long id = 1L;
+        when(facilityRepository.existsById(id)).thenReturn(false);
+        facilityService.deleteFacility(id);
+
+        verify(facilityRepository, times(0)).deleteById(id);
+    }
 }
