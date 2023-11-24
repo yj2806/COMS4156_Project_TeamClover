@@ -103,17 +103,17 @@ public class ListingService {
      * @param updatedListing the new details for the listing
      * @return an Optional containing the updated listing, or empty if not found
      */
-    public Optional<Listing> updateListing(Long clientID,
+    public Optional<Listing> updateListing(Long id,
+                                           Long clientID,
                                            String auth,
-                                           Long id,
                                            ListingRequestDTO updatedListing) {
         Client c = clientRepository.findById(clientID)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Client not found with id: " + clientID));
 
         if (!auth.equals(c.getAuthentication())) {
-            throw (new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "wrong auth"));
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                    "Authentication failed");
         }
         if (listingRepository.existsById(id)) {
             Listing toUpdate = listingRepository.findById(id).orElseThrow(
@@ -179,17 +179,30 @@ public class ListingService {
     }
 
     /**
-     * Searches for listings based on a location and range.
+     * Searches for listings based on a combination of criteria including public/private status,
+     * group code, item list, age requirement, veteran status, gender, and location.
      *
-     * @param latitude  the latitude of the search center
-     * @param longitude the longitude of the search center
-     * @param range     the range (in units) from the center to search for listings
-     * @return a list of listings found within the specified range of the location
+     * This method combines both non-location and location-based criteria to filter listings.
+     * It leverages a single database query to efficiently retrieve listings that match all specified criteria.
+     *
+     * @param isPublic        Boolean flag indicating if the listing is public. If null, this criterion is ignored.
+     * @param groupCode       Integer representing the group code for private listings. If null, this criterion is ignored.
+     * @param itemList        String representing the list of items in the listing. If null, this criterion is ignored.
+     * @param ageRequirement  Integer specifying the age requirement for the listing. If null, this criterion is ignored.
+     * @param veteranStatus   Boolean flag indicating if the listing is for veterans. If null, this criterion is ignored.
+     * @param gender          String indicating the gender requirement for the listing. If null, this criterion is ignored.
+     * @param latitude        Double representing the latitude for location-based filtering.
+     * @param longitude       Double representing the longitude for location-based filtering.
+     * @param range           Double representing the range (in appropriate units) for location-based filtering.
+     * @return                A list of {@link Listing} objects that match the specified criteria.
      */
-    public List<Listing> searchListingsByLocation(Double latitude,
-                                                  Double longitude,
-                                                  Double range) {
-        return listingRepository.findListingsByLocation(latitude, longitude, range);
+    public List<Listing> searchListings(Boolean isPublic, Integer groupCode, String itemList,
+                                        Integer ageRequirement, Boolean veteranStatus, String gender,
+                                        Double latitude, Double longitude, Double range) {
+        // Call the repository method with all criteria
+        return listingRepository.findListingsByCriteria(isPublic, groupCode, itemList,
+                ageRequirement, veteranStatus, gender,
+                latitude, longitude, range);
     }
 
 }

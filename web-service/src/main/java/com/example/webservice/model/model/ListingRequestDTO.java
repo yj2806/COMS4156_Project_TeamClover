@@ -17,6 +17,10 @@ public class ListingRequestDTO {
     @NotNull(message = "Public status is required.")
     private Boolean isPublic;
 
+    public boolean isPublic() {
+        return isPublic;
+    }
+
     private Integer groupCode;
 
     @NotNull(message = "Item list is required.")

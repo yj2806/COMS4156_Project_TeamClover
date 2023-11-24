@@ -3,11 +3,13 @@ package com.example.webservice.controller;
 import com.example.webservice.model.Listing;
 import com.example.webservice.service.ListingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.webservice.model.model.ListingRequestDTO;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Controller for handling operations related to the {@link Listing} entity.
@@ -38,7 +40,7 @@ public class ListingController {
      * @return {@link ResponseEntity} containing the specified listing or a not found status.
      * Response Codes:
      * 200: Success
-     * 401: Invalid Token
+     * 404: Invalid Token
      */
     @GetMapping("/{id}")
     public ResponseEntity<Listing> getListingById(@PathVariable Long id) {
@@ -60,12 +62,22 @@ public class ListingController {
      * 404: Invalid Client ID or authentication
      */
     @PostMapping("/create")
-    public ResponseEntity<Listing> createListing(@RequestParam Long clientID,
-                                                 @RequestParam String auth,
-                                                 @RequestBody ListingRequestDTO listing) {
-        // We can include validations here for constraints if needed
-        return ResponseEntity.ok(listingService.createListing(
-                clientID, auth, listing));
+    public ResponseEntity<?> createListing(@RequestParam Long clientID,
+                                           @RequestParam String auth,
+                                           @RequestBody ListingRequestDTO listing) {
+        // Validate the listing details
+        if (!listing.getIsPublic() && listing.getGroupCode() == null) {
+            return ResponseEntity.badRequest().body("Group code is required for private listings.");
+        }
+
+        // Assuming listingService.createListing returns a Listing object or null
+        Listing createdListing = listingService.createListing(clientID, auth, listing);
+        if (createdListing != null) {
+            return ResponseEntity.ok(createdListing);
+        } else {
+            // Handle the case where listing creation fails
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating listing");
+        }
     }
 
     /**
@@ -82,14 +94,25 @@ public class ListingController {
      * 404: Invalid Client ID or authentication
      */
     @PutMapping("/update/{id}")
-    public ResponseEntity<Listing> updateListing(@RequestParam Long clientID,
+    public ResponseEntity<?> updateListing(@PathVariable Long id,
+                                                 @RequestParam Long clientID,
                                                  @RequestParam String auth,
-                                                 @PathVariable Long id,
                                                  @RequestBody ListingRequestDTO updatedListing) {
-        return listingService.updateListing(clientID, auth, id, updatedListing)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        // Validate the listing details
+        if (!updatedListing.getIsPublic() && updatedListing.getGroupCode() == null) {
+            return ResponseEntity.badRequest().body("Group code is required for private listings.");
+        }
+
+        // Assuming listingService.updateListing returns the updated Listing or null
+        Optional<Listing> listing = listingService.updateListing(id, clientID, auth, updatedListing);
+        if (listing != null) {
+            return ResponseEntity.ok(listing);
+        } else {
+            // Handle the case where listing update fails
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating listing");
+        }
     }
+
 
     /**
      * Deletes a specified listing using provided details and authentication.
@@ -99,9 +122,9 @@ public class ListingController {
      * @param id       ID of the listing to be deleted.
      * @return {@link ResponseEntity} with a no content or not found status.
      * Response Codes:
-     * 200: Success
+     * 204: Success
      * 401: Invalid Client ID or authentication
-     * 500: Internal Server Error
+     * 404: Listing not found
      */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteListing(@RequestParam Long clientID,
@@ -124,9 +147,19 @@ public class ListingController {
      * 200: Success
      */
     @GetMapping("/search")
-    public ResponseEntity<List<Listing>> searchListingsByLocation(@RequestParam Double latitude,
-                                                                  @RequestParam Double longitude,
-                                                                  @RequestParam Double range) {
-        return ResponseEntity.ok(listingService.searchListingsByLocation(latitude, longitude, range));
+    public ResponseEntity<List<Listing>> searchListings(@RequestParam(required = false) Boolean isPublic,
+                                                        @RequestParam(required = false) Integer groupCode,
+                                                        @RequestParam(required = false) String itemList,
+                                                        @RequestParam(required = false) Integer ageRequirement,
+                                                        @RequestParam(required = false) Boolean veteranStatus,
+                                                        @RequestParam(required = false) String gender,
+                                                        @RequestParam Double latitude,
+                                                        @RequestParam Double longitude,
+                                                        @RequestParam Double range) {
+        List<Listing> listings = listingService.searchListings(isPublic, groupCode, itemList,
+                ageRequirement, veteranStatus, gender,
+                latitude, longitude, range);
+        return ResponseEntity.ok(listings);
     }
+
 }
