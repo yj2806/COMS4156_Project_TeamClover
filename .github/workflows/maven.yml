@@ -16,6 +16,8 @@ on:
     branches: [ "yaochen-ci" ]
     # branches: [ "main" ]
 
+permissions: write-all
+
 jobs:
   build:
 
