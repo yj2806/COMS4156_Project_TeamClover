@@ -27,6 +27,29 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-    - name: Build with Maven
-      run: mvn -B package --file web-service/pom.xml
-
+    # - name: Build with Maven
+    #   run: mvn -B package --file web-service/pom.xml
+    - name: Generate CI Report
+      run: |
+          cd web-service
+          mvn site
+          cd ..
+          cp -r web-service/target/site/* report/ci
+          git add report/*
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub"
+          git commit -m "Add CI Report " -a
+    - name: Push to Repository
+      if: ${{ github.event_name == 'pull_request' }}
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.head_ref }}
+        force: true
+    - name: Push to Repository
+      if: ${{ github.event_name == 'push' }}
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
+        force: true
