@@ -46,12 +46,14 @@ jobs:
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ github.head_ref }}
+        # branch: ${{ github.head_ref }}
+        branch: config/yaochen-ci
         force: true
     - name: Push to Repository
       if: ${{ github.event_name == 'push' }}
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ github.ref }}
+        # branch: ${{ github.ref }}
+        branch: config/yaochen-ci
         force: true
