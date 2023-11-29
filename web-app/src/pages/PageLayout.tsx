@@ -63,7 +63,7 @@ const PageLayout: React.FC<Props> = ({ children }) => {
                 >
                     <List>
                         <ListItem sx={{ fontWeight: 'bold' }}>Client</ListItem>
-                        {clientMenuItems.map((item, index) => (
+                        {clientMenuItems.map((item) => (
                             <ListItem key={item.name} disablePadding>
                                 <ListItemButton href={item.href}>
                                     <ListItemIcon></ListItemIcon>
@@ -75,7 +75,7 @@ const PageLayout: React.FC<Props> = ({ children }) => {
                     <Divider />
                     <List>
                         <ListItem sx={{ fontWeight: 'bold' }}>Listing</ListItem>
-                        {listingMenuItems.map((item, index) => (
+                        {listingMenuItems.map((item) => (
                             <ListItem key={item.name} disablePadding>
                                 <ListItemButton href={item.href}>
                                     <ListItemIcon></ListItemIcon>
@@ -87,7 +87,7 @@ const PageLayout: React.FC<Props> = ({ children }) => {
                     <Divider />
                     <List>
                         <ListItem sx={{ fontWeight: 'bold' }}>Facility</ListItem>
-                        {facilityMenuItems.map((item, index) => (
+                        {facilityMenuItems.map((item) => (
                             <ListItem key={item.name} disablePadding>
                                 <ListItemButton href={item.href}>
                                     <ListItemIcon></ListItemIcon>

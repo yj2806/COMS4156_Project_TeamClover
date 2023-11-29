@@ -2,7 +2,7 @@ import { Stack, TextField, FormControl, InputLabel, Select, MenuItem, Button, Se
 import React, { useState } from 'react';
 import PageLayout from '../PageLayout';
 
-const ClientCreate: React.FC = () => {
+const CreateFacility: React.FC = () => {
     const [clientType, setClientType] = useState<string>('DISTRIBUTOR');
     const handleChange = (event: SelectChangeEvent) => {
         setClientType(event.target.value as string);
@@ -24,4 +24,4 @@ const ClientCreate: React.FC = () => {
     );
 };
 
-export default ClientCreate;
+export default CreateFacility;
