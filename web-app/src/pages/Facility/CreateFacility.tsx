@@ -10,7 +10,7 @@ const CreateFacility: React.FC = () => {
     return (
         <PageLayout>
             <Stack gap={2} width={500} p={2}>
-                <TextField label="Authentication" />
+                <TextField label="Client ID" />
                 <FormControl fullWidth>
                     <InputLabel id="client-type">Type</InputLabel>
                     <Select labelId="client-type" value={clientType} label="Age" onChange={handleChange}>
