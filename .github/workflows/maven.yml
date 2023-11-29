@@ -42,7 +42,7 @@ jobs:
           git add report/*
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub"
-          git commit -m "Add CI Report " -a
+          git commit --allow-empty -m "Add CI Report "
     - name: Push to Repository
       if: ${{ github.event_name == 'pull_request' }}
       uses: ad-m/github-push-action@master
