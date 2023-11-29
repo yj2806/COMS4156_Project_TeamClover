@@ -31,18 +31,20 @@ const PageLayout: React.FC<Props> = ({ children }) => {
         { name: 'Listing Create', href: '/listing/create' },
         { name: 'View Listing', href: '/listing/create' },
         { name: 'Edit Listing', href: '/listing/edit' },
+        { name: 'Search Listing', href: '/listing/search' },
     ];
 
     const facilityMenuItems: MenuListing[] = [
         { name: 'Facility Create', href: '/facility/create' },
         { name: 'View Facility', href: '/facility/view' },
         { name: 'Edit Facility', href: '/facility/edit' },
+        { name: 'Remove Facility', href: '/facility/remove' },
     ];
 
     return (
         <CssBaseline>
             <Box sx={{ display: 'flex' }}>
-                <AppBar position="fixed" sx={{ width: `calc(100% - ${drawerWidth}px)` }}>
+                <AppBar position="fixed" sx={{ height: '70px', width: `calc(100% - ${drawerWidth}px)` }}>
                     <Typography variant="h5" sx={{ p: 2 }}>
                         Team Clove - Front End
                     </Typography>
@@ -95,7 +97,7 @@ const PageLayout: React.FC<Props> = ({ children }) => {
                         ))}
                     </List>
                 </Drawer>
-                <Box>{children}</Box>
+                <Box sx={{ mt: '70px' }}>{children}</Box>
             </Box>
         </CssBaseline>
     );

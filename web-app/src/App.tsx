@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import Homepage from './pages/Homepage';
-import Client from './pages/ClientCreate';
+import Client from './pages/Client/ClientCreate';
 
 const App = () => {
     return (

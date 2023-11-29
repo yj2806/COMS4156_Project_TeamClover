@@ -1,6 +1,6 @@
 import { Stack, TextField, FormControl, InputLabel, Select, MenuItem, Button, SelectChangeEvent } from '@mui/material';
 import React, { useState } from 'react';
-import PageLayout from './PageLayout';
+import PageLayout from '../PageLayout';
 
 const Client: React.FC = () => {
     const [clientType, setClientType] = useState<string>('DISTRIBUTOR');
