@@ -10,11 +10,11 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "yaochen-ci" ]
-    # branches: [ "main" ]
+    # branches: [ "yaochen-ci" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "yaochen-ci" ]
-    # branches: [ "main" ]
+    # branches: [ "yaochen-ci" ]
+    branches: [ "main" ]
 
 permissions: write-all
 
@@ -48,14 +48,14 @@ jobs:
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        # branch: ${{ github.head_ref }}
-        branch: yaochen-ci
+        branch: ${{ github.head_ref }}
+        # branch: yaochen-ci
         force: true
     - name: Push to Repository
       if: ${{ github.event_name == 'push' }}
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        # branch: ${{ github.ref }}
-        branch: yaochen-ci
+        branch: ${{ github.ref }}
+        # branch: yaochen-ci
         force: true
