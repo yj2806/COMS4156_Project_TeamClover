@@ -29,16 +29,16 @@ const PageLayout: React.FC<Props> = ({ children }) => {
     ];
     const listingMenuItems: MenuListing[] = [
         { name: 'Listing Create', href: '/listing/create' },
-        { name: 'View Listing', href: '/listing/create' },
+        { name: 'View Listing', href: '/listing/view' },
         { name: 'Edit Listing', href: '/listing/edit' },
         { name: 'Search Listing', href: '/listing/search' },
     ];
 
     const facilityMenuItems: MenuListing[] = [
         { name: 'Facility Create', href: '/facility/create' },
-        { name: 'View Facility', href: '/facility/view' },
         { name: 'Edit Facility', href: '/facility/edit' },
-        { name: 'Remove Facility', href: '/facility/remove' },
+        { name: 'View Facility', href: '/facility/view' },
+        { name: 'Delete Facility', href: '/facility/delete' },
     ];
 
     return (
