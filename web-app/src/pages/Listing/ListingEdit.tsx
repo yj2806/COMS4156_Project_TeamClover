@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import PageLayout from '../PageLayout';
 
-const CreateListing: React.FC = () => {
+const ListingEdit: React.FC = () => {
     const [isPublic, setIsPublic] = useState(false);
     const [isVeteran, setIsVeteran] = useState(false);
 
@@ -47,10 +47,10 @@ const CreateListing: React.FC = () => {
                         label="Veteran"
                     />
                 </FormGroup>
-                <Button variant="contained">Create Listing</Button>
+                <Button variant="contained">Edit Listing</Button>
             </Stack>
         </PageLayout>
     );
 };
 
-export default CreateListing;
+export default ListingEdit;
