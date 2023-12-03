@@ -1,22 +1,6 @@
 create schema `4156service`;
 
 --
--- create table `facility`
---
-create table if not exists facility
-(
-    facilityID int auto_increment,
-    latitude   float        not null,
-    longitude  float        not null,
-    public     boolean      not null,
-    email      varchar(255) null,
-    phone      varchar(255) null,
-    hours      varchar(255) null,
-    constraint facility_pk
-        primary key (facilityID)
-);
-
---
 -- create table `client`
 --
 create table if not exists client
@@ -24,14 +8,29 @@ create table if not exists client
     clientID              int auto_increment,
     authentication        varchar(255) not null,
     type                  varchar(255) not null,
-    associated_facilityID int          null,
     constraint client_pk
         primary key (clientID),
-    constraint client_facility_facilityID_fk
-        foreign key (associated_facilityID) references facility (facilityID)
-            on delete set null,
     constraint check_type
         check (type IN ('Distributor', 'not Distributor'))
+);
+
+--
+-- create table `facility`
+--
+create table if not exists facility
+(
+    facilityID int auto_increment,
+    associated_distributorID int null,
+    latitude   float        not null,
+    longitude  float        not null,
+    public     boolean      not null,
+    email      varchar(255) null,
+    phone      varchar(255) null,
+    hours      varchar(255) null,
+    constraint facility_pk
+        primary key (facilityID),
+    constraint facility_fk
+        foreign key (associated_distributorID) references client (clientID)
 );
 
 --
@@ -55,11 +54,13 @@ create table if not exists listings
         check (((group_code is not null) and (public is true)) or (public is false))
 );
 
-alter table client
-    drop constraint check_type;
+--
+-- alter table client
+--     drop constraint check_type;
 
-ALTER TABLE client
-    ADD CONSTRAINT check_type CHECK (type IN ('DISTRIBUTOR', 'NON_DISTRIBUTOR'));
+-- ALTER TABLE client
+--     ADD CONSTRAINT check_type CHECK (type IN ('DISTRIBUTOR', 'NON_DISTRIBUTOR'));
+--
 
 
 

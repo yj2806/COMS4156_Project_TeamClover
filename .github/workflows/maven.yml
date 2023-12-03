@@ -1,0 +1,63 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Java CI with Maven
+
+on:
+  push:
+    # branches: [ "yaochen-ci" ]
+    branches: [ "main" ]
+  pull_request:
+    # branches: [ "yaochen-ci" ]
+    branches: [ "main" ]
+
+permissions: write-all
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+    # - name: Build with Maven
+    #   run: |
+            # mvn -B package --file web-service/pom.xml
+            # cp -r web-service/target/site/jacoco report/branch-coverage
+    - name: Generate CI Report
+      run: |
+          cd web-service
+          mvn site
+          cd ..
+          cp -r web-service/target/site/* report/ci
+          git add report/*
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub"
+          git commit --allow-empty -m "Add CI Report "
+    - name: Push to Repository
+      if: ${{ github.event_name == 'pull_request' }}
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.head_ref }}
+        # branch: yaochen-ci
+        force: true
+    - name: Push to Repository
+      if: ${{ github.event_name == 'push' }}
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
+        # branch: yaochen-ci
+        force: true
