@@ -2,12 +2,12 @@ import { Button } from '@mui/material';
 import React from 'react';
 import PageLayout from '../PageLayout';
 
-const CreateFacility: React.FC = () => {
+const FacilityEdit: React.FC = () => {
     return (
         <PageLayout>
-            <Button variant="contained">Create Facility</Button>
+            <Button variant="contained">Edit Facility</Button>
         </PageLayout>
     );
 };
 
-export default CreateFacility;
+export default FacilityEdit;
