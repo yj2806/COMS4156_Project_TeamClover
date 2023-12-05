@@ -17,6 +17,7 @@ jobs:
         run: postman login --with-api-key PMAK-656e9692fd34746966f44043-daeb61cda5ea4550e920bf50ad6d035dc0
       - name: Run API tests
         run: |
+          mvn spring-boot:run
           postman collection run "26640460-d59c3b6a-6aa4-4b21-bfdf-a3ff4181a444" --integration-id "154095-${{ github.run_id }}"
           # Lint your API using Postman CLI
           postman api lint 1f216e5f-e4cd-4d13-b0f0-b5ed163f92b9 --integration-id 154095
