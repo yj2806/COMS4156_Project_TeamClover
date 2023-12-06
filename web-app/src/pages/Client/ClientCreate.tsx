@@ -18,7 +18,7 @@ const ClientCreate: React.FC = () => {
                         <MenuItem value={'NON_DISTRIBUTOR'}>NON DISTRIBUTOR</MenuItem>
                     </Select>
                 </FormControl>
-                <Button>Create Client</Button>
+                <Button variant="contained">Create Client</Button>
             </Stack>
         </PageLayout>
     );
