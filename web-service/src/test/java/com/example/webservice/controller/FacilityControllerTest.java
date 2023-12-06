@@ -41,7 +41,7 @@ public class FacilityControllerTest {
     public void testGetAllFacilities() throws Exception {
         Facility facility = new Facility();
         // Set properties if necessary
-        when(facilityService.getAllFacilities()).thenReturn(List.of(facility));
+        when(facilityService.getPublicFacilities()).thenReturn(List.of(facility));
 
         mockMvc.perform(get("/facility"))
                 .andExpect(status().isOk())
