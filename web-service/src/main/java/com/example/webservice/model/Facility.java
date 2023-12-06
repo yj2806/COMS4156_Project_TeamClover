@@ -25,6 +25,9 @@ public class Facility implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long facilityID;
 
+    @Column(name = "associated_distributorID")
+    private Long associated_distributorID;
+
     @Column(name = "latitude")
     private float latitude;
 

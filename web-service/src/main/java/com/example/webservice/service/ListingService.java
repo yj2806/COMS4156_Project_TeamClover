@@ -1,6 +1,7 @@
 package com.example.webservice.service;
 
 import com.example.webservice.model.Client;
+import com.example.webservice.model.Facility;
 import com.example.webservice.model.Listing;
 import com.example.webservice.model.model.ListingRequestDTO;
 import com.example.webservice.repository.ListingRepository;
@@ -62,11 +63,13 @@ public class ListingService {
      *
      * @param clientID the ID of the client creating the listing
      * @param auth     the authentication token of the client
+     * @param facilityID the ID of the facility the listing belongs to
      * @param listing  the details of the new listing
      * @return the created listing
      */
     public Listing createListing(Long clientID,
                                  String auth,
+                                 Long facilityID,
                                  ListingRequestDTO listing) {
         // Constraints and validation could be added here if necessary.
         Client c = clientRepository.findById(clientID)
@@ -77,9 +80,16 @@ public class ListingService {
                     "wrong auth"));
         }
 
+        Facility f = facilityRepository.findById(facilityID)
+                .orElseThrow(() -> new ResourceNotFoundException("Facility not found with id: " + facilityID));
+
+        if (!clientID.equals(f.getAssociated_distributorID())) {
+            throw (new ResourceNotFoundException("unmatched facilityID and client"));
+        }
+
         try {
             Listing newListing = new Listing();
-            newListing.setAssociatedFacility(c.getAssociatedFacility());
+            newListing.setAssociatedFacility(f);
             newListing.setPublic(listing.getIsPublic());
             newListing.setGroupCode(listing.getGroupCode());
             newListing.setItemList(listing.getItemList());
@@ -96,6 +106,7 @@ public class ListingService {
 
     /**
      * Updates an existing listing with the provided details.
+     *
      *
      * @param clientID       the ID of the client updating the listing
      * @param auth           the authentication token of the client
@@ -119,8 +130,8 @@ public class ListingService {
             Listing toUpdate = listingRepository.findById(id).orElseThrow(
                     () -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
                             "not exist"));
-            if (!toUpdate.getAssociatedFacility().getFacilityID().equals(
-                    c.getAssociatedFacility().getFacilityID())) {
+            if (!toUpdate.getAssociatedFacility().getAssociated_distributorID()
+                    .equals(clientID)) {
                 throw (new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "unmatched info"));
             }
@@ -128,7 +139,7 @@ public class ListingService {
             return Optional.of(listingRepository.findById(id)
                     .map(listing -> {
                         listing.setListingID(id);
-                        listing.setAssociatedFacility(c.getAssociatedFacility());
+                        listing.setAssociatedFacility(toUpdate.getAssociatedFacility());
                         listing.setPublic(updatedListing.getIsPublic());
                         listing.setGroupCode(updatedListing.getGroupCode());
                         listing.setItemList(updatedListing.getItemList());
@@ -156,7 +167,7 @@ public class ListingService {
                                  Long id) {
         Client c = clientRepository.findById(clientID)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED,
-                        "auth and id does not match"));
+                        "Client not found"));
 
         if (!auth.equals(c.getAuthentication())) {
 
@@ -167,8 +178,8 @@ public class ListingService {
         if (listingRepository.existsById(id)) {
             Listing toDelete = listingRepository.findById(id).orElseThrow(
                     () -> new ResourceNotFoundException("Listing not found with id: " + id));
-            if (!toDelete.getAssociatedFacility().getFacilityID().equals(
-                    c.getAssociatedFacility().getFacilityID())) {
+            if (!toDelete.getAssociatedFacility().getAssociated_distributorID()
+                    .equals(clientID)) {
                 throw (new ResponseStatusException(HttpStatus.UNAUTHORIZED,
                         "unmatched info"));
             }
