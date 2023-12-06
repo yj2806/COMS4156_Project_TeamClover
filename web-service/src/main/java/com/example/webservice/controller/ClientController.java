@@ -31,18 +31,6 @@ public class ClientController {
     }
 
 
-//    // GET request to retrieve all clients
-//    @GetMapping
-//    public List<Client> getAllClients() {
-//        return clientService.getAllClients();
-//    }
-
-//    // GET request to retrieve a client by their ID
-//    @GetMapping("/{id}")
-//    public Client getClientById(@PathVariable Long id) {
-//        return clientService.getClientById(id);
-//    }
-
     /**
      * Create a new client.
      * @param client client info
@@ -58,15 +46,6 @@ public class ClientController {
         }
 
     }
-
-//    // PUT request to update an existing client by their ID
-//    @PutMapping("/update/{id}")
-//    public Client updateClient(@PathVariable Long id,
-//                              @RequestBody ClientRequestDTO updatedClient) {
-//        return clientService.updateClient(id, updatedClient);
-//    }
-
-    // DELETE request to delete a client by their ID
 
     /**
      * Delete client.

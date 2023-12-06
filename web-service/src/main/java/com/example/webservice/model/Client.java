@@ -34,8 +34,8 @@ public class Client implements Serializable {
     @Enumerated(EnumType.STRING)
     private ClientType type;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "associated_facilityID")
-    private Facility associatedFacility;
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "associated_facilityID")
+//    private Facility associatedFacility;
 
 }
