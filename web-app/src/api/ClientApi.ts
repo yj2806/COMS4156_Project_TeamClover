@@ -1,11 +1,20 @@
 import axios from 'axios'; // If you're using Axios
 
-export const createClient = async (selectedFile: File) => {
-    const formData = new FormData();
-    formData.append('file', selectedFile);
+export const baseURL = 'http://localhost:8080/';
+const clientURL = baseURL + 'client/';
 
+export type ClientType = {
+    authentication: string;
+    type: string;
+};
+
+export const createClient = async (input: ClientType) => {
     axios
-        .post('localhost', formData)
+        .post(clientURL + 'create', input, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
         .then(() => {
             // Handle the server's response, such as success or error messages.
         })
