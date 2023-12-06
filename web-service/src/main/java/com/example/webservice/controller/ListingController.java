@@ -64,6 +64,7 @@ public class ListingController {
     @PostMapping("/create")
     public ResponseEntity<?> createListing(@RequestParam Long clientID,
                                            @RequestParam String auth,
+                                           @RequestParam Long facilityID,
                                            @RequestBody ListingRequestDTO listing) {
         // Validate the listing details
         if (!listing.getIsPublic() && listing.getGroupCode() == null) {
@@ -71,7 +72,7 @@ public class ListingController {
         }
 
         // Assuming listingService.createListing returns a Listing object or null
-        Listing createdListing = listingService.createListing(clientID, auth, listing);
+        Listing createdListing = listingService.createListing(clientID, auth, facilityID, listing);
         if (createdListing != null) {
             return ResponseEntity.ok(createdListing);
         } else {
@@ -82,6 +83,7 @@ public class ListingController {
 
     /**
      * Updates an existing listing using provided details and authentication.
+     * Update related facility is NOT allowed, must remove the listing first and re-list
      *
      * @param clientID       ID of the client updating the listing.
      * @param auth           Client's authentication string.

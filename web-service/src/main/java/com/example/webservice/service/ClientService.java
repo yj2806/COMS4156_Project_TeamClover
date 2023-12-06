@@ -31,15 +31,17 @@ public class ClientService {
         this.listingRepository = listingRepository;
     }
 
-    /**
-     * Retrieves a list of all clients.
-     *
-     * @return the list of all clients
-     */
-    @Transactional
-    public List<Client> getAllClients() {
-        return clientRepository.findAll();
-    }
+//    /**
+//     * !!deprecated!!
+//     *
+//     * Retrieves a list of all clients.
+//     *
+//     * @return the list of all clients
+//     */
+//    @Transactional
+//    public List<Client> getAllClients() {
+//        return clientRepository.findAll();
+//    }
 
     /**
      * Retrieves a client based on the given ID.
@@ -68,7 +70,8 @@ public class ClientService {
         }
 
         Client newClient = new Client();
-        newClient.setAssociatedFacility(createFacility());
+//        Create facility and listing later
+//        newClient.setAssociatedFacility(createFacility());
         newClient.setType(ClientType.fromString(client.getType()));
         newClient.setAuthentication(client.getAuthentication());
         return clientRepository.save(newClient);
@@ -95,13 +98,18 @@ public class ClientService {
      */
     @Transactional
     public void deleteClient(Long id) {
-        Client client = getClientById(id);
-        Long facilityID = client.getAssociatedFacility().getFacilityID();
-        List<Listing> listingID = listingRepository.findListingsByFacilityID(facilityID);
-        for (Listing l : listingID) {
-            listingRepository.deleteById(l.getListingID());
+//        Client client = getClientById(id);
+
+        List<Facility> facilityIDs = facilityRepository.findFacilitiesByClientID(id);
+
+        for (Facility f : facilityIDs) {
+            Long facilityID = f.getFacilityID();
+            List<Listing> listingID = listingRepository.findListingsByFacilityID(facilityID);
+            for (Listing l : listingID) {
+                listingRepository.deleteById(l.getListingID());
+            }
+            facilityRepository.deleteById(facilityID);
         }
-        facilityRepository.deleteById(facilityID);
         clientRepository.deleteById(id);
     }
 
