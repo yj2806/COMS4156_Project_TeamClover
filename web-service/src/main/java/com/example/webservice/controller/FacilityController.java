@@ -147,7 +147,7 @@ public class FacilityController {
     public ResponseEntity<Facility> updateFacility(
             @RequestParam Long clientID,
             @RequestParam String auth,
-            @RequestParam Long facilityID,
+            @PathVariable Long facilityID,
             @RequestBody FacilityRequestDTO facility) {
         try {
             Facility updatedFacility = facilityService.updateFacility(clientID, auth, facilityID, facility);
