@@ -44,8 +44,19 @@ public class FacilityService {
      * @return the list of all public facilities
      */
     @Transactional
-    public List<Facility> getAllFacilities() {
+    public List<Facility> getPublicFacilities() {
         return facilityRepository.findPublicFacilities();
+    }
+
+    /**
+     * Retrieves a list facilities by clientID.
+     * @param clientID   the client ID
+     *
+     * @return the list of all public facilities
+     */
+    @Transactional
+    public List<Facility> getFacilitiesByClientID(Long clientID) {
+        return facilityRepository.findFacilitiesByClientID(clientID);
     }
 
     /**

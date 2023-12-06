@@ -39,7 +39,7 @@ public class FacilityServiceTest {
         Facility facility = new Facility();
         when(facilityRepository.findAll()).thenReturn(Arrays.asList(facility));
 
-        List<Facility> result = facilityService.getAllFacilities();
+        List<Facility> result = facilityService.getPublicFacilities();
         assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals(facility, result.get(0));

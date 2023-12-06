@@ -38,14 +38,39 @@ public class FacilityController {
     }
 
     /**
-     * Retrieves a list of all facilities.
+     * Retrieves a list of all public facilities.
      *
-     * @return ResponseEntity containing a list of all facilities and an HTTP status.
+     * @return ResponseEntity containing a list of all public facilities and an HTTP status.
      *         HttpStatus.OK (200) for success.
      */
     @GetMapping
     public ResponseEntity<List<Facility>> getAllFacilities() {
-        List<Facility> facilities = facilityService.getAllFacilities();
+        List<Facility> facilities = facilityService.getPublicFacilities();
+        return new ResponseEntity<>(facilities, HttpStatus.OK);
+    }
+
+    /**
+     * Retrieves a list of facilities associated with client.
+     *
+     * @return ResponseEntity containing a list of facilities and an HTTP status.
+     *         HttpStatus.OK (200) for success.
+     */
+    @GetMapping("/by_client/{clientID}")
+    public ResponseEntity<List<Facility>> getFacilityByClient(@PathVariable Long clientID,
+                                                              @RequestParam String auth) {
+        try {
+            Client client = clientService.getClientById(clientID);
+
+            if (!auth.equals(client.getAuthentication())) {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                        "auth and id does not match");
+            }
+        } catch (ResourceNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    e.getMessage());
+        }
+
+        List<Facility> facilities = facilityService.getFacilitiesByClientID(clientID);
         return new ResponseEntity<>(facilities, HttpStatus.OK);
     }
 
