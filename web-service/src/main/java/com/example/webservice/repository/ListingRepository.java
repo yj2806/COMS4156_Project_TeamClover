@@ -38,6 +38,7 @@ public interface ListingRepository extends JpaRepository<Listing, Long> {
 
     @Query(value = "SELECT l.* FROM listings l JOIN facility f ON l.associated_facilityID = f.facilityID " +
             "WHERE (:itemList IS NULL OR l.item_list LIKE :itemList) " +
+            "AND (l.public = True) " +
             "AND (:ageRequirement IS NULL OR l.age_requirement >= :ageRequirement) " +
             "AND (:veteranStatus IS NULL OR l.veteran_status = :veteranStatus) " +
             "AND (:gender IS NULL OR l.gender = :gender) " +
