@@ -93,34 +93,39 @@ public class FacilityService {
                     &quot;only distributor can create facility&quot;);
         }
 
-<span class="pc bpc" id="L96" title="3 of 4 branches missed.">        if (facility.getEmail() != null &amp;&amp; !facility.getEmail().contains(&quot;@&quot;)) {</span>
+<span class="pc bpc" id="L96" title="1 of 2 branches missed.">        if (facility.getIsPublic() == null) {</span>
 <span class="nc" id="L97">            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,</span>
+                    &quot;invalid public status&quot;);
+        }
+
+<span class="pc bpc" id="L101" title="3 of 4 branches missed.">        if (facility.getEmail() != null &amp;&amp; !facility.getEmail().contains(&quot;@&quot;)) {</span>
+<span class="nc" id="L102">            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,</span>
                     &quot;invalid email&quot;);
         }
 
-<span class="pc bpc" id="L101" title="1 of 2 branches missed.">        if (facility.getPhone() != null) {</span>
-<span class="nc bnc" id="L102" title="All 2 branches missed.">            for (int i = 0; i &lt; facility.getPhone().length(); ++i) {</span>
-<span class="nc" id="L103">                char ch = facility.getPhone().charAt(i);</span>
-<span class="nc bnc" id="L104" title="All 2 branches missed.">                if (!Character.isDigit(ch)) {</span>
-<span class="nc" id="L105">                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST,</span>
+<span class="pc bpc" id="L106" title="1 of 2 branches missed.">        if (facility.getPhone() != null) {</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">            for (int i = 0; i &lt; facility.getPhone().length(); ++i) {</span>
+<span class="nc" id="L108">                char ch = facility.getPhone().charAt(i);</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">                if (!Character.isDigit(ch)) {</span>
+<span class="nc" id="L110">                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST,</span>
                             &quot;invalid phone&quot;);
                 }
             }
         }
 
         try {
-<span class="fc" id="L112">            Facility newFacility = new Facility();</span>
-<span class="fc" id="L113">            newFacility.setAssociated_distributorID(c.getClientID());</span>
-<span class="fc" id="L114">            newFacility.setLatitude(facility.getLatitude());</span>
-<span class="fc" id="L115">            newFacility.setLongitude(facility.getLongitude());</span>
-<span class="fc" id="L116">            newFacility.setPublic(facility.getIsPublic());</span>
-<span class="fc" id="L117">            newFacility.setEmail(facility.getEmail());</span>
-<span class="fc" id="L118">            newFacility.setPhone(facility.getPhone());</span>
-<span class="fc" id="L119">            newFacility.setHours(facility.getHours());</span>
-<span class="fc" id="L120">            return facilityRepository.save(newFacility);</span>
-<span class="nc" id="L121">        } catch (Exception e) {</span>
-<span class="nc" id="L122">            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,</span>
-<span class="nc" id="L123">                    e.getMessage());</span>
+<span class="fc" id="L117">            Facility newFacility = new Facility();</span>
+<span class="fc" id="L118">            newFacility.setAssociated_distributorID(c.getClientID());</span>
+<span class="fc" id="L119">            newFacility.setLatitude(facility.getLatitude());</span>
+<span class="fc" id="L120">            newFacility.setLongitude(facility.getLongitude());</span>
+<span class="fc" id="L121">            newFacility.setPublic(facility.getIsPublic());</span>
+<span class="fc" id="L122">            newFacility.setEmail(facility.getEmail());</span>
+<span class="fc" id="L123">            newFacility.setPhone(facility.getPhone());</span>
+<span class="fc" id="L124">            newFacility.setHours(facility.getHours());</span>
+<span class="fc" id="L125">            return facilityRepository.save(newFacility);</span>
+<span class="nc" id="L126">        } catch (Exception e) {</span>
+<span class="nc" id="L127">            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,</span>
+<span class="nc" id="L128">                    e.getMessage());</span>
         }
     }
 
@@ -139,43 +144,48 @@ public class FacilityService {
                                    String auth,
                                    Long id,
                                    FacilityRequestDTO updatedFacility) {
-<span class="fc" id="L142">        Facility f = facilityRepository.findById(id)</span>
-<span class="pc" id="L143">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
+<span class="fc" id="L147">        Facility f = facilityRepository.findById(id)</span>
+<span class="pc" id="L148">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
                         &quot;Facility Not Found&quot;));
 
-<span class="fc bfc" id="L146" title="All 2 branches covered.">        if (!clientId.equals(f.getAssociated_distributorID())) {</span>
-<span class="fc" id="L147">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">        if (!clientId.equals(f.getAssociated_distributorID())) {</span>
+<span class="fc" id="L152">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
                     &quot;unmatched client and facility&quot;);
         }
 
-<span class="pc bpc" id="L151" title="3 of 4 branches missed.">        if (updatedFacility.getEmail() != null &amp;&amp; !updatedFacility.getEmail().contains(&quot;@&quot;)) {</span>
-<span class="nc" id="L152">            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,</span>
+<span class="pc bpc" id="L156" title="1 of 2 branches missed.">        if (updatedFacility.getIsPublic() == null) {</span>
+<span class="nc" id="L157">            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,</span>
+                    &quot;invalid public status&quot;);
+        }
+
+<span class="pc bpc" id="L161" title="3 of 4 branches missed.">        if (updatedFacility.getEmail() != null &amp;&amp; !updatedFacility.getEmail().contains(&quot;@&quot;)) {</span>
+<span class="nc" id="L162">            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,</span>
                     &quot;invalid email&quot;);
         }
 
-<span class="pc bpc" id="L156" title="1 of 2 branches missed.">        if (updatedFacility.getPhone() != null) {</span>
-<span class="nc bnc" id="L157" title="All 2 branches missed.">            for (int i = 0; i &lt; updatedFacility.getPhone().length(); ++i) {</span>
-<span class="nc" id="L158">                char ch = updatedFacility.getPhone().charAt(i);</span>
-<span class="nc bnc" id="L159" title="All 2 branches missed.">                if (!Character.isDigit(ch)) {</span>
-<span class="nc" id="L160">                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST,</span>
+<span class="pc bpc" id="L166" title="1 of 2 branches missed.">        if (updatedFacility.getPhone() != null) {</span>
+<span class="nc bnc" id="L167" title="All 2 branches missed.">            for (int i = 0; i &lt; updatedFacility.getPhone().length(); ++i) {</span>
+<span class="nc" id="L168">                char ch = updatedFacility.getPhone().charAt(i);</span>
+<span class="nc bnc" id="L169" title="All 2 branches missed.">                if (!Character.isDigit(ch)) {</span>
+<span class="nc" id="L170">                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST,</span>
                             &quot;invalid phone&quot;);
                 }
             }
         }
 
-<span class="fc" id="L166">        return facilityRepository.findById(id)</span>
-<span class="fc" id="L167">                .map(facility -&gt; {</span>
-<span class="fc" id="L168">                    facility.setFacilityID(id);</span>
-<span class="fc" id="L169">                    facility.setAssociated_distributorID(clientId);</span>
-<span class="fc" id="L170">                    facility.setLatitude(updatedFacility.getLatitude());</span>
-<span class="fc" id="L171">                    facility.setLongitude(updatedFacility.getLongitude());</span>
-<span class="fc" id="L172">                    facility.setPublic(updatedFacility.getIsPublic());</span>
-<span class="fc" id="L173">                    facility.setEmail(updatedFacility.getEmail());</span>
-<span class="fc" id="L174">                    facility.setPhone(updatedFacility.getPhone());</span>
-<span class="fc" id="L175">                    facility.setHours(updatedFacility.getHours());</span>
-<span class="fc" id="L176">                    return facilityRepository.save(facility);</span>
+<span class="fc" id="L176">        return facilityRepository.findById(id)</span>
+<span class="fc" id="L177">                .map(facility -&gt; {</span>
+<span class="fc" id="L178">                    facility.setFacilityID(id);</span>
+<span class="fc" id="L179">                    facility.setAssociated_distributorID(clientId);</span>
+<span class="fc" id="L180">                    facility.setLatitude(updatedFacility.getLatitude());</span>
+<span class="fc" id="L181">                    facility.setLongitude(updatedFacility.getLongitude());</span>
+<span class="fc" id="L182">                    facility.setPublic(updatedFacility.getIsPublic());</span>
+<span class="fc" id="L183">                    facility.setEmail(updatedFacility.getEmail());</span>
+<span class="fc" id="L184">                    facility.setPhone(updatedFacility.getPhone());</span>
+<span class="fc" id="L185">                    facility.setHours(updatedFacility.getHours());</span>
+<span class="fc" id="L186">                    return facilityRepository.save(facility);</span>
                 })
-<span class="pc" id="L178">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
+<span class="pc" id="L188">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
                         &quot;Facility Not Found&quot;));
     }
 
@@ -187,19 +197,19 @@ public class FacilityService {
      * @return true if the facility was found and deleted, false otherwise
      */
     public void deleteFacility(Long clientId, Long id) {
-<span class="fc" id="L190">        Facility f = facilityRepository.findById(id)</span>
-<span class="pc" id="L191">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
+<span class="fc" id="L200">        Facility f = facilityRepository.findById(id)</span>
+<span class="pc" id="L201">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
                         &quot;Facility Not Found&quot;));
 
-<span class="fc bfc" id="L194" title="All 2 branches covered.">        if (!clientId.equals(f.getAssociated_distributorID())) {</span>
-<span class="fc" id="L195">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
+<span class="fc bfc" id="L204" title="All 2 branches covered.">        if (!clientId.equals(f.getAssociated_distributorID())) {</span>
+<span class="fc" id="L205">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
                     &quot;unmatched client and facility&quot;);
         }
-<span class="fc" id="L198">        List&lt;Listing&gt; listingID = listingRepository.findListingsByFacilityID(id);</span>
-<span class="pc bpc" id="L199" title="1 of 2 branches missed.">        for (Listing l : listingID) {</span>
-<span class="nc" id="L200">            listingRepository.deleteById(l.getListingID());</span>
-<span class="nc" id="L201">        }</span>
-<span class="fc" id="L202">        facilityRepository.deleteById(id);</span>
-<span class="fc" id="L203">    }</span>
+<span class="fc" id="L208">        List&lt;Listing&gt; listingID = listingRepository.findListingsByFacilityID(id);</span>
+<span class="pc bpc" id="L209" title="1 of 2 branches missed.">        for (Listing l : listingID) {</span>
+<span class="nc" id="L210">            listingRepository.deleteById(l.getListingID());</span>
+<span class="nc" id="L211">        }</span>
+<span class="fc" id="L212">        facilityRepository.deleteById(id);</span>
+<span class="fc" id="L213">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
