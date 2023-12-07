@@ -91,7 +91,7 @@ public class FacilityService {
             newFacility.setAssociated_distributorID(c.getClientID());
             newFacility.setLatitude(facility.getLatitude());
             newFacility.setLongitude(facility.getLongitude());
-            newFacility.setPublic(facility.getPublic());
+            newFacility.setPublic(facility.getIsPublic());
             newFacility.setEmail(facility.getEmail());
             newFacility.setPhone(facility.getPhone());
             newFacility.setHours(facility.getHours());
@@ -117,18 +117,13 @@ public class FacilityService {
                                    String auth,
                                    Long id,
                                    FacilityRequestDTO updatedFacility) {
-        Client c = clientRepository.findById(clientId)
-                .orElseThrow(() -> new ResourceNotFoundException("Client not found with id: " + clientId));
-
-        if (!auth.equals(c.getAuthentication())) {
-            throw (new ResourceNotFoundException("wrong auth"));
-        }
-
         Facility f = facilityRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Facility not found with id: " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Facility Not Found"));
 
         if (!clientId.equals(f.getAssociated_distributorID())) {
-            throw (new ResourceNotFoundException("wrong facilityID"));
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                    "unmatched client and facility");
         }
 
         return facilityRepository.findById(id)
@@ -137,13 +132,14 @@ public class FacilityService {
                     facility.setAssociated_distributorID(clientId);
                     facility.setLatitude(updatedFacility.getLatitude());
                     facility.setLongitude(updatedFacility.getLongitude());
-                    facility.setPublic(updatedFacility.getPublic());
+                    facility.setPublic(updatedFacility.getIsPublic());
                     facility.setEmail(updatedFacility.getEmail());
                     facility.setPhone(updatedFacility.getPhone());
                     facility.setHours(updatedFacility.getHours());
                     return facilityRepository.save(facility);
                 })
-                .orElseThrow(() -> new ResourceNotFoundException("Facility not found with id: " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Facility Not Found"));
     }
 
     /**
@@ -153,24 +149,19 @@ public class FacilityService {
      * @param id the ID of the facility to delete
      * @return true if the facility was found and deleted, false otherwise
      */
-    public boolean deleteFacility(Long clientId, Long id) {
+    public void deleteFacility(Long clientId, Long id) {
+        Facility f = facilityRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Facility Not Found"));
 
-
-        if (facilityRepository.existsById(id)) {
-            Facility f = facilityRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFoundException("Facility not found with id: " + id));
-
-            if (!clientId.equals(f.getAssociated_distributorID())) {
-                throw (new ResourceNotFoundException("unmatched facilityID and client"));
-            }
-            List<Listing> listingID = listingRepository.findListingsByFacilityID(id);
-            for (Listing l : listingID) {
-                listingRepository.deleteById(l.getListingID());
-            }
-            facilityRepository.deleteById(id);
-            return true;
-        } else {
-            return false;
+        if (!clientId.equals(f.getAssociated_distributorID())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                    "unmatched client and facility");
         }
+        List<Listing> listingID = listingRepository.findListingsByFacilityID(id);
+        for (Listing l : listingID) {
+            listingRepository.deleteById(l.getListingID());
+        }
+        facilityRepository.deleteById(id);
     }
 }

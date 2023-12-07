@@ -7,12 +7,16 @@ import com.example.webservice.model.model.ListingRequestDTO;
 import com.example.webservice.repository.ListingRepository;
 import com.example.webservice.repository.ClientRepository;
 import com.example.webservice.repository.FacilityRepository;
+import com.example.webservice.service.FacilityService;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +26,7 @@ public class ListingService {
     private final ListingRepository listingRepository;
     private final ClientRepository clientRepository;
     private final FacilityRepository facilityRepository;
+    private final FacilityService facilityService;
 
     /**
      * Constructs a new ListingService with the specified repositories.
@@ -33,20 +38,22 @@ public class ListingService {
     @Autowired
     public ListingService(ListingRepository listingRepository,
                           ClientRepository clientRepository,
-                          FacilityRepository facilityRepository) {
+                          FacilityRepository facilityRepository,
+                          FacilityService facilityService) {
         this.listingRepository = listingRepository;
         this.clientRepository = clientRepository;
         this.facilityRepository = facilityRepository;
+        this.facilityService = facilityService;
     }
 
-    /**
-     * Retrieves a list of all listings.
-     *
-     * @return the list of all listings
-     */
-    public List<Listing> getAllListings() {
-        return listingRepository.findAll();
-    }
+//    /**
+//     * Retrieves a list of all listings.
+//     *
+//     * @return the list of all listings
+//     */
+//    public List<Listing> getAllListings() {
+//        return listingRepository.findAll();
+//    }
 
     /**
      * Retrieves a listing by its ID.
@@ -57,6 +64,21 @@ public class ListingService {
     public Optional<Listing> getListingById(Long id) {
         return listingRepository.findById(id);
     }
+
+    /**
+     * Retrieves a list of listings by clientID.
+     * @param clientID   the client ID
+     * @return the list of all public listings
+     */
+    @Transactional
+    public List<Listing> getListingsByClientID(Long clientID) {
+        List<Listing> listings = new ArrayList<>();
+        for (Facility f : facilityService.getFacilitiesByClientID(clientID)) {
+            listings.addAll(listingRepository.findListingsByFacilityID(f.getFacilityID()));
+        }
+        return listings;
+    }
+
 
     /**
      * Creates a new listing with the provided details.
@@ -215,5 +237,48 @@ public class ListingService {
                 ageRequirement, veteranStatus, gender,
                 latitude, longitude, range);
     }
+
+
+    /**
+     * Searches for listings based on a combination of criteria including location, item list, age requirement,
+     * veteran status, and gender.
+     *
+     * @param latitude The latitude of the search center.
+     * @param longitude The longitude of the search center.
+     * @param range The range (in specified units) to search for listings.
+     * @param itemList A delimited string of items to include in the search. Items are separated by '|'.
+     * @param age The age requirement for the listings.
+     * @param veteranStatus The veteran status requirement for the listings.
+     * @param gender The gender requirement for the listings.
+     * @return A list of {@link Listing} objects that match the specified criteria.
+     */
+    public List<Listing> searchListingsWithFilter(Double latitude, Double longitude, Double range,
+                                                  String itemList, Integer age, Boolean veteranStatus, String gender) {
+        // Process the itemList if it's not null or empty
+        String processedItemList = null;
+        if (itemList != null && !itemList.isEmpty()) {
+            // Split the itemList by the delimiter and join with SQL wildcards
+            processedItemList = "%" + itemList.replace("|", "%|%") + "%";
+        }
+
+        // Call the repository method with the processed item list and other criteria
+        return listingRepository.findListingsWithFilter(latitude, longitude, range, processedItemList, age, veteranStatus, gender);
+    }
+
+
+    /**
+     * Searches for listings based on a group code and location criteria.
+     *
+     * @param latitude The latitude of the search center.
+     * @param longitude The longitude of the search center.
+     * @param range The range (in specified units) to search for listings.
+     * @param groupCode The group code for the listings. This is typically used to filter listings that belong to a specific group or category.
+     * @return A list of {@link Listing} objects that match the group code and are within the specified range of the location.
+     */
+    public List<Listing> searchListingsWithGroupCode(Double latitude, Double longitude, Double range, Integer groupCode) {
+        // Call the repository method with group code and location criteria
+        return listingRepository.findListingsWithGroupCode(latitude, longitude, range, groupCode);
+    }
+
 
 }

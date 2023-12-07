@@ -1,12 +1,17 @@
 package com.example.webservice.controller;
 
+import com.example.webservice.model.Client;
+import com.example.webservice.model.Facility;
 import com.example.webservice.model.Listing;
 import com.example.webservice.service.ListingService;
+import com.example.webservice.service.ClientService;
+import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.webservice.model.model.ListingRequestDTO;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,23 +20,25 @@ import java.util.Optional;
  * Controller for handling operations related to the {@link Listing} entity.
  */
 @RestController
+@CrossOrigin
 @RequestMapping("/listing")
 public class ListingController {
 
     @Autowired
     private ListingService listingService;
+    private ClientService clientService;
 
-    /**
-     * Retrieves a list of all listings.
-     *
-     * @return {@link ResponseEntity} containing a list of all listings.
-     * Response Codes:
-     * 200: Success
-     */
-    @GetMapping
-    public ResponseEntity<List<Listing>> getAllListings() {
-        return ResponseEntity.ok(listingService.getAllListings());
-    }
+//    /**
+//     * Retrieves a list of all listings.
+//     *
+//     * @return {@link ResponseEntity} containing a list of all listings.
+//     * Response Codes:
+//     * 200: Success
+//     */
+//    @GetMapping
+//    public ResponseEntity<List<Listing>> getAllListings() {
+//        return ResponseEntity.ok(listingService.getAllListings());
+//    }
 
     /**
      * Retrieves a specific listing by its ID.
@@ -47,6 +54,34 @@ public class ListingController {
         return listingService.getListingById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Retrieves listing created by client.
+     *
+     * @param clientID The ID of the client.
+     * @param auth authentication.
+     * Response Codes:
+     * 200: Success
+     * 404: Invalid Token
+     */
+    @GetMapping("/by_client/{clientID}")
+    public ResponseEntity<List<Listing>> getListingByClient(@PathVariable Long clientID,
+                                                      @RequestParam String auth) {
+
+        try {
+            Client client = clientService.getClientById(clientID);
+
+            if (!auth.equals(client.getAuthentication())) {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                        "auth and id does not match");
+            }
+        } catch (ResourceNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    e.getMessage());
+        }
+        List<Listing> listings = listingService.getListingsByClientID(clientID);
+        return new ResponseEntity<>(listings, HttpStatus.OK);
     }
 
     /**
@@ -97,21 +132,23 @@ public class ListingController {
      */
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateListing(@PathVariable Long id,
-                                                 @RequestParam Long clientID,
-                                                 @RequestParam String auth,
-                                                 @RequestBody ListingRequestDTO updatedListing) {
+                                           @RequestParam Long clientID,
+                                           @RequestParam String auth,
+                                           @RequestBody ListingRequestDTO updatedListing) {
         // Validate the listing details
         if (!updatedListing.getIsPublic() && updatedListing.getGroupCode() == null) {
             return ResponseEntity.badRequest().body("Group code is required for private listings.");
         }
 
-        // Assuming listingService.updateListing returns the updated Listing or null
-        Optional<Listing> listing = listingService.updateListing(id, clientID, auth, updatedListing);
-        if (listing != null) {
-            return ResponseEntity.ok(listing);
+        // Attempt to update the listing
+        Optional<Listing> updated = listingService.updateListing(id, clientID, auth, updatedListing);
+
+        // Check if the update operation was successful
+        if (updated.isPresent()) {
+            return ResponseEntity.ok(updated.get());
         } else {
             // Handle the case where listing update fails
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating listing");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Listing not found or update failed");
         }
     }
 
@@ -164,4 +201,50 @@ public class ListingController {
         return ResponseEntity.ok(listings);
     }
 
+
+    /**
+     * Searches for listings based on various filters.
+     *
+     * @param latitude       Latitude of the search center.
+     * @param longitude      Longitude of the search center.
+     * @param range          Range (in specified units) to search for listings.
+     * @param itemContained  Items contained in the listing (separated by '|').
+     * @param age            Age requirement for the listing.
+     * @param veteranStatus  Veteran status requirement.
+     * @param gender         Gender requirement.
+     * @return {@link ResponseEntity} containing a list of listings matching the filters.
+     * Response Codes:
+     * 200: Success
+     */
+    @GetMapping("/search_with_filter")
+    public ResponseEntity<List<Listing>> searchListingsWithFilter(@RequestParam Double latitude,
+                                                                  @RequestParam Double longitude,
+                                                                  @RequestParam Double range,
+                                                                  @RequestParam(required = false) String itemContained,
+                                                                  @RequestParam(required = false) Integer age,
+                                                                  @RequestParam(required = false) Boolean veteranStatus,
+                                                                  @RequestParam(required = false) String gender) {
+        List<Listing> listings = listingService.searchListingsWithFilter(latitude, longitude, range, itemContained, age, veteranStatus, gender);
+        return ResponseEntity.ok(listings);
+    }
+
+    /**
+     * Searches for listings based on a group code.
+     *
+     * @param latitude   Latitude of the search center.
+     * @param longitude  Longitude of the search center.
+     * @param range      Range (in specified units) to search for listings.
+     * @param groupCode  Group code for the listings.
+     * @return {@link ResponseEntity} containing a list of listings matching the group code.
+     * Response Codes:
+     * 200: Success
+     */
+    @GetMapping("/search_with_group_code")
+    public ResponseEntity<List<Listing>> searchListingsWithGroupCode(@RequestParam Double latitude,
+                                                                     @RequestParam Double longitude,
+                                                                     @RequestParam Double range,
+                                                                     @RequestParam Integer groupCode) {
+        List<Listing> listings = listingService.searchListingsWithGroupCode(latitude, longitude, range, groupCode);
+        return ResponseEntity.ok(listings);
+    }
 }
