@@ -16,6 +16,7 @@ import java.util.List;
  * Provides endpoints for creating, updating, retrieving, and deleting clients.
  */
 @RestController
+@CrossOrigin
 @RequestMapping("client")
 public class ClientController {
     private final ClientService clientService;
