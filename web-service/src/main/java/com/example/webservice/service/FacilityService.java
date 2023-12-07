@@ -91,7 +91,7 @@ public class FacilityService {
             newFacility.setAssociated_distributorID(c.getClientID());
             newFacility.setLatitude(facility.getLatitude());
             newFacility.setLongitude(facility.getLongitude());
-            newFacility.setPublic(facility.getPublic());
+            newFacility.setPublic(facility.getIsPublic());
             newFacility.setEmail(facility.getEmail());
             newFacility.setPhone(facility.getPhone());
             newFacility.setHours(facility.getHours());
@@ -137,7 +137,7 @@ public class FacilityService {
                     facility.setAssociated_distributorID(clientId);
                     facility.setLatitude(updatedFacility.getLatitude());
                     facility.setLongitude(updatedFacility.getLongitude());
-                    facility.setPublic(updatedFacility.getPublic());
+                    facility.setPublic(updatedFacility.getIsPublic());
                     facility.setEmail(updatedFacility.getEmail());
                     facility.setPhone(updatedFacility.getPhone());
                     facility.setHours(updatedFacility.getHours());
