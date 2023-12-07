@@ -22,7 +22,7 @@ import java.util.Optional;
 @RestController
 @CrossOrigin
 @RequestMapping(&quot;/listing&quot;)
-<span class="nc" id="L25">public class ListingController {</span>
+<span class="fc" id="L25">public class ListingController {</span>
 
     @Autowired
     private ListingService listingService;
@@ -51,9 +51,9 @@ import java.util.Optional;
      */
     @GetMapping(&quot;/{id}&quot;)
     public ResponseEntity&lt;Listing&gt; getListingById(@PathVariable Long id) {
-<span class="nc" id="L54">        return listingService.getListingById(id)</span>
-<span class="nc" id="L55">                .map(ResponseEntity::ok)</span>
-<span class="nc" id="L56">                .orElseGet(() -&gt; ResponseEntity.notFound().build());</span>
+<span class="fc" id="L54">        return listingService.getListingById(id)</span>
+<span class="fc" id="L55">                .map(ResponseEntity::ok)</span>
+<span class="fc" id="L56">                .orElseGet(() -&gt; ResponseEntity.notFound().build());</span>
     }
 
     /**
@@ -102,14 +102,14 @@ import java.util.Optional;
                                            @RequestParam Long facilityID,
                                            @RequestBody ListingRequestDTO listing) {
         // Validate the listing details
-<span class="nc bnc" id="L105" title="All 4 branches missed.">        if (!listing.getIsPublic() &amp;&amp; listing.getGroupCode() == null) {</span>
+<span class="pc bpc" id="L105" title="3 of 4 branches missed.">        if (!listing.getIsPublic() &amp;&amp; listing.getGroupCode() == null) {</span>
 <span class="nc" id="L106">            return ResponseEntity.badRequest().body(&quot;Group code is required for private listings.&quot;);</span>
         }
 
         // Assuming listingService.createListing returns a Listing object or null
-<span class="nc" id="L110">        Listing createdListing = listingService.createListing(clientID, auth, facilityID, listing);</span>
-<span class="nc bnc" id="L111" title="All 2 branches missed.">        if (createdListing != null) {</span>
-<span class="nc" id="L112">            return ResponseEntity.ok(createdListing);</span>
+<span class="fc" id="L110">        Listing createdListing = listingService.createListing(clientID, auth, facilityID, listing);</span>
+<span class="pc bpc" id="L111" title="1 of 2 branches missed.">        if (createdListing != null) {</span>
+<span class="fc" id="L112">            return ResponseEntity.ok(createdListing);</span>
         } else {
             // Handle the case where listing creation fails
 <span class="nc" id="L115">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(&quot;Error creating listing&quot;);</span>
@@ -136,19 +136,19 @@ import java.util.Optional;
                                            @RequestParam String auth,
                                            @RequestBody ListingRequestDTO updatedListing) {
         // Validate the listing details
-<span class="nc bnc" id="L139" title="All 4 branches missed.">        if (!updatedListing.getIsPublic() &amp;&amp; updatedListing.getGroupCode() == null) {</span>
+<span class="pc bpc" id="L139" title="3 of 4 branches missed.">        if (!updatedListing.getIsPublic() &amp;&amp; updatedListing.getGroupCode() == null) {</span>
 <span class="nc" id="L140">            return ResponseEntity.badRequest().body(&quot;Group code is required for private listings.&quot;);</span>
         }
 
         // Attempt to update the listing
-<span class="nc" id="L144">        Optional&lt;Listing&gt; updated = listingService.updateListing(id, clientID, auth, updatedListing);</span>
+<span class="fc" id="L144">        Optional&lt;Listing&gt; updated = listingService.updateListing(id, clientID, auth, updatedListing);</span>
 
         // Check if the update operation was successful
-<span class="nc bnc" id="L147" title="All 2 branches missed.">        if (updated.isPresent()) {</span>
-<span class="nc" id="L148">            return ResponseEntity.ok(updated.get());</span>
+<span class="fc bfc" id="L147" title="All 2 branches covered.">        if (updated.isPresent()) {</span>
+<span class="fc" id="L148">            return ResponseEntity.ok(updated.get());</span>
         } else {
             // Handle the case where listing update fails
-<span class="nc" id="L151">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;Listing not found or update failed&quot;);</span>
+<span class="fc" id="L151">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;Listing not found or update failed&quot;);</span>
         }
     }
 
@@ -169,10 +169,10 @@ import java.util.Optional;
     public ResponseEntity&lt;Void&gt; deleteListing(@RequestParam Long clientID,
                                               @RequestParam String auth,
                                               @PathVariable Long id) {
-<span class="nc bnc" id="L172" title="All 2 branches missed.">        if (listingService.deleteListing(clientID, auth, id)) {</span>
-<span class="nc" id="L173">            return ResponseEntity.noContent().build();</span>
+<span class="fc bfc" id="L172" title="All 2 branches covered.">        if (listingService.deleteListing(clientID, auth, id)) {</span>
+<span class="fc" id="L173">            return ResponseEntity.noContent().build();</span>
         }
-<span class="nc" id="L175">        return ResponseEntity.notFound().build();</span>
+<span class="fc" id="L175">        return ResponseEntity.notFound().build();</span>
     }
 
     /**
@@ -195,10 +195,10 @@ import java.util.Optional;
                                                         @RequestParam Double latitude,
                                                         @RequestParam Double longitude,
                                                         @RequestParam Double range) {
-<span class="nc" id="L198">        List&lt;Listing&gt; listings = listingService.searchListings(isPublic, groupCode, itemList,</span>
+<span class="fc" id="L198">        List&lt;Listing&gt; listings = listingService.searchListings(isPublic, groupCode, itemList,</span>
                 ageRequirement, veteranStatus, gender,
                 latitude, longitude, range);
-<span class="nc" id="L201">        return ResponseEntity.ok(listings);</span>
+<span class="fc" id="L201">        return ResponseEntity.ok(listings);</span>
     }
 
 
@@ -224,8 +224,8 @@ import java.util.Optional;
                                                                   @RequestParam(required = false) Integer age,
                                                                   @RequestParam(required = false) Boolean veteranStatus,
                                                                   @RequestParam(required = false) String gender) {
-<span class="nc" id="L227">        List&lt;Listing&gt; listings = listingService.searchListingsWithFilter(latitude, longitude, range, itemContained, age, veteranStatus, gender);</span>
-<span class="nc" id="L228">        return ResponseEntity.ok(listings);</span>
+<span class="fc" id="L227">        List&lt;Listing&gt; listings = listingService.searchListingsWithFilter(latitude, longitude, range, itemContained, age, veteranStatus, gender);</span>
+<span class="fc" id="L228">        return ResponseEntity.ok(listings);</span>
     }
 
     /**
@@ -244,8 +244,8 @@ import java.util.Optional;
                                                                      @RequestParam Double longitude,
                                                                      @RequestParam Double range,
                                                                      @RequestParam Integer groupCode) {
-<span class="nc" id="L247">        List&lt;Listing&gt; listings = listingService.searchListingsWithGroupCode(latitude, longitude, range, groupCode);</span>
-<span class="nc" id="L248">        return ResponseEntity.ok(listings);</span>
+<span class="fc" id="L247">        List&lt;Listing&gt; listings = listingService.searchListingsWithGroupCode(latitude, longitude, range, groupCode);</span>
+<span class="fc" id="L248">        return ResponseEntity.ok(listings);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
