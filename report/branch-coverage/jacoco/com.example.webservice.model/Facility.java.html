@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Facility.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">web-service</a> &gt; <a href="index.source.html" class="el_package">com.example.webservice.model</a> &gt; <span class="el_source">Facility.java</span></div><h1>Facility.java</h1><pre class="source lang-java linenums">package com.example.webservice.model;
+
+import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.*;
+
+import java.io.Serializable;
+
+@Entity
+<span class="nc" id="L13">@Builder(access = AccessLevel.PACKAGE, toBuilder = true)</span>
+<span class="nc" id="L14">@AllArgsConstructor(access = AccessLevel.PACKAGE)</span>
+<span class="nc" id="L15">@NoArgsConstructor(access = AccessLevel.PUBLIC)</span>
+<span class="nc" id="L16">@Setter</span>
+@Getter
+@Table(name = &quot;facility&quot;)
+public class Facility implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+<span class="nc" id="L26">    private Long facilityID;</span>
+
+    @Column(name = &quot;associated_distributorID&quot;)
+<span class="nc" id="L29">    private Long associated_distributorID;</span>
+
+    @Column(name = &quot;latitude&quot;)
+<span class="nc" id="L32">    private float latitude;</span>
+
+    @Column(name = &quot;longitude&quot;)
+<span class="nc" id="L35">    private float longitude;</span>
+
+    @Column(name = &quot;public&quot;)
+<span class="nc" id="L38">    private boolean isPublic;</span>
+
+    @Column(name = &quot;email&quot;)
+<span class="nc" id="L41">    private String email;</span>
+
+    @Column(name = &quot;phone&quot;)
+<span class="nc" id="L44">    private String phone;</span>
+
+    @Column(name = &quot;hours&quot;)
+<span class="nc" id="L47">    private String hours;</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

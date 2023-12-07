@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClientService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">web-service</a> &gt; <a href="index.source.html" class="el_package">com.example.webservice.service</a> &gt; <span class="el_source">ClientService.java</span></div><h1>ClientService.java</h1><pre class="source lang-java linenums">package com.example.webservice.service;
+
+import com.example.webservice.model.Client;
+import com.example.webservice.model.Facility;
+import com.example.webservice.model.Listing;
+import com.example.webservice.model.model.ClientRequestDTO;
+import com.example.webservice.model.type.ClientType;
+import com.example.webservice.repository.ClientRepository;
+import com.example.webservice.repository.FacilityRepository;
+import com.example.webservice.repository.ListingRepository;
+import org.apache.velocity.exception.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class ClientService {
+
+    private final ClientRepository clientRepository;
+    private final FacilityRepository facilityRepository;
+    private final ListingRepository listingRepository;
+
+    @Autowired
+    public ClientService(ClientRepository clientRepository,
+                         FacilityRepository facilityRepository,
+<span class="nc" id="L28">                         ListingRepository listingRepository) {</span>
+<span class="nc" id="L29">        this.clientRepository = clientRepository;</span>
+<span class="nc" id="L30">        this.facilityRepository = facilityRepository;</span>
+<span class="nc" id="L31">        this.listingRepository = listingRepository;</span>
+<span class="nc" id="L32">    }</span>
+
+//    /**
+//     * !!deprecated!!
+//     *
+//     * Retrieves a list of all clients.
+//     *
+//     * @return the list of all clients
+//     */
+//    @Transactional
+//    public List&lt;Client&gt; getAllClients() {
+//        return clientRepository.findAll();
+//    }
+
+    /**
+     * Retrieves a client based on the given ID.
+     *
+     * @param id the ID of the client to retrieve
+     * @return the client with the given ID
+     * @throws ResourceNotFoundException if no client is found with the given ID
+     */
+    @Transactional
+    public Client getClientById(Long id) {
+<span class="nc" id="L55">        return clientRepository.findById(id)</span>
+<span class="nc" id="L56">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Client not found with id: &quot; + id));</span>
+    }
+
+    /**
+     * Creates a new client using the given ClientRequestDTO.
+     *
+     * @param client the client data transfer object containing client details
+     * @return the newly created client
+     */
+    @Transactional
+    public Client createClient(ClientRequestDTO client) {
+<span class="nc" id="L67">        boolean validType = ClientType.isValid(client.getType());</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">        if (!validType) {</span>
+<span class="nc" id="L69">            throw new IllegalArgumentException(&quot;Valid type are DISTRIBUTOR and NON_DISTRIBUTOR&quot;);</span>
+        }
+
+<span class="nc" id="L72">        Client newClient = new Client();</span>
+//        Create facility and listing later
+//        newClient.setAssociatedFacility(createFacility());
+<span class="nc" id="L75">        newClient.setType(ClientType.fromString(client.getType()));</span>
+<span class="nc" id="L76">        newClient.setAuthentication(client.getAuthentication());</span>
+<span class="nc" id="L77">        return clientRepository.save(newClient);</span>
+    }
+
+//    // Update an existing client based on ID and new client info
+//    @Transactional
+//    public Client updateClient(Long id, ClientRequestDTO updatedClient) {
+//        return clientRepository.findById(id)
+//                .map(client -&gt; {
+//                    client.setAssociatedFacility(getFacility(updatedClient.getAssociatedFacilityId()));
+//                    client.setClientID(id);
+//                    client.setType(ClientType.fromString(updatedClient.getType()));
+//                    return clientRepository.save(client);
+//                })
+//                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Client not found with id: &quot; + id));
+//    }
+
+    /**
+     * Deletes a client with the given ID.
+     * This also deletes associated listings and facility.
+     *
+     * @param id the ID of the client to delete
+     */
+    @Transactional
+    public void deleteClient(Long id) {
+//        Client client = getClientById(id);
+
+<span class="nc" id="L103">        List&lt;Facility&gt; facilityIDs = facilityRepository.findFacilitiesByClientID(id);</span>
+
+<span class="nc bnc" id="L105" title="All 2 branches missed.">        for (Facility f : facilityIDs) {</span>
+<span class="nc" id="L106">            Long facilityID = f.getFacilityID();</span>
+<span class="nc" id="L107">            List&lt;Listing&gt; listingID = listingRepository.findListingsByFacilityID(facilityID);</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">            for (Listing l : listingID) {</span>
+<span class="nc" id="L109">                listingRepository.deleteById(l.getListingID());</span>
+<span class="nc" id="L110">            }</span>
+<span class="nc" id="L111">            facilityRepository.deleteById(facilityID);</span>
+<span class="nc" id="L112">        }</span>
+<span class="nc" id="L113">        clientRepository.deleteById(id);</span>
+<span class="nc" id="L114">    }</span>
+
+    /**
+     * Helper method to retrieve a facility based on its ID.
+     *
+     * @param id the ID of the facility to retrieve
+     * @return the facility with the given ID
+     * @throws ResourceNotFoundException if no facility is found with the given ID
+     */
+    private Facility getFacility(Long id) {
+<span class="nc" id="L124">        Optional&lt;Facility&gt; f = facilityRepository.findById(id);</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">        if (f.isPresent()) {</span>
+<span class="nc" id="L126">            return f.get();</span>
+        }
+<span class="nc" id="L128">        throw new ResourceNotFoundException(&quot;Facility not found with id: &quot; + id);</span>
+    }
+
+    private Facility createFacility() {
+<span class="nc" id="L132">        Facility newFacility = new Facility();</span>
+<span class="nc" id="L133">        return facilityRepository.save(newFacility);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ListingController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">web-service</a> &gt; <a href="index.source.html" class="el_package">com.example.webservice.controller</a> &gt; <span class="el_source">ListingController.java</span></div><h1>ListingController.java</h1><pre class="source lang-java linenums">package com.example.webservice.controller;
+
+import com.example.webservice.model.Listing;
+import com.example.webservice.service.ListingService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import com.example.webservice.model.model.ListingRequestDTO;
+
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Controller for handling operations related to the {@link Listing} entity.
+ */
+@RestController
+@RequestMapping(&quot;/listing&quot;)
+<span class="nc" id="L19">public class ListingController {</span>
+
+    @Autowired
+    private ListingService listingService;
+
+    /**
+     * Retrieves a list of all listings.
+     *
+     * @return {@link ResponseEntity} containing a list of all listings.
+     * Response Codes:
+     * 200: Success
+     */
+    @GetMapping
+    public ResponseEntity&lt;List&lt;Listing&gt;&gt; getAllListings() {
+<span class="nc" id="L33">        return ResponseEntity.ok(listingService.getAllListings());</span>
+    }
+
+    /**
+     * Retrieves a specific listing by its ID.
+     *
+     * @param id The ID of the desired listing.
+     * @return {@link ResponseEntity} containing the specified listing or a not found status.
+     * Response Codes:
+     * 200: Success
+     * 404: Invalid Token
+     */
+    @GetMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Listing&gt; getListingById(@PathVariable Long id) {
+<span class="nc" id="L47">        return listingService.getListingById(id)</span>
+<span class="nc" id="L48">                .map(ResponseEntity::ok)</span>
+<span class="nc" id="L49">                .orElseGet(() -&gt; ResponseEntity.notFound().build());</span>
+    }
+
+    /**
+     * Creates a new listing using provided details and authentication.
+     *
+     * @param clientID ID of the client creating the listing.
+     * @param auth     Client's authentication string.
+     * @param listing  {@link ListingRequestDTO} containing listing details.
+     * @return {@link ResponseEntity} containing the created listing.
+     * Response Codes:
+     * 200: Success
+     * 400: Invalid Input
+     * 404: Invalid Client ID or authentication
+     */
+    @PostMapping(&quot;/create&quot;)
+    public ResponseEntity&lt;?&gt; createListing(@RequestParam Long clientID,
+                                           @RequestParam String auth,
+                                           @RequestParam Long facilityID,
+                                           @RequestBody ListingRequestDTO listing) {
+        // Validate the listing details
+<span class="nc bnc" id="L70" title="All 4 branches missed.">        if (!listing.getIsPublic() &amp;&amp; listing.getGroupCode() == null) {</span>
+<span class="nc" id="L71">            return ResponseEntity.badRequest().body(&quot;Group code is required for private listings.&quot;);</span>
+        }
+
+        // Assuming listingService.createListing returns a Listing object or null
+<span class="nc" id="L75">        Listing createdListing = listingService.createListing(clientID, auth, facilityID, listing);</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">        if (createdListing != null) {</span>
+<span class="nc" id="L77">            return ResponseEntity.ok(createdListing);</span>
+        } else {
+            // Handle the case where listing creation fails
+<span class="nc" id="L80">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(&quot;Error creating listing&quot;);</span>
+        }
+    }
+
+    /**
+     * Updates an existing listing using provided details and authentication.
+     * Update related facility is NOT allowed, must remove the listing first and re-list
+     *
+     * @param clientID       ID of the client updating the listing.
+     * @param auth           Client's authentication string.
+     * @param id             ID of the listing to be updated.
+     * @param updatedListing {@link ListingRequestDTO} containing updated listing details.
+     * @return {@link ResponseEntity} containing the updated listing or a not found status.
+     * Response Codes:
+     * 200: Success
+     * 400: Invalid Input
+     * 404: Invalid Client ID or authentication
+     */
+    @PutMapping(&quot;/update/{id}&quot;)
+    public ResponseEntity&lt;?&gt; updateListing(@PathVariable Long id,
+                                                 @RequestParam Long clientID,
+                                                 @RequestParam String auth,
+                                                 @RequestBody ListingRequestDTO updatedListing) {
+        // Validate the listing details
+<span class="nc bnc" id="L104" title="All 4 branches missed.">        if (!updatedListing.getIsPublic() &amp;&amp; updatedListing.getGroupCode() == null) {</span>
+<span class="nc" id="L105">            return ResponseEntity.badRequest().body(&quot;Group code is required for private listings.&quot;);</span>
+        }
+
+        // Assuming listingService.updateListing returns the updated Listing or null
+<span class="nc" id="L109">        Optional&lt;Listing&gt; listing = listingService.updateListing(id, clientID, auth, updatedListing);</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        if (listing != null) {</span>
+<span class="nc" id="L111">            return ResponseEntity.ok(listing);</span>
+        } else {
+            // Handle the case where listing update fails
+<span class="nc" id="L114">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(&quot;Error updating listing&quot;);</span>
+        }
+    }
+
+
+    /**
+     * Deletes a specified listing using provided details and authentication.
+     *
+     * @param clientID ID of the client requesting delete.
+     * @param auth     Client's authentication string.
+     * @param id       ID of the listing to be deleted.
+     * @return {@link ResponseEntity} with a no content or not found status.
+     * Response Codes:
+     * 204: Success
+     * 401: Invalid Client ID or authentication
+     * 404: Listing not found
+     */
+    @DeleteMapping(&quot;/delete/{id}&quot;)
+    public ResponseEntity&lt;Void&gt; deleteListing(@RequestParam Long clientID,
+                                              @RequestParam String auth,
+                                              @PathVariable Long id) {
+<span class="nc bnc" id="L135" title="All 2 branches missed.">        if (listingService.deleteListing(clientID, auth, id)) {</span>
+<span class="nc" id="L136">            return ResponseEntity.noContent().build();</span>
+        }
+<span class="nc" id="L138">        return ResponseEntity.notFound().build();</span>
+    }
+
+    /**
+     * Searches for listings based on a specified location and range.
+     *
+     * @param latitude  Latitude of the search center.
+     * @param longitude Longitude of the search center.
+     * @param range     Range (in specified units) to search for listings.
+     * @return {@link ResponseEntity} containing a list of listings within the specified range of the location.
+     * Response Codes:
+     * 200: Success
+     */
+    @GetMapping(&quot;/search&quot;)
+    public ResponseEntity&lt;List&lt;Listing&gt;&gt; searchListings(@RequestParam(required = false) Boolean isPublic,
+                                                        @RequestParam(required = false) Integer groupCode,
+                                                        @RequestParam(required = false) String itemList,
+                                                        @RequestParam(required = false) Integer ageRequirement,
+                                                        @RequestParam(required = false) Boolean veteranStatus,
+                                                        @RequestParam(required = false) String gender,
+                                                        @RequestParam Double latitude,
+                                                        @RequestParam Double longitude,
+                                                        @RequestParam Double range) {
+<span class="nc" id="L161">        List&lt;Listing&gt; listings = listingService.searchListings(isPublic, groupCode, itemList,</span>
+                ageRequirement, veteranStatus, gender,
+                latitude, longitude, range);
+<span class="nc" id="L164">        return ResponseEntity.ok(listings);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ListingService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">web-service</a> &gt; <a href="index.source.html" class="el_package">com.example.webservice.service</a> &gt; <span class="el_source">ListingService.java</span></div><h1>ListingService.java</h1><pre class="source lang-java linenums">package com.example.webservice.service;
+
+import com.example.webservice.model.Client;
+import com.example.webservice.model.Facility;
+import com.example.webservice.model.Listing;
+import com.example.webservice.model.model.ListingRequestDTO;
+import com.example.webservice.repository.ListingRepository;
+import com.example.webservice.repository.ClientRepository;
+import com.example.webservice.repository.FacilityRepository;
+import org.apache.velocity.exception.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class ListingService {
+
+    private final ListingRepository listingRepository;
+    private final ClientRepository clientRepository;
+    private final FacilityRepository facilityRepository;
+
+    /**
+     * Constructs a new ListingService with the specified repositories.
+     *
+     * @param listingRepository the listing repository
+     * @param clientRepository  the client repository
+     * @param facilityRepository the facility repository
+     */
+    @Autowired
+    public ListingService(ListingRepository listingRepository,
+                          ClientRepository clientRepository,
+<span class="nc" id="L36">                          FacilityRepository facilityRepository) {</span>
+<span class="nc" id="L37">        this.listingRepository = listingRepository;</span>
+<span class="nc" id="L38">        this.clientRepository = clientRepository;</span>
+<span class="nc" id="L39">        this.facilityRepository = facilityRepository;</span>
+<span class="nc" id="L40">    }</span>
+
+    /**
+     * Retrieves a list of all listings.
+     *
+     * @return the list of all listings
+     */
+    public List&lt;Listing&gt; getAllListings() {
+<span class="nc" id="L48">        return listingRepository.findAll();</span>
+    }
+
+    /**
+     * Retrieves a listing by its ID.
+     *
+     * @param id the ID of the listing to retrieve
+     * @return an Optional containing the retrieved listing, or empty if not found
+     */
+    public Optional&lt;Listing&gt; getListingById(Long id) {
+<span class="nc" id="L58">        return listingRepository.findById(id);</span>
+    }
+
+    /**
+     * Creates a new listing with the provided details.
+     *
+     * @param clientID the ID of the client creating the listing
+     * @param auth     the authentication token of the client
+     * @param facilityID the ID of the facility the listing belongs to
+     * @param listing  the details of the new listing
+     * @return the created listing
+     */
+    public Listing createListing(Long clientID,
+                                 String auth,
+                                 Long facilityID,
+                                 ListingRequestDTO listing) {
+        // Constraints and validation could be added here if necessary.
+<span class="nc" id="L75">        Client c = clientRepository.findById(clientID)</span>
+<span class="nc" id="L76">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
+                        &quot;Client not found with id: &quot; + clientID));
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        if (!auth.equals(c.getAuthentication())) {</span>
+<span class="nc" id="L79">            throw (new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
+                    &quot;wrong auth&quot;));
+        }
+
+<span class="nc" id="L83">        Facility f = facilityRepository.findById(facilityID)</span>
+<span class="nc" id="L84">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Facility not found with id: &quot; + facilityID));</span>
+
+<span class="nc bnc" id="L86" title="All 2 branches missed.">        if (!clientID.equals(f.getAssociated_distributorID())) {</span>
+<span class="nc" id="L87">            throw (new ResourceNotFoundException(&quot;unmatched facilityID and client&quot;));</span>
+        }
+
+        try {
+<span class="nc" id="L91">            Listing newListing = new Listing();</span>
+<span class="nc" id="L92">            newListing.setAssociatedFacility(f);</span>
+<span class="nc" id="L93">            newListing.setPublic(listing.getIsPublic());</span>
+<span class="nc" id="L94">            newListing.setGroupCode(listing.getGroupCode());</span>
+<span class="nc" id="L95">            newListing.setItemList(listing.getItemList());</span>
+<span class="nc" id="L96">            newListing.setAgeRequirement(listing.getAgeRequirement());</span>
+<span class="nc" id="L97">            newListing.setVeteranStatus(listing.getVeteranStatus());</span>
+<span class="nc" id="L98">            newListing.setGender(listing.getGender());</span>
+<span class="nc" id="L99">            return listingRepository.save(newListing);</span>
+<span class="nc" id="L100">        } catch (Exception e) {</span>
+<span class="nc" id="L101">            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,</span>
+<span class="nc" id="L102">                    e.getMessage());</span>
+        }
+
+    }
+
+    /**
+     * Updates an existing listing with the provided details.
+     *
+     *
+     * @param clientID       the ID of the client updating the listing
+     * @param auth           the authentication token of the client
+     * @param id             the ID of the listing to update
+     * @param updatedListing the new details for the listing
+     * @return an Optional containing the updated listing, or empty if not found
+     */
+    public Optional&lt;Listing&gt; updateListing(Long id,
+                                           Long clientID,
+                                           String auth,
+                                           ListingRequestDTO updatedListing) {
+<span class="nc" id="L121">        Client c = clientRepository.findById(clientID)</span>
+<span class="nc" id="L122">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
+                        &quot;Client not found with id: &quot; + clientID));
+
+<span class="nc bnc" id="L125" title="All 2 branches missed.">        if (!auth.equals(c.getAuthentication())) {</span>
+<span class="nc" id="L126">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
+                    &quot;Authentication failed&quot;);
+        }
+<span class="nc bnc" id="L129" title="All 2 branches missed.">        if (listingRepository.existsById(id)) {</span>
+<span class="nc" id="L130">            Listing toUpdate = listingRepository.findById(id).orElseThrow(</span>
+<span class="nc" id="L131">                    () -&gt; new ResponseStatusException(HttpStatus.BAD_REQUEST,</span>
+                            &quot;not exist&quot;));
+<span class="nc" id="L133">            if (!toUpdate.getAssociatedFacility().getAssociated_distributorID()</span>
+<span class="nc bnc" id="L134" title="All 2 branches missed.">                    .equals(clientID)) {</span>
+<span class="nc" id="L135">                throw (new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
+                        &quot;unmatched info&quot;));
+            }
+
+<span class="nc" id="L139">            return Optional.of(listingRepository.findById(id)</span>
+<span class="nc" id="L140">                    .map(listing -&gt; {</span>
+<span class="nc" id="L141">                        listing.setListingID(id);</span>
+<span class="nc" id="L142">                        listing.setAssociatedFacility(toUpdate.getAssociatedFacility());</span>
+<span class="nc" id="L143">                        listing.setPublic(updatedListing.getIsPublic());</span>
+<span class="nc" id="L144">                        listing.setGroupCode(updatedListing.getGroupCode());</span>
+<span class="nc" id="L145">                        listing.setItemList(updatedListing.getItemList());</span>
+<span class="nc" id="L146">                        listing.setAgeRequirement(updatedListing.getAgeRequirement());</span>
+<span class="nc" id="L147">                        listing.setVeteranStatus(updatedListing.getVeteranStatus());</span>
+<span class="nc" id="L148">                        listing.setGender(updatedListing.getGender());</span>
+<span class="nc" id="L149">                        return listingRepository.save(listing);</span>
+                    })
+<span class="nc" id="L151">                    .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.BAD_REQUEST,</span>
+                            &quot;not exist&quot;)));
+        }
+<span class="nc" id="L154">        return Optional.empty();</span>
+    }
+
+    /**
+     * Deletes a listing by its ID.
+     *
+     * @param clientID the ID of the client requesting the deletion
+     * @param auth     the authentication token of the client
+     * @param id       the ID of the listing to delete
+     * @return true if the listing was deleted, false otherwise
+     */
+    public boolean deleteListing(Long clientID,
+                                 String auth,
+                                 Long id) {
+<span class="nc" id="L168">        Client c = clientRepository.findById(clientID)</span>
+<span class="nc" id="L169">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
+                        &quot;Client not found&quot;));
+
+<span class="nc bnc" id="L172" title="All 2 branches missed.">        if (!auth.equals(c.getAuthentication())) {</span>
+
+<span class="nc" id="L174">            throw (new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
+                    &quot;auth and id does not match&quot;));
+        }
+
+<span class="nc bnc" id="L178" title="All 2 branches missed.">        if (listingRepository.existsById(id)) {</span>
+<span class="nc" id="L179">            Listing toDelete = listingRepository.findById(id).orElseThrow(</span>
+<span class="nc" id="L180">                    () -&gt; new ResourceNotFoundException(&quot;Listing not found with id: &quot; + id));</span>
+<span class="nc" id="L181">            if (!toDelete.getAssociatedFacility().getAssociated_distributorID()</span>
+<span class="nc bnc" id="L182" title="All 2 branches missed.">                    .equals(clientID)) {</span>
+<span class="nc" id="L183">                throw (new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
+                        &quot;unmatched info&quot;));
+            }
+<span class="nc" id="L186">            listingRepository.deleteById(id);</span>
+<span class="nc" id="L187">            return true;</span>
+        }
+<span class="nc" id="L189">        return false;</span>
+    }
+
+    /**
+     * Searches for listings based on a combination of criteria including public/private status,
+     * group code, item list, age requirement, veteran status, gender, and location.
+     *
+     * This method combines both non-location and location-based criteria to filter listings.
+     * It leverages a single database query to efficiently retrieve listings that match all specified criteria.
+     *
+     * @param isPublic        Boolean flag indicating if the listing is public. If null, this criterion is ignored.
+     * @param groupCode       Integer representing the group code for private listings. If null, this criterion is ignored.
+     * @param itemList        String representing the list of items in the listing. If null, this criterion is ignored.
+     * @param ageRequirement  Integer specifying the age requirement for the listing. If null, this criterion is ignored.
+     * @param veteranStatus   Boolean flag indicating if the listing is for veterans. If null, this criterion is ignored.
+     * @param gender          String indicating the gender requirement for the listing. If null, this criterion is ignored.
+     * @param latitude        Double representing the latitude for location-based filtering.
+     * @param longitude       Double representing the longitude for location-based filtering.
+     * @param range           Double representing the range (in appropriate units) for location-based filtering.
+     * @return                A list of {@link Listing} objects that match the specified criteria.
+     */
+    public List&lt;Listing&gt; searchListings(Boolean isPublic, Integer groupCode, String itemList,
+                                        Integer ageRequirement, Boolean veteranStatus, String gender,
+                                        Double latitude, Double longitude, Double range) {
+        // Call the repository method with all criteria
+<span class="nc" id="L214">        return listingRepository.findListingsByCriteria(isPublic, groupCode, itemList,</span>
+                ageRequirement, veteranStatus, gender,
+                latitude, longitude, range);
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

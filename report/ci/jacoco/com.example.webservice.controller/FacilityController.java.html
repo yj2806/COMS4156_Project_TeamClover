@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FacilityController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">web-service</a> &gt; <a href="index.source.html" class="el_package">com.example.webservice.controller</a> &gt; <span class="el_source">FacilityController.java</span></div><h1>FacilityController.java</h1><pre class="source lang-java linenums">package com.example.webservice.controller;
+
+import com.example.webservice.exception.InvalidClientIDOrAuthException;
+import com.example.webservice.exception.InvalidTokenException;
+import com.example.webservice.model.Client;
+import com.example.webservice.model.Facility;
+import com.example.webservice.model.model.FacilityRequestDTO;
+import com.example.webservice.service.FacilityService;
+import com.example.webservice.service.ClientService;
+import org.apache.velocity.exception.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+
+/**
+ * Controller for handling operations related to the {@link Facility} entity.
+ */
+@RestController
+@RequestMapping(&quot;facility&quot;)
+public class FacilityController {
+
+    private final FacilityService facilityService;
+    private final ClientService clientService;
+
+    /**
+     * Constructs a new FacilityController with the specified {@link FacilityService}.
+     *
+     * @param facilityService the facility service
+     */
+    @Autowired
+<span class="nc" id="L35">    public FacilityController(FacilityService facilityService, ClientService clientService) {</span>
+<span class="nc" id="L36">        this.facilityService = facilityService;</span>
+<span class="nc" id="L37">        this.clientService = clientService;</span>
+<span class="nc" id="L38">    }</span>
+
+    /**
+     * Retrieves a list of all public facilities.
+     *
+     * @return ResponseEntity containing a list of all public facilities and an HTTP status.
+     *         HttpStatus.OK (200) for success.
+     */
+    @GetMapping
+    public ResponseEntity&lt;List&lt;Facility&gt;&gt; getAllFacilities() {
+<span class="nc" id="L48">        List&lt;Facility&gt; facilities = facilityService.getPublicFacilities();</span>
+<span class="nc" id="L49">        return new ResponseEntity&lt;&gt;(facilities, HttpStatus.OK);</span>
+    }
+
+    /**
+     * Retrieves a list of facilities associated with client.
+     *
+     * @return ResponseEntity containing a list of facilities and an HTTP status.
+     *         HttpStatus.OK (200) for success.
+     */
+    @GetMapping(&quot;/by_client/{clientID}&quot;)
+    public ResponseEntity&lt;List&lt;Facility&gt;&gt; getFacilityByClient(@PathVariable Long clientID,
+                                                              @RequestParam String auth) {
+        try {
+<span class="nc" id="L62">            Client client = clientService.getClientById(clientID);</span>
+
+<span class="nc bnc" id="L64" title="All 2 branches missed.">            if (!auth.equals(client.getAuthentication())) {</span>
+<span class="nc" id="L65">                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
+                        &quot;auth and id does not match&quot;);
+            }
+<span class="nc" id="L68">        } catch (ResourceNotFoundException e) {</span>
+<span class="nc" id="L69">            throw new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
+<span class="nc" id="L70">                    e.getMessage());</span>
+<span class="nc" id="L71">        }</span>
+
+<span class="nc" id="L73">        List&lt;Facility&gt; facilities = facilityService.getFacilitiesByClientID(clientID);</span>
+<span class="nc" id="L74">        return new ResponseEntity&lt;&gt;(facilities, HttpStatus.OK);</span>
+    }
+
+    /**
+     * Retrieves information on facility with a specific ID.
+     *
+     * @param id the ID of the facility
+     * @return ResponseEntity containing the facility with the given ID and an HTTP status.
+     *         HttpStatus.OK (200) for success.
+     *         HttpStatus.UNAUTHORIZED (401) for invalid token.
+     */
+    @GetMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Facility&gt; getFacilityById(@PathVariable Long id) {
+        try {
+<span class="nc" id="L88">            Facility facility = facilityService.getFacilityById(id);</span>
+<span class="nc" id="L89">            return new ResponseEntity&lt;&gt;(facility, HttpStatus.OK);</span>
+<span class="nc" id="L90">        } catch (ResourceNotFoundException e) {</span>
+<span class="nc" id="L91">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
+                    &quot;auth and id does not match&quot;);
+        }
+    }
+
+    /**
+     * Create a new facility
+     *
+     * @param clientID the ID of the client associated with the facility
+     * @param auth the authentication string of the client
+     * @param facility the facility data
+     * @return ResponseEntity containing the updated facility and an HTTP status.
+     *         HttpStatus.OK (200) for success.
+     *         HttpStatus.UNAUTHORIZED (401) for invalid token.
+     *         HttpStatus.NOT_FOUND (404) for invalid client ID or authentication.
+     */
+    @PostMapping(&quot;/create&quot;)
+    public ResponseEntity&lt;Facility&gt; createFacility(
+            @RequestParam Long clientID,
+            @RequestParam String auth,
+            @RequestBody FacilityRequestDTO facility) {
+
+        try {
+<span class="nc" id="L114">            Client client = clientService.getClientById(clientID);</span>
+
+<span class="nc bnc" id="L116" title="All 2 branches missed.">            if (!auth.equals(client.getAuthentication())) {</span>
+<span class="nc" id="L117">                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
+                        &quot;auth and id does not match&quot;);
+            }
+<span class="nc" id="L120">        } catch (ResourceNotFoundException e) {</span>
+<span class="nc" id="L121">            throw new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
+<span class="nc" id="L122">                    e.getMessage());</span>
+<span class="nc" id="L123">        }</span>
+        try {
+<span class="nc" id="L125">            Facility newFacility = facilityService.createFacility(clientID, facility);</span>
+<span class="nc" id="L126">            return new ResponseEntity&lt;&gt;(newFacility, HttpStatus.OK);</span>
+<span class="nc" id="L127">        } catch (InvalidTokenException e) {</span>
+<span class="nc" id="L128">            return new ResponseEntity&lt;&gt;(HttpStatus.UNAUTHORIZED);</span>
+<span class="nc" id="L129">        } catch (InvalidClientIDOrAuthException e) {</span>
+<span class="nc" id="L130">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+        }
+    }
+
+    /**
+     * Updates information for an existing facility. Requires client authentication.
+     *
+     * @param clientID the ID of the client associated with the facility
+     * @param auth the authentication string of the client
+     * @param facilityID the ID of the facility
+     * @param facility the updated facility data
+     * @return ResponseEntity containing the updated facility and an HTTP status.
+     *         HttpStatus.OK (200) for success.
+     *         HttpStatus.UNAUTHORIZED (401) for invalid token.
+     *         HttpStatus.NOT_FOUND (404) for invalid client ID or authentication.
+     */
+    @PutMapping(&quot;/update/{facilityID}&quot;)
+    public ResponseEntity&lt;Facility&gt; updateFacility(
+            @RequestParam Long clientID,
+            @RequestParam String auth,
+            @PathVariable Long facilityID,
+            @RequestBody FacilityRequestDTO facility) {
+        try {
+<span class="nc" id="L153">            Facility updatedFacility = facilityService.updateFacility(clientID, auth, facilityID, facility);</span>
+<span class="nc" id="L154">            return new ResponseEntity&lt;&gt;(updatedFacility, HttpStatus.OK);</span>
+<span class="nc" id="L155">        } catch (InvalidTokenException e) {</span>
+<span class="nc" id="L156">            return new ResponseEntity&lt;&gt;(HttpStatus.UNAUTHORIZED);</span>
+<span class="nc" id="L157">        } catch (InvalidClientIDOrAuthException e) {</span>
+<span class="nc" id="L158">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+        }
+    }
+
+    /**
+     * Delete a facility.
+     *
+     * @param clientID the ID of the client associated with the facility
+     * @param auth the authentication string of the client
+     * @param id the ID of the facility
+     * @return ResponseEntity containing the updated facility and an HTTP status.
+     *         HttpStatus.OK (200) for success.
+     *         HttpStatus.UNAUTHORIZED (401) for invalid token.
+     *         HttpStatus.NOT_FOUND (404) for invalid client ID or authentication.
+     */
+    @DeleteMapping(&quot;/delete/{id}&quot;)
+    public ResponseEntity&lt;Void&gt; deleteFacility(@RequestParam Long clientID,
+                                               @RequestParam String auth,
+                                               @PathVariable Long id) {
+
+        try {
+<span class="nc" id="L179">            Client client = clientService.getClientById(clientID);</span>
+
+<span class="nc bnc" id="L181" title="All 2 branches missed.">            if (!auth.equals(client.getAuthentication())) {</span>
+<span class="nc" id="L182">                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
+                        &quot;auth and id does not match&quot;);
+            }
+<span class="nc" id="L185">        } catch (ResourceNotFoundException e) {</span>
+<span class="nc" id="L186">            throw new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
+<span class="nc" id="L187">                    e.getMessage());</span>
+<span class="nc" id="L188">        }</span>
+
+
+<span class="nc bnc" id="L191" title="All 2 branches missed.">        if (facilityService.deleteFacility(clientID, id)) {</span>
+<span class="nc" id="L192">            return ResponseEntity.noContent().build();</span>
+        }
+<span class="nc" id="L194">        return ResponseEntity.notFound().build();</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
