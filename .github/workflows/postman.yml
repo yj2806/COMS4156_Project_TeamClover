@@ -1,0 +1,29 @@
+name: Automated API tests using Postman CLI
+
+on:
+  push:
+    branches: [ "yaochen-ci" ]
+    # branches: [ "main" ]
+
+jobs:
+  automated-api-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      - name: Install Postman CLI
+        run: |
+          curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+      - name: Login to Postman CLI
+        run: postman login --with-api-key PMAK-656e9692fd34746966f44043-daeb61cda5ea4550e920bf50ad6d035dc0
+      - name: Run API tests
+        run: |
+          cd web-service
+          mvn spring-boot:run -Dmaven.test.skip package & postman collection run "26640460-d59c3b6a-6aa4-4b21-bfdf-a3ff4181a444" --integration-id "154095-${{ github.run_id }}"
+          # Lint your API using Postman CLI
+          postman api lint 1f216e5f-e4cd-4d13-b0f0-b5ed163f92b9 --integration-id 154095
