@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios'; // If you're using Axios
 
-export const baseURL = 'http://localhost:8080/';
+export const baseURL = 'http://44.200.117.13:8080/';
 const clientURL = baseURL + 'client/';
 
 export type ClientType = {

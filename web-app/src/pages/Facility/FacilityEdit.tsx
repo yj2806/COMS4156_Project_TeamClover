@@ -1,9 +1,11 @@
-import { Button, Divider, FormControlLabel, FormGroup, Stack, Switch, TextField } from '@mui/material';
+import { Button, Divider, FormControlLabel, FormGroup, Stack, Switch, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import PageLayout from '../PageLayout';
 import { FacilityCreateDTO, facilityUpdate, getFacility } from '../../api/FacilityApi';
 
 const FacilityEdit: React.FC = () => {
+    const [message, setMessage] = useState<string | undefined>();
+
     const [authentication, setAuthentication] = useState<string>('');
     const [clientId, setClientId] = useState<string>('');
 
@@ -119,13 +121,20 @@ const FacilityEdit: React.FC = () => {
                 <Button
                     variant="contained"
                     onClick={async () => {
+                        setMessage(undefined);
                         setFacilityId(undefined);
                         const response = await facilityUpdate(facilityId || '', clientId, authentication, formValues);
                         response && setFacilityId(response.facilityID);
+                        if (response) {
+                            setMessage('Successful');
+                        } else {
+                            setMessage('Unble to update, please check fields');
+                        }
                     }}
                 >
                     Update Facility
                 </Button>
+                {message && <Typography>{message}</Typography>}
             </Stack>
         </PageLayout>
     );
