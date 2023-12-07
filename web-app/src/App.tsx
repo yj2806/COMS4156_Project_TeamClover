@@ -5,11 +5,13 @@ import CreateFacility from './pages/Facility/CreateFacility';
 import CreateListing from './pages/Listing/CreateListing';
 import ListingView from './pages/Listing/ListingView';
 import ListingEdit from './pages/Listing/ListingEdit';
-import ListingSearch from './pages/Listing/ListingSearch';
 import FacilityEdit from './pages/Facility/FacilityEdit';
 import FacilityView from './pages/Facility/FacilityView';
 import FacilityDelete from './pages/Facility/FacilityDelete';
 import ClientDelete from './pages/Client/ClientDelete';
+import ListingSearchGroupCode from './pages/Listing/Search/ListingSearchGroupCode';
+import ListingSearchWithFilter from './pages/Listing/Search/ListingSearchWithFilter';
+import ListingDelete from './pages/Listing/ListingDelete';
 
 const App = () => {
     return (
@@ -30,7 +32,11 @@ const App = () => {
                     <Route path="create" element={<CreateListing />} />
                     <Route path="view" element={<ListingView />} />
                     <Route path="edit" element={<ListingEdit />} />
-                    <Route path="search" element={<ListingSearch />} />
+                    <Route path="delete" element={<ListingDelete />} />
+                    <Route path="search/">
+                        <Route path="group_code" element={<ListingSearchGroupCode />} />
+                        <Route path="filter" element={<ListingSearchWithFilter />} />
+                    </Route>
                 </Route>
             </Routes>
         </>

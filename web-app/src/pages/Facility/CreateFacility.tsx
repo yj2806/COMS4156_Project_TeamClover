@@ -32,7 +32,7 @@ const CreateFacility: React.FC = () => {
 
     return (
         <PageLayout>
-            <Stack gap={2} width={500} p={2}>
+            <Stack gap={2} width={500}>
                 <TextField
                     label="Client ID"
                     type="string"
