@@ -93,6 +93,11 @@ public class FacilityService {
                     "only distributor can create facility");
         }
 
+        if (facility.getIsPublic() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "invalid public status");
+        }
+
         if (facility.getEmail() != null && !facility.getEmail().contains("@")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "invalid email");
@@ -146,6 +151,11 @@ public class FacilityService {
         if (!clientId.equals(f.getAssociated_distributorID())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
                     "unmatched client and facility");
+        }
+
+        if (updatedFacility.getIsPublic() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "invalid public status");
         }
 
         if (updatedFacility.getEmail() != null && !updatedFacility.getEmail().contains("@")) {
