@@ -211,32 +211,33 @@ public class ListingService {
 <span class="fc" id="L211">        return false;</span>
     }
 
-    /**
-     * Searches for listings based on a combination of criteria including public/private status,
-     * group code, item list, age requirement, veteran status, gender, and location.
-     *
-     * This method combines both non-location and location-based criteria to filter listings.
-     * It leverages a single database query to efficiently retrieve listings that match all specified criteria.
-     *
-     * @param isPublic        Boolean flag indicating if the listing is public. If null, this criterion is ignored.
-     * @param groupCode       Integer representing the group code for private listings. If null, this criterion is ignored.
-     * @param itemList        String representing the list of items in the listing. If null, this criterion is ignored.
-     * @param ageRequirement  Integer specifying the age requirement for the listing. If null, this criterion is ignored.
-     * @param veteranStatus   Boolean flag indicating if the listing is for veterans. If null, this criterion is ignored.
-     * @param gender          String indicating the gender requirement for the listing. If null, this criterion is ignored.
-     * @param latitude        Double representing the latitude for location-based filtering.
-     * @param longitude       Double representing the longitude for location-based filtering.
-     * @param range           Double representing the range (in appropriate units) for location-based filtering.
-     * @return                A list of {@link Listing} objects that match the specified criteria.
-     */
-    public List&lt;Listing&gt; searchListings(Boolean isPublic, Integer groupCode, String itemList,
-                                        Integer ageRequirement, Boolean veteranStatus, String gender,
-                                        Double latitude, Double longitude, Double range) {
-        // Call the repository method with all criteria
-<span class="fc" id="L236">        return listingRepository.findListingsByCriteria(isPublic, groupCode, itemList,</span>
-                ageRequirement, veteranStatus, gender,
-                latitude, longitude, range);
-    }
+//    Deprecated
+//    /**
+//     * Searches for listings based on a combination of criteria including public/private status,
+//     * group code, item list, age requirement, veteran status, gender, and location.
+//     *
+//     * This method combines both non-location and location-based criteria to filter listings.
+//     * It leverages a single database query to efficiently retrieve listings that match all specified criteria.
+//     *
+//     * @param isPublic        Boolean flag indicating if the listing is public. If null, this criterion is ignored.
+//     * @param groupCode       Integer representing the group code for private listings. If null, this criterion is ignored.
+//     * @param itemList        String representing the list of items in the listing. If null, this criterion is ignored.
+//     * @param ageRequirement  Integer specifying the age requirement for the listing. If null, this criterion is ignored.
+//     * @param veteranStatus   Boolean flag indicating if the listing is for veterans. If null, this criterion is ignored.
+//     * @param gender          String indicating the gender requirement for the listing. If null, this criterion is ignored.
+//     * @param latitude        Double representing the latitude for location-based filtering.
+//     * @param longitude       Double representing the longitude for location-based filtering.
+//     * @param range           Double representing the range (in appropriate units) for location-based filtering.
+//     * @return                A list of {@link Listing} objects that match the specified criteria.
+//     */
+//    public List&lt;Listing&gt; searchListings(Boolean isPublic, Integer groupCode, String itemList,
+//                                        Integer ageRequirement, Boolean veteranStatus, String gender,
+//                                        Double latitude, Double longitude, Double range) {
+//        // Call the repository method with all criteria
+//        return listingRepository.findListingsByCriteria(isPublic, groupCode, itemList,
+//                ageRequirement, veteranStatus, gender,
+//                latitude, longitude, range);
+//    }
 
 
     /**
@@ -255,14 +256,14 @@ public class ListingService {
     public List&lt;Listing&gt; searchListingsWithFilter(Double latitude, Double longitude, Double range,
                                                   String itemList, Integer age, Boolean veteranStatus, String gender) {
         // Process the itemList if it's not null or empty
-<span class="fc" id="L258">        String processedItemList = null;</span>
-<span class="pc bpc" id="L259" title="2 of 4 branches missed.">        if (itemList != null &amp;&amp; !itemList.isEmpty()) {</span>
+<span class="fc" id="L259">        String processedItemList = null;</span>
+<span class="pc bpc" id="L260" title="2 of 4 branches missed.">        if (itemList != null &amp;&amp; !itemList.isEmpty()) {</span>
             // Split the itemList by the delimiter and join with SQL wildcards
-<span class="fc" id="L261">            processedItemList = &quot;%&quot; + itemList.replace(&quot;|&quot;, &quot;%|%&quot;) + &quot;%&quot;;</span>
+<span class="fc" id="L262">            processedItemList = &quot;%&quot; + itemList.replace(&quot;|&quot;, &quot;%|%&quot;) + &quot;%&quot;;</span>
         }
 
         // Call the repository method with the processed item list and other criteria
-<span class="fc" id="L265">        return listingRepository.findListingsWithFilter(latitude, longitude, range, processedItemList, age, veteranStatus, gender);</span>
+<span class="fc" id="L266">        return listingRepository.findListingsWithFilter(latitude, longitude, range, processedItemList, age, veteranStatus, gender);</span>
     }
 
 
@@ -277,7 +278,7 @@ public class ListingService {
      */
     public List&lt;Listing&gt; searchListingsWithGroupCode(Double latitude, Double longitude, Double range, Integer groupCode) {
         // Call the repository method with group code and location criteria
-<span class="fc" id="L280">        return listingRepository.findListingsWithGroupCode(latitude, longitude, range, groupCode);</span>
+<span class="fc" id="L281">        return listingRepository.findListingsWithGroupCode(latitude, longitude, range, groupCode);</span>
     }
 
 
