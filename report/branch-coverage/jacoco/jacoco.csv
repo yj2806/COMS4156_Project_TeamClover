@@ -15,6 +15,6 @@ web-service,com.example.webservice.controller,ListingController,59,99,10,8,13,21
 web-service,com.example.webservice.controller,HelloController,2,3,0,0,1,1,1,1,1,1
 web-service,com.example.webservice.controller,ClientController,0,50,0,2,0,16,0,4,0,3
 web-service,com.example.webservice.controller,FacilityController,42,154,0,8,14,34,0,11,0,7
-web-service,com.example.webservice.service,FacilityService,110,211,18,10,16,49,15,12,3,10
+web-service,com.example.webservice.service,FacilityService,122,217,20,12,18,51,17,12,3,10
 web-service,com.example.webservice.service,ClientService,61,73,5,3,13,18,5,6,2,5
 web-service,com.example.webservice.service,ListingService,91,271,10,12,15,58,14,13,5,11
