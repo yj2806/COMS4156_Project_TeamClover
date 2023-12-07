@@ -20,6 +20,7 @@ import java.util.List;
  * Controller for handling operations related to the {@link Facility} entity.
  */
 @RestController
+@CrossOrigin
 @RequestMapping("facility")
 public class FacilityController {
 
