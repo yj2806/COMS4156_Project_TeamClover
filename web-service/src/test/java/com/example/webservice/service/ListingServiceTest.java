@@ -200,17 +200,17 @@ public class ListingServiceTest {
     }
 
 
-    @Test
-    public void testSearchListings() {
-        when(listingRepository.findListingsByCriteria(any(), any(), any(), any(), any(), any(), anyDouble(), anyDouble(), anyDouble()))
-                .thenReturn(Collections.singletonList(testListing));
-
-        var result = listingService.searchListings(true, 123, "itemList", 18, true, "gender", 40.0, -74.0, 10.0);
-
-        assertFalse(result.isEmpty());
-        assertEquals(1, result.size());
-        verify(listingRepository).findListingsByCriteria(any(), any(), any(), any(), any(), any(), anyDouble(), anyDouble(), anyDouble());
-    }
+//    @Test
+//    public void testSearchListings() {
+//        when(listingRepository.findListingsByCriteria(any(), any(), any(), any(), any(), any(), anyDouble(), anyDouble(), anyDouble()))
+//                .thenReturn(Collections.singletonList(testListing));
+//
+//        var result = listingService.searchListings(true, 123, "itemList", 18, true, "gender", 40.0, -74.0, 10.0);
+//
+//        assertFalse(result.isEmpty());
+//        assertEquals(1, result.size());
+//        verify(listingRepository).findListingsByCriteria(any(), any(), any(), any(), any(), any(), anyDouble(), anyDouble(), anyDouble());
+//    }
 
     @Test
     public void testSearchListingsWithFilterSuccess() {

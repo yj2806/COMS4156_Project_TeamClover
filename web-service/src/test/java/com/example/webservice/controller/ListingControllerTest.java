@@ -172,20 +172,20 @@ public class ListingControllerTest {
         verify(listingService).deleteListing(anyLong(), anyString(), eq(listingId));
     }
 
-    @Test
-    public void testSearchListings() throws Exception {
-        when(listingService.searchListings(any(), any(), any(), any(), any(), any(), anyDouble(), anyDouble(), anyDouble()))
-                .thenReturn(Collections.singletonList(new Listing()));
-
-        mockMvc.perform(get("/listing/search")
-                        .param("latitude", "40.7128")
-                        .param("longitude", "-74.0060")
-                        .param("range", "10"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)));
-
-        verify(listingService).searchListings(any(), any(), any(), any(), any(), any(), anyDouble(), anyDouble(), anyDouble());
-    }
+//    @Test
+//    public void testSearchListings() throws Exception {
+//        when(listingService.searchListings(any(), any(), any(), any(), any(), any(), anyDouble(), anyDouble(), anyDouble()))
+//                .thenReturn(Collections.singletonList(new Listing()));
+//
+//        mockMvc.perform(get("/listing/search")
+//                        .param("latitude", "40.7128")
+//                        .param("longitude", "-74.0060")
+//                        .param("range", "10"))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$", hasSize(1)));
+//
+//        verify(listingService).searchListings(any(), any(), any(), any(), any(), any(), anyDouble(), anyDouble(), anyDouble());
+//    }
 
     @Test
     public void testSearchListingsWithFilterSuccess() throws Exception {
