@@ -238,6 +238,20 @@ public class ListingService {
                 latitude, longitude, range);
     }
 
+
+    /**
+     * Searches for listings based on a combination of criteria including location, item list, age requirement,
+     * veteran status, and gender.
+     *
+     * @param latitude The latitude of the search center.
+     * @param longitude The longitude of the search center.
+     * @param range The range (in specified units) to search for listings.
+     * @param itemList A delimited string of items to include in the search. Items are separated by '|'.
+     * @param age The age requirement for the listings.
+     * @param veteranStatus The veteran status requirement for the listings.
+     * @param gender The gender requirement for the listings.
+     * @return A list of {@link Listing} objects that match the specified criteria.
+     */
     public List<Listing> searchListingsWithFilter(Double latitude, Double longitude, Double range,
                                                   String itemList, Integer age, Boolean veteranStatus, String gender) {
         // Process the itemList if it's not null or empty
@@ -251,6 +265,16 @@ public class ListingService {
         return listingRepository.findListingsWithFilter(latitude, longitude, range, processedItemList, age, veteranStatus, gender);
     }
 
+
+    /**
+     * Searches for listings based on a group code and location criteria.
+     *
+     * @param latitude The latitude of the search center.
+     * @param longitude The longitude of the search center.
+     * @param range The range (in specified units) to search for listings.
+     * @param groupCode The group code for the listings. This is typically used to filter listings that belong to a specific group or category.
+     * @return A list of {@link Listing} objects that match the group code and are within the specified range of the location.
+     */
     public List<Listing> searchListingsWithGroupCode(Double latitude, Double longitude, Double range, Integer groupCode) {
         // Call the repository method with group code and location criteria
         return listingRepository.findListingsWithGroupCode(latitude, longitude, range, groupCode);
