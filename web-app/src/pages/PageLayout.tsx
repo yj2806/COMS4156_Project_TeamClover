@@ -31,7 +31,9 @@ const PageLayout: React.FC<Props> = ({ children }) => {
         { name: 'Listing Create', href: '/listing/create' },
         { name: 'View Listing', href: '/listing/view' },
         { name: 'Edit Listing', href: '/listing/edit' },
-        { name: 'Search Listing', href: '/listing/search' },
+        // { name: 'Search Listing', href: '/listing/search' },
+        { name: 'Search Listing by Group Code', href: '/listing/search/group_code' },
+        { name: 'Search Listing by Filter', href: '/listing/search/filter' },
     ];
 
     const facilityMenuItems: MenuListing[] = [

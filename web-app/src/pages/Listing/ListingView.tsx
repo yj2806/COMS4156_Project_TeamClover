@@ -41,7 +41,7 @@ const ListingView: React.FC = () => {
                 </Button>
             </Stack>
             {data.map((listing) => (
-                <div>
+                <Stack gap={2}>
                     <Typography variant="h4">Listing Information</Typography>
                     <Typography variant="body1">Listing ID: {listing.listingID}</Typography>
                     <Typography variant="body1">Group Code: {listing.groupCode}</Typography>
@@ -60,7 +60,7 @@ const ListingView: React.FC = () => {
                     <Typography variant="body1">Phone: {listing.associatedFacility.phone}</Typography>
                     <Typography variant="body1">Hours: {listing.associatedFacility.hours}</Typography>
                     <Typography variant="body1">Public: {listing.associatedFacility.public ? 'Yes' : 'No'}</Typography>
-                </div>
+                </Stack>
             ))}
         </PageLayout>
     );
