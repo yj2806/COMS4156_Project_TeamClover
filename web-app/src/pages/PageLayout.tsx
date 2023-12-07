@@ -25,7 +25,7 @@ const PageLayout: React.FC<Props> = ({ children }) => {
     const drawerWidth = 240;
     const clientMenuItems: MenuListing[] = [
         { name: 'Client Create', href: '/client/create' },
-        { name: 'Client Edit', href: '/client/edit' },
+        { name: 'Client Delete', href: '/client/delete' },
     ];
     const listingMenuItems: MenuListing[] = [
         { name: 'Listing Create', href: '/listing/create' },

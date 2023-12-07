@@ -16,22 +16,21 @@ export const createClient = async (input: ClientType) => {
             },
         })
         .then(() => {
-            // Handle the server's response, such as success or error messages.
+            // return response;
         })
         .catch(() => {
             // Handle errors.
         });
 };
 
-export const EditClient = async () => {
+export const deleteClient = async (id: string, auth: string) => {
     try {
         // Replace 'your-api-url' with your actual API endpoint
-        const response = await axios.post('localhost', prompt, {
-            headers: {
-                'Content-Type': 'application/json',
+        const response = await axios.delete(`${clientURL}delete/${id}`, {
+            params: {
+                auth: auth,
             },
         });
-
         // Set the retrieved data to the state
         return response.data;
     } catch (error) {
