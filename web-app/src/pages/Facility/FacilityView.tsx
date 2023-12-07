@@ -10,7 +10,7 @@ const FacilityView: React.FC = () => {
     const [data, setData] = useState<Facility[]>([]);
 
     return (
-        <PageLayout>
+        <PageLayout title="Facility View">
             <Stack gap={3}>
                 <TextField
                     label="Client ID"

@@ -60,7 +60,7 @@ export const facilityUpdate = async (
     input: FacilityCreateDTO,
 ): Promise<Facility | undefined> => {
     try {
-        const response: AxiosResponse<Facility> = await axios.post(
+        const response: AxiosResponse<Facility> = await axios.put(
             facilityURL + 'update/' + facilityId,
             input,
 
@@ -75,7 +75,6 @@ export const facilityUpdate = async (
             },
         );
 
-        console.log('Response:', response.data);
         // Handle the response as needed
         return response.data;
     } catch (error) {

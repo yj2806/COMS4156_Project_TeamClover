@@ -54,7 +54,7 @@ const ListingEdit: React.FC = () => {
     const [listingId, setListingId] = useState<string | undefined>();
 
     return (
-        <PageLayout>
+        <PageLayout title="Edit Listing">
             <Stack gap={2}>
                 <TextField
                     label="Listing ID"

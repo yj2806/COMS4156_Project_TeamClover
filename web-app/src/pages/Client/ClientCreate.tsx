@@ -22,7 +22,7 @@ const ClientCreate: React.FC = () => {
     };
 
     return (
-        <PageLayout>
+        <PageLayout title="Create Client">
             <Stack gap={2} width={500}>
                 <TextField
                     label="Authentication"

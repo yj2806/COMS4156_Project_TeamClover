@@ -31,7 +31,7 @@ const CreateFacility: React.FC = () => {
     console.log(formValues);
 
     return (
-        <PageLayout>
+        <PageLayout title="Create Facility">
             <Stack gap={2} width={500}>
                 <TextField
                     label="Client ID"
