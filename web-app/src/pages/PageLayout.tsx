@@ -74,18 +74,6 @@ const PageLayout: React.FC<Props> = ({ children }) => {
                     </List>
                     <Divider />
                     <List>
-                        <ListItem sx={{ fontWeight: 'bold' }}>Listing</ListItem>
-                        {listingMenuItems.map((item) => (
-                            <ListItem key={item.name} disablePadding>
-                                <ListItemButton href={item.href}>
-                                    <ListItemIcon></ListItemIcon>
-                                    <ListItemText primary={item.name} />
-                                </ListItemButton>
-                            </ListItem>
-                        ))}
-                    </List>
-                    <Divider />
-                    <List>
                         <ListItem sx={{ fontWeight: 'bold' }}>Facility</ListItem>
                         {facilityMenuItems.map((item) => (
                             <ListItem key={item.name} disablePadding>
@@ -96,8 +84,20 @@ const PageLayout: React.FC<Props> = ({ children }) => {
                             </ListItem>
                         ))}
                     </List>
+                    <Divider />
+                    <List>
+                        <ListItem sx={{ fontWeight: 'bold' }}>Listing</ListItem>
+                        {listingMenuItems.map((item) => (
+                            <ListItem key={item.name} disablePadding>
+                                <ListItemButton href={item.href}>
+                                    <ListItemIcon></ListItemIcon>
+                                    <ListItemText primary={item.name} />
+                                </ListItemButton>
+                            </ListItem>
+                        ))}
+                    </List>
                 </Drawer>
-                <Box sx={{ mt: '70px' }}>{children}</Box>
+                <Box sx={{ mt: '70px', pt: 2 }}>{children}</Box>
             </Box>
         </CssBaseline>
     );

@@ -38,7 +38,6 @@ export const createClient = async (input: ClientType): Promise<ClientResponse | 
 
 export const deleteClient = async (id: string, auth: string) => {
     try {
-        // Replace 'your-api-url' with your actual API endpoint
         const response = await axios.delete(`${clientURL}delete/${id}`, {
             params: {
                 auth: auth,

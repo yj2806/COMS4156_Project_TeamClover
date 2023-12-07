@@ -40,7 +40,7 @@ const ClientCreate: React.FC = () => {
                         <MenuItem value={'NON_DISTRIBUTOR'}>NON DISTRIBUTOR</MenuItem>
                     </Select>
                 </FormControl>
-                {clientId && <Typography>{clientId}</Typography>}
+                {clientId && <Typography>New Client ID: {clientId}</Typography>}
                 <Button
                     disabled={!authentication}
                     onClick={async () => {
