@@ -9,7 +9,7 @@ const ListingDelete: React.FC = () => {
     const [listingId, setListingId] = useState<string | undefined>();
 
     return (
-        <PageLayout>
+        <PageLayout title="Delete Listing">
             <Stack gap={3}>
                 <TextField
                     label="Client ID"

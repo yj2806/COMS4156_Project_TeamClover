@@ -1,7 +1,7 @@
 import { Button, Divider, FormControlLabel, FormGroup, Stack, Switch, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import PageLayout from '../PageLayout';
-import { FacilityCreateDTO, facilityCreate, getFacility } from '../../api/FacilityApi';
+import { FacilityCreateDTO, facilityUpdate, getFacility } from '../../api/FacilityApi';
 
 const FacilityEdit: React.FC = () => {
     const [authentication, setAuthentication] = useState<string>('');
@@ -26,10 +26,8 @@ const FacilityEdit: React.FC = () => {
         }));
     };
 
-    console.log(formValues);
-
     return (
-        <PageLayout>
+        <PageLayout title="Facility Edit">
             <Stack gap={2}>
                 <TextField
                     label="Facility ID"
@@ -122,7 +120,7 @@ const FacilityEdit: React.FC = () => {
                     variant="contained"
                     onClick={async () => {
                         setFacilityId(undefined);
-                        const response = await facilityCreate(clientId, authentication, formValues);
+                        const response = await facilityUpdate(facilityId || '', clientId, authentication, formValues);
                         response && setFacilityId(response.facilityID);
                     }}
                 >

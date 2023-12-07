@@ -15,13 +15,14 @@ import React from 'react';
 
 type Props = {
     children?: React.ReactNode;
+    title: string;
 };
 
 type MenuListing = {
     name: string;
     href: string;
 };
-const PageLayout: React.FC<Props> = ({ children }) => {
+const PageLayout: React.FC<Props> = ({ title, children }) => {
     const drawerWidth = 240;
     const clientMenuItems: MenuListing[] = [
         { name: 'Client Create', href: '/client/create' },
@@ -99,7 +100,10 @@ const PageLayout: React.FC<Props> = ({ children }) => {
                         ))}
                     </List>
                 </Drawer>
-                <Box sx={{ mt: '70px', p: 2 }}>{children}</Box>
+                <Box sx={{ mt: '70px', p: 2 }}>
+                    <Typography sx={{ fontSize: '24px', fontWeight: 'bold', pb: 3 }}>{title}</Typography>
+                    {children}
+                </Box>
             </Box>
         </CssBaseline>
     );

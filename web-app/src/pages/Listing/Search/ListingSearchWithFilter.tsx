@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, TextField, Typography, Checkbox, FormControlLabel, Stack } from '@mui/material';
+import { Button, TextField, Typography, Checkbox, FormControlLabel, Stack, Divider } from '@mui/material';
 import PageLayout from '../../PageLayout';
 import { Listing, searchByFilter } from '../../../api/ListingApi';
 
@@ -45,10 +45,7 @@ const ListingSearchWithFilter: React.FC = () => {
     };
 
     return (
-        <PageLayout>
-            <Typography variant="h4" gutterBottom>
-                Search Listings by Filter
-            </Typography>
+        <PageLayout title=" Search Listings by Filter">
             <TextField
                 required
                 label="Latitude"
@@ -128,6 +125,7 @@ const ListingSearchWithFilter: React.FC = () => {
                     <Typography variant="body1">Phone: {listing.associatedFacility.phone}</Typography>
                     <Typography variant="body1">Hours: {listing.associatedFacility.hours}</Typography>
                     <Typography variant="body1">Public: {listing.associatedFacility.public ? 'Yes' : 'No'}</Typography>
+                    <Divider />
                 </Stack>
             ))}
         </PageLayout>
