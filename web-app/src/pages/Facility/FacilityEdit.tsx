@@ -48,7 +48,7 @@ const FacilityEdit: React.FC = () => {
                                 longitude: response.longitude,
                                 isPublic: response.public,
                                 email: response.email,
-                                phone: response.email,
+                                phone: response.phone,
                                 hours: response.hours,
                             });
                         // console.log(response);
