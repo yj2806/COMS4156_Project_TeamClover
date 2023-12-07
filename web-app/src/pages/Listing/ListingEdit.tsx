@@ -10,11 +10,14 @@ import {
     Select,
     SelectChangeEvent,
     Divider,
+    Typography,
 } from '@mui/material';
 import PageLayout from '../PageLayout';
 import { ListingCreate, getListingById, listingUpdate } from '../../api/ListingApi';
 
 const ListingEdit: React.FC = () => {
+    const [message, setMessage] = useState<string | undefined>();
+
     const [formValues, setFormValues] = useState<ListingCreate>({
         isPublic: true,
         groupCode: 0,
@@ -46,7 +49,14 @@ const ListingEdit: React.FC = () => {
     };
 
     const handleSubmit = async () => {
-        clientId && listingId && (await listingUpdate(listingId, clientId, authentication, formValues));
+        setMessage(undefined);
+        const response =
+            clientId && listingId && (await listingUpdate(listingId, clientId, authentication, formValues));
+        if (response) {
+            setMessage('Successful');
+        } else {
+            setMessage('Unble to update, please check fields');
+        }
     };
 
     const [authentication, setAuthentication] = useState<string>('');
@@ -159,6 +169,7 @@ const ListingEdit: React.FC = () => {
                 >
                     Update Listing
                 </Button>
+                {message && <Typography>{message}</Typography>}
             </Stack>
         </PageLayout>
     );
