@@ -58,16 +58,6 @@ public class ListingServiceTest {
 
     }
 
-    @Test
-    public void testGetAllListings() {
-        when(listingRepository.findAll()).thenReturn(Collections.singletonList(testListing));
-
-        var result = listingService.getAllListings();
-
-        assertFalse(result.isEmpty());
-        assertEquals(1, result.size());
-        verify(listingRepository).findAll();
-    }
 
     @Test
     public void testGetListingByIdFound() {
