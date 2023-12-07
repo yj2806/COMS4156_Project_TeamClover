@@ -4,6 +4,7 @@ import com.example.webservice.controller.ListingController;
 import com.example.webservice.model.Facility;
 import com.example.webservice.model.Listing;
 import com.example.webservice.model.model.ListingRequestDTO;
+import com.example.webservice.service.ClientService;
 import com.example.webservice.service.ListingService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +37,8 @@ public class ListingControllerTest {
 
     @MockBean
     private ListingService listingService;
+    @MockBean
+    private ClientService clientService;
 
     private ObjectMapper objectMapper;
 
