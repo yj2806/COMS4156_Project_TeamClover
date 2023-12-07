@@ -132,21 +132,23 @@ public class ListingController {
      */
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateListing(@PathVariable Long id,
-                                                 @RequestParam Long clientID,
-                                                 @RequestParam String auth,
-                                                 @RequestBody ListingRequestDTO updatedListing) {
+                                           @RequestParam Long clientID,
+                                           @RequestParam String auth,
+                                           @RequestBody ListingRequestDTO updatedListing) {
         // Validate the listing details
         if (!updatedListing.getIsPublic() && updatedListing.getGroupCode() == null) {
             return ResponseEntity.badRequest().body("Group code is required for private listings.");
         }
 
-        // Assuming listingService.updateListing returns the updated Listing or null
-        Optional<Listing> listing = listingService.updateListing(id, clientID, auth, updatedListing);
-        if (listing != null) {
-            return ResponseEntity.ok(listing);
+        // Attempt to update the listing
+        Optional<Listing> updated = listingService.updateListing(id, clientID, auth, updatedListing);
+
+        // Check if the update operation was successful
+        if (updated.isPresent()) {
+            return ResponseEntity.ok(updated.get());
         } else {
             // Handle the case where listing update fails
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating listing");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Listing not found or update failed");
         }
     }
 

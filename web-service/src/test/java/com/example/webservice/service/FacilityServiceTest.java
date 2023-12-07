@@ -1,17 +1,21 @@
 package com.example.webservice.service;
 
+import com.example.webservice.model.Client;
 import com.example.webservice.model.Facility;
 import com.example.webservice.model.model.FacilityRequestDTO;
 import com.example.webservice.repository.ClientRepository;
 import com.example.webservice.repository.FacilityRepository;
+import com.example.webservice.repository.ListingRepository;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +31,9 @@ public class FacilityServiceTest {
     private ClientRepository clientRepository;
 
     @Mock
+    private ListingRepository listingRepository;
+
+    @Mock
     private FacilityRepository facilityRepository;
 
     @BeforeEach
@@ -35,76 +42,142 @@ public class FacilityServiceTest {
     }
 
     @Test
-    public void testGetAllFacilities() {
-        Facility facility = new Facility();
-        when(facilityRepository.findAll()).thenReturn(Arrays.asList(facility));
+    public void getPublicFacilitiesSuccess() {
+        List<Facility> expectedFacilities = Arrays.asList(new Facility(), new Facility());
+        when(facilityRepository.findPublicFacilities()).thenReturn(expectedFacilities);
 
-        List<Facility> result = facilityService.getPublicFacilities();
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals(facility, result.get(0));
+        List<Facility> actualFacilities = facilityService.getPublicFacilities();
+
+        assertEquals(expectedFacilities, actualFacilities);
     }
 
     @Test
-    public void testGetFacilityById() {
+    public void getFacilitiesByClientIDSuccess() {
+        Long clientID = 1L;
+        List<Facility> expectedFacilities = Arrays.asList(new Facility());
+        when(facilityRepository.findFacilitiesByClientID(clientID)).thenReturn(expectedFacilities);
+
+        List<Facility> actualFacilities = facilityService.getFacilitiesByClientID(clientID);
+
+        assertEquals(expectedFacilities, actualFacilities);
+    }
+
+    @Test
+    public void getFacilityByIdSuccess() {
         Long id = 1L;
-        Facility facility = new Facility();
-        when(facilityRepository.findById(id)).thenReturn(Optional.of(facility));
+        Facility expectedFacility = new Facility();
+        when(facilityRepository.findById(id)).thenReturn(Optional.of(expectedFacility));
 
-        Facility result = facilityService.getFacilityById(id);
-        assertNotNull(result);
-        assertEquals(facility, result);
+        Facility actualFacility = facilityService.getFacilityById(id);
+
+        assertEquals(expectedFacility, actualFacility);
     }
 
     @Test
-    public void testGetFacilityById_NotFound() {
+    public void getFacilityByIdNotFound() {
         Long id = 1L;
         when(facilityRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> facilityService.getFacilityById(id));
+        // Assert that the method call throws a ResourceNotFoundException
+        assertThrows(ResourceNotFoundException.class, () -> {
+            facilityService.getFacilityById(id);
+        });
     }
 
-//    @Test
-//    public void testCreateFacility() {
-//        FacilityRequestDTO facilityDTO = new FacilityRequestDTO();
-//        // set the properties if necessary
-//        Facility facility = new Facility();
-//        when(facilityRepository.save(any())).thenReturn(facility);
-//
-//        Facility result = facilityService.createFacility(facilityDTO);
-//        assertNotNull(result);
-//        assertEquals(facility, result);
-//    }
 
-//    @Test
-//    public void testUpdateFacility() {
-//        Long id = 1L;
-//        Facility facility = new Facility();
-//        FacilityRequestDTO updatedFacilityDTO = new FacilityRequestDTO();
-//        // set properties if necessary
-//        when(facilityRepository.findById(id)).thenReturn(Optional.of(facility));
-//        when(facilityRepository.save(facility)).thenReturn(facility);
-//
-//        Facility result = facilityService.updateFacility(id, updatedFacilityDTO);
-//        assertNotNull(result);
-//        assertEquals(facility, result);
-//    }
-//
-//    @Test
-//    public void testUpdateFacility_NotFound() {
-//        Long id = 1L;
-//        FacilityRequestDTO updatedFacilityDTO = new FacilityRequestDTO();
-//        // set properties if necessary
-//        when(facilityRepository.findById(id)).thenReturn(Optional.empty());
-//
-//        assertThrows(ResourceNotFoundException.class, () -> facilityService.updateFacility(id, updatedFacilityDTO));
-//    }
+    @Test
+    public void createFacilitySuccess() {
+        Long clientId = 1L;
+        FacilityRequestDTO facilityDTO = new FacilityRequestDTO(); // Initialize with test data
+        facilityDTO.setIsPublic(true);
+        Facility expectedFacility = new Facility();
+        when(clientRepository.findById(clientId)).thenReturn(Optional.of(new Client()));
+        when(facilityRepository.save(any(Facility.class))).thenReturn(expectedFacility);
 
-//    @Test
-//    public void testDeleteFacility() {
-//        Long id = 1L;
-//        facilityService.deleteFacility(id);
-//
-//        verify(facilityRepository, times(1)).deleteById(id);
-//    }
+        Facility actualFacility = facilityService.createFacility(clientId, facilityDTO);
+
+        assertEquals(expectedFacility, actualFacility);
+    }
+
+    @Test
+    public void createFacilityClientNotFound() {
+        Long clientId = 1L;
+        FacilityRequestDTO facilityDTO = new FacilityRequestDTO(); // Initialize with test data
+        when(clientRepository.findById(clientId)).thenReturn(Optional.empty());
+
+        // Assert that the method call throws a ResourceNotFoundException
+        assertThrows(ResourceNotFoundException.class, () -> {
+            facilityService.createFacility(clientId, facilityDTO);
+        });
+    }
+
+
+    @Test
+    public void updateFacilitySuccess() {
+        Long clientId = 1L;
+        Long facilityId = 1L;
+        FacilityRequestDTO updatedFacilityDTO = new FacilityRequestDTO();
+        updatedFacilityDTO.setIsPublic(true); // Set a value for isPublic
+        // Initialize other necessary fields of updatedFacilityDTO
+
+        Facility existingFacility = new Facility();
+        existingFacility.setAssociated_distributorID(clientId);
+        when(facilityRepository.findById(facilityId)).thenReturn(Optional.of(existingFacility));
+        when(facilityRepository.save(any(Facility.class))).thenReturn(existingFacility);
+
+        Facility updatedFacility = facilityService.updateFacility(clientId, "validAuth", facilityId, updatedFacilityDTO);
+
+        assertNotNull(updatedFacility);
+    }
+
+
+    @Test
+    public void updateFacilityUnauthorized() {
+        Long clientId = 1L;
+        Long facilityId = 1L;
+        FacilityRequestDTO updatedFacilityDTO = new FacilityRequestDTO(); // Initialize with test data
+        Facility existingFacility = new Facility();
+        existingFacility.setAssociated_distributorID(2L); // Different client ID
+        when(facilityRepository.findById(facilityId)).thenReturn(Optional.of(existingFacility));
+
+        // Assert that the method call throws a ResponseStatusException
+        assertThrows(ResponseStatusException.class, () -> {
+            facilityService.updateFacility(clientId, "validAuth", facilityId, updatedFacilityDTO);
+        });
+    }
+
+
+    @Test
+    public void deleteFacilitySuccess() {
+        Long clientId = 1L;
+        Long facilityId = 1L;
+        Facility facility = new Facility();
+        facility.setAssociated_distributorID(clientId);
+        when(facilityRepository.findById(facilityId)).thenReturn(Optional.of(facility));
+        when(listingRepository.findListingsByFacilityID(facilityId)).thenReturn(Collections.emptyList());
+
+        facilityService.deleteFacility(clientId, facilityId);
+
+        verify(facilityRepository).deleteById(facilityId);
+    }
+
+
+    @Test
+    public void deleteFacilityUnauthorized() {
+        Long clientId = 1L;
+        Long facilityId = 1L;
+        Facility facility = new Facility();
+        facility.setAssociated_distributorID(2L); // Different client ID
+        when(facilityRepository.findById(facilityId)).thenReturn(Optional.of(facility));
+
+        // Assert that the method call throws a ResponseStatusException
+        assertThrows(ResponseStatusException.class, () -> {
+            facilityService.deleteFacility(clientId, facilityId);
+        });
+    }
+
 }
+
+
+
+
