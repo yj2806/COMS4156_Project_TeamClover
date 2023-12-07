@@ -10,9 +10,11 @@ import com.example.webservice.repository.ListingRepository;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import com.example.webservice.model.type.ClientType;
 
 import java.util.List;
 
@@ -86,6 +88,26 @@ public class FacilityService {
         Client c = clientRepository.findById(clientId)
                 .orElseThrow(() -> new ResourceNotFoundException("Client not found with id: " + clientId));
 
+        if (c.getType() == ClientType.NON_DISTRIBUTOR){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                    "only distributor can create facility");
+        }
+
+        if (facility.getEmail() != null && !facility.getEmail().contains("@")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "invalid email");
+        }
+
+        if (facility.getPhone() != null) {
+            for (int i = 0; i < facility.getPhone().length(); ++i) {
+                char ch = facility.getPhone().charAt(i);
+                if (!Character.isDigit(ch)) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                            "invalid phone");
+                }
+            }
+        }
+
         try {
             Facility newFacility = new Facility();
             newFacility.setAssociated_distributorID(c.getClientID());
@@ -124,6 +146,21 @@ public class FacilityService {
         if (!clientId.equals(f.getAssociated_distributorID())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
                     "unmatched client and facility");
+        }
+
+        if (updatedFacility.getEmail() != null && !updatedFacility.getEmail().contains("@")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "invalid email");
+        }
+
+        if (updatedFacility.getPhone() != null) {
+            for (int i = 0; i < updatedFacility.getPhone().length(); ++i) {
+                char ch = updatedFacility.getPhone().charAt(i);
+                if (!Character.isDigit(ch)) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                            "invalid phone");
+                }
+            }
         }
 
         return facilityRepository.findById(id)

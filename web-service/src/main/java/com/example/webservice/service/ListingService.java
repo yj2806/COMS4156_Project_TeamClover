@@ -211,32 +211,33 @@ public class ListingService {
         return false;
     }
 
-    /**
-     * Searches for listings based on a combination of criteria including public/private status,
-     * group code, item list, age requirement, veteran status, gender, and location.
-     *
-     * This method combines both non-location and location-based criteria to filter listings.
-     * It leverages a single database query to efficiently retrieve listings that match all specified criteria.
-     *
-     * @param isPublic        Boolean flag indicating if the listing is public. If null, this criterion is ignored.
-     * @param groupCode       Integer representing the group code for private listings. If null, this criterion is ignored.
-     * @param itemList        String representing the list of items in the listing. If null, this criterion is ignored.
-     * @param ageRequirement  Integer specifying the age requirement for the listing. If null, this criterion is ignored.
-     * @param veteranStatus   Boolean flag indicating if the listing is for veterans. If null, this criterion is ignored.
-     * @param gender          String indicating the gender requirement for the listing. If null, this criterion is ignored.
-     * @param latitude        Double representing the latitude for location-based filtering.
-     * @param longitude       Double representing the longitude for location-based filtering.
-     * @param range           Double representing the range (in appropriate units) for location-based filtering.
-     * @return                A list of {@link Listing} objects that match the specified criteria.
-     */
-    public List<Listing> searchListings(Boolean isPublic, Integer groupCode, String itemList,
-                                        Integer ageRequirement, Boolean veteranStatus, String gender,
-                                        Double latitude, Double longitude, Double range) {
-        // Call the repository method with all criteria
-        return listingRepository.findListingsByCriteria(isPublic, groupCode, itemList,
-                ageRequirement, veteranStatus, gender,
-                latitude, longitude, range);
-    }
+//    Deprecated
+//    /**
+//     * Searches for listings based on a combination of criteria including public/private status,
+//     * group code, item list, age requirement, veteran status, gender, and location.
+//     *
+//     * This method combines both non-location and location-based criteria to filter listings.
+//     * It leverages a single database query to efficiently retrieve listings that match all specified criteria.
+//     *
+//     * @param isPublic        Boolean flag indicating if the listing is public. If null, this criterion is ignored.
+//     * @param groupCode       Integer representing the group code for private listings. If null, this criterion is ignored.
+//     * @param itemList        String representing the list of items in the listing. If null, this criterion is ignored.
+//     * @param ageRequirement  Integer specifying the age requirement for the listing. If null, this criterion is ignored.
+//     * @param veteranStatus   Boolean flag indicating if the listing is for veterans. If null, this criterion is ignored.
+//     * @param gender          String indicating the gender requirement for the listing. If null, this criterion is ignored.
+//     * @param latitude        Double representing the latitude for location-based filtering.
+//     * @param longitude       Double representing the longitude for location-based filtering.
+//     * @param range           Double representing the range (in appropriate units) for location-based filtering.
+//     * @return                A list of {@link Listing} objects that match the specified criteria.
+//     */
+//    public List<Listing> searchListings(Boolean isPublic, Integer groupCode, String itemList,
+//                                        Integer ageRequirement, Boolean veteranStatus, String gender,
+//                                        Double latitude, Double longitude, Double range) {
+//        // Call the repository method with all criteria
+//        return listingRepository.findListingsByCriteria(isPublic, groupCode, itemList,
+//                ageRequirement, veteranStatus, gender,
+//                latitude, longitude, range);
+//    }
 
 
     /**
