@@ -22,6 +22,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 
 public class ClientServiceTest {
 
@@ -86,7 +87,7 @@ public class ClientServiceTest {
     }
 
     @Test
-    public void testGetClientByIdNotFound() {
+    public void testGetClientById_NotFound() {
         Long clientId = 1L;
         Mockito.when(clientRepository.findById(clientId)).thenReturn(Optional.empty());
 
@@ -95,20 +96,37 @@ public class ClientServiceTest {
         });
     }
 
-//    @Test
-//    public void testCreateClient() {
-//        ClientRequestDTO clientRequest = new ClientRequestDTO();
-//        clientRequest.setType("DISTRIBUTOR");
-//        // TODO:Set clientRequest properties
-//
-//        Facility facility = new Facility();
-//        Mockito.when(facilityRepository.findById(clientRequest.getAssociatedFacilityId())).thenReturn(Optional.of(facility));
-//
-//        Client result = clientService.createClient(clientRequest);
-//
-//        assertEquals(ClientType.DISTRIBUTOR,result.getType());
-//        // TODO: Perform assertions on the result
-//    }
+    @Test
+    public void testCreateClient() {
+        ClientRequestDTO clientRequest = new ClientRequestDTO();
+        clientRequest.setType("DISTRIBUTOR");
+        String auth = "test";
+        clientRequest.setAuthentication(auth);
+
+        Facility facility = new Facility();
+        Mockito.when(facilityRepository.save(facility)).thenReturn(facility);
+
+        Mockito.when(clientRepository.save(any(Client.class))).thenReturn(this.client);
+        Client result = clientService.createClient(clientRequest);
+
+        assertEquals(ClientType.DISTRIBUTOR,result.getType());
+        assertEquals(auth, result.getAuthentication());
+
+    }
+    @Test
+    public void testCreateClient_WrongType() {
+        ClientRequestDTO clientRequest = new ClientRequestDTO();
+        clientRequest.setType("DISTRIBUTOR111");
+        String auth = "test";
+        clientRequest.setAuthentication(auth);
+
+        Facility facility = new Facility();
+        Mockito.when(facilityRepository.save(facility)).thenReturn(facility);
+
+        Mockito.when(clientRepository.save(any(Client.class))).thenReturn(this.client);
+
+        assertThrows(IllegalArgumentException.class, () -> clientService.createClient(clientRequest));
+    }
 
 //    @Test
 //    public void testUpdateClient() {
