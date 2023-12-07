@@ -136,6 +136,9 @@ public class ListingController {
                                            @RequestParam Long clientID,
                                            @RequestParam String auth,
                                            @RequestBody ListingRequestDTO updatedListing) {
+        if (updatedListing.getIsPublic() == null) {
+            return ResponseEntity.badRequest().body("invalid public status");
+        }
         // Validate the listing details
         if (!updatedListing.getIsPublic() && updatedListing.getGroupCode() == null) {
             return ResponseEntity.badRequest().body("Group code is required for private listings.");
@@ -176,31 +179,32 @@ public class ListingController {
         return ResponseEntity.notFound().build();
     }
 
-    /**
-     * Searches for listings based on a specified location and range.
-     *
-     * @param latitude  Latitude of the search center.
-     * @param longitude Longitude of the search center.
-     * @param range     Range (in specified units) to search for listings.
-     * @return {@link ResponseEntity} containing a list of listings within the specified range of the location.
-     * Response Codes:
-     * 200: Success
-     */
-    @GetMapping("/search")
-    public ResponseEntity<List<Listing>> searchListings(@RequestParam(required = false) Boolean isPublic,
-                                                        @RequestParam(required = false) Integer groupCode,
-                                                        @RequestParam(required = false) String itemList,
-                                                        @RequestParam(required = false) Integer ageRequirement,
-                                                        @RequestParam(required = false) Boolean veteranStatus,
-                                                        @RequestParam(required = false) String gender,
-                                                        @RequestParam Double latitude,
-                                                        @RequestParam Double longitude,
-                                                        @RequestParam Double range) {
-        List<Listing> listings = listingService.searchListings(isPublic, groupCode, itemList,
-                ageRequirement, veteranStatus, gender,
-                latitude, longitude, range);
-        return ResponseEntity.ok(listings);
-    }
+//    Deprecated
+//    /**
+//     * Searches for listings based on a specified location and range.
+//     *
+//     * @param latitude  Latitude of the search center.
+//     * @param longitude Longitude of the search center.
+//     * @param range     Range (in specified units) to search for listings.
+//     * @return {@link ResponseEntity} containing a list of listings within the specified range of the location.
+//     * Response Codes:
+//     * 200: Success
+//     */
+//    @GetMapping("/search")
+//    public ResponseEntity<List<Listing>> searchListings(@RequestParam(required = false) Boolean isPublic,
+//                                                        @RequestParam(required = false) Integer groupCode,
+//                                                        @RequestParam(required = false) String itemList,
+//                                                        @RequestParam(required = false) Integer ageRequirement,
+//                                                        @RequestParam(required = false) Boolean veteranStatus,
+//                                                        @RequestParam(required = false) String gender,
+//                                                        @RequestParam Double latitude,
+//                                                        @RequestParam Double longitude,
+//                                                        @RequestParam Double range) {
+//        List<Listing> listings = listingService.searchListings(isPublic, groupCode, itemList,
+//                ageRequirement, veteranStatus, gender,
+//                latitude, longitude, range);
+//        return ResponseEntity.ok(listings);
+//    }
 
 
     /**
