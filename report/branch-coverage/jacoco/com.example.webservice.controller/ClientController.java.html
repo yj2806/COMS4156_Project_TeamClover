@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClientController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">web-service</a> &gt; <a href="index.source.html" class="el_package">com.example.webservice.controller</a> &gt; <span class="el_source">ClientController.java</span></div><h1>ClientController.java</h1><pre class="source lang-java linenums">package com.example.webservice.controller;
+
+import com.example.webservice.model.Client;
+import com.example.webservice.model.model.ClientRequestDTO;
+import com.example.webservice.service.ClientService;
+import org.apache.velocity.exception.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+
+/**
+ * Rest controller for handling client-related operations.
+ * Provides endpoints for creating, updating, retrieving, and deleting clients.
+ */
+@RestController
+@CrossOrigin
+@RequestMapping(&quot;client&quot;)
+public class ClientController {
+    private final ClientService clientService;
+
+    /**
+     * Constructor for dependency injection of the ClientService.
+     *
+     * @param clientService Service to handle client operations.
+     */
+    @Autowired
+<span class="fc" id="L30">    public ClientController(ClientService clientService) {</span>
+<span class="fc" id="L31">        this.clientService = clientService;</span>
+<span class="fc" id="L32">    }</span>
+
+
+    /**
+     * Create a new client.
+     * @param client client info
+     * @return the created client.
+     */
+    @PostMapping(&quot;/create&quot;)
+    public Client createClient(@RequestBody ClientRequestDTO client) {
+        try {
+<span class="fc" id="L43">            return clientService.createClient(client);</span>
+<span class="fc" id="L44">        } catch (IllegalArgumentException e) {</span>
+<span class="fc" id="L45">            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,</span>
+<span class="fc" id="L46">                                            e.getMessage());</span>
+        }
+
+    }
+
+    /**
+     * Delete client.
+     * @param id client id, auth
+     * @param auth client authentication
+     */
+    @DeleteMapping(&quot;/delete/{id}&quot;)
+    public void deleteClient(@PathVariable Long id, @RequestParam String auth) {
+        try {
+<span class="fc" id="L59">            Client client = clientService.getClientById(id);</span>
+
+<span class="fc bfc" id="L61" title="All 2 branches covered.">            if (auth.equals(client.getAuthentication())) {</span>
+<span class="fc" id="L62">                clientService.deleteClient(id);</span>
+            } else {
+<span class="fc" id="L64">                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
+                        &quot;auth and id does not match&quot;);
+            }
+
+<span class="fc" id="L68">        } catch (ResourceNotFoundException e) {</span>
+<span class="fc" id="L69">            throw new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
+<span class="fc" id="L70">                    e.getMessage());</span>
+<span class="fc" id="L71">        }</span>
+
+<span class="fc" id="L73">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
