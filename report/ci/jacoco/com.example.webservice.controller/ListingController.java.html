@@ -136,20 +136,23 @@ import java.util.Optional;
                                            @RequestParam Long clientID,
                                            @RequestParam String auth,
                                            @RequestBody ListingRequestDTO updatedListing) {
+<span class="pc bpc" id="L139" title="1 of 2 branches missed.">        if (updatedListing.getIsPublic() == null) {</span>
+<span class="nc" id="L140">            return ResponseEntity.badRequest().body(&quot;invalid public status&quot;);</span>
+        }
         // Validate the listing details
-<span class="pc bpc" id="L140" title="3 of 4 branches missed.">        if (!updatedListing.getIsPublic() &amp;&amp; updatedListing.getGroupCode() == null) {</span>
-<span class="nc" id="L141">            return ResponseEntity.badRequest().body(&quot;Group code is required for private listings.&quot;);</span>
+<span class="pc bpc" id="L143" title="3 of 4 branches missed.">        if (!updatedListing.getIsPublic() &amp;&amp; updatedListing.getGroupCode() == null) {</span>
+<span class="nc" id="L144">            return ResponseEntity.badRequest().body(&quot;Group code is required for private listings.&quot;);</span>
         }
 
         // Attempt to update the listing
-<span class="fc" id="L145">        Optional&lt;Listing&gt; updated = listingService.updateListing(id, clientID, auth, updatedListing);</span>
+<span class="fc" id="L148">        Optional&lt;Listing&gt; updated = listingService.updateListing(id, clientID, auth, updatedListing);</span>
 
         // Check if the update operation was successful
-<span class="fc bfc" id="L148" title="All 2 branches covered.">        if (updated.isPresent()) {</span>
-<span class="fc" id="L149">            return ResponseEntity.ok(updated.get());</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">        if (updated.isPresent()) {</span>
+<span class="fc" id="L152">            return ResponseEntity.ok(updated.get());</span>
         } else {
             // Handle the case where listing update fails
-<span class="fc" id="L152">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;Listing not found or update failed&quot;);</span>
+<span class="fc" id="L155">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;Listing not found or update failed&quot;);</span>
         }
     }
 
@@ -170,37 +173,38 @@ import java.util.Optional;
     public ResponseEntity&lt;Void&gt; deleteListing(@RequestParam Long clientID,
                                               @RequestParam String auth,
                                               @PathVariable Long id) {
-<span class="fc bfc" id="L173" title="All 2 branches covered.">        if (listingService.deleteListing(clientID, auth, id)) {</span>
-<span class="fc" id="L174">            return ResponseEntity.noContent().build();</span>
+<span class="fc bfc" id="L176" title="All 2 branches covered.">        if (listingService.deleteListing(clientID, auth, id)) {</span>
+<span class="fc" id="L177">            return ResponseEntity.noContent().build();</span>
         }
-<span class="fc" id="L176">        return ResponseEntity.notFound().build();</span>
+<span class="fc" id="L179">        return ResponseEntity.notFound().build();</span>
     }
 
-    /**
-     * Searches for listings based on a specified location and range.
-     *
-     * @param latitude  Latitude of the search center.
-     * @param longitude Longitude of the search center.
-     * @param range     Range (in specified units) to search for listings.
-     * @return {@link ResponseEntity} containing a list of listings within the specified range of the location.
-     * Response Codes:
-     * 200: Success
-     */
-    @GetMapping(&quot;/search&quot;)
-    public ResponseEntity&lt;List&lt;Listing&gt;&gt; searchListings(@RequestParam(required = false) Boolean isPublic,
-                                                        @RequestParam(required = false) Integer groupCode,
-                                                        @RequestParam(required = false) String itemList,
-                                                        @RequestParam(required = false) Integer ageRequirement,
-                                                        @RequestParam(required = false) Boolean veteranStatus,
-                                                        @RequestParam(required = false) String gender,
-                                                        @RequestParam Double latitude,
-                                                        @RequestParam Double longitude,
-                                                        @RequestParam Double range) {
-<span class="fc" id="L199">        List&lt;Listing&gt; listings = listingService.searchListings(isPublic, groupCode, itemList,</span>
-                ageRequirement, veteranStatus, gender,
-                latitude, longitude, range);
-<span class="fc" id="L202">        return ResponseEntity.ok(listings);</span>
-    }
+//    Deprecated
+//    /**
+//     * Searches for listings based on a specified location and range.
+//     *
+//     * @param latitude  Latitude of the search center.
+//     * @param longitude Longitude of the search center.
+//     * @param range     Range (in specified units) to search for listings.
+//     * @return {@link ResponseEntity} containing a list of listings within the specified range of the location.
+//     * Response Codes:
+//     * 200: Success
+//     */
+//    @GetMapping(&quot;/search&quot;)
+//    public ResponseEntity&lt;List&lt;Listing&gt;&gt; searchListings(@RequestParam(required = false) Boolean isPublic,
+//                                                        @RequestParam(required = false) Integer groupCode,
+//                                                        @RequestParam(required = false) String itemList,
+//                                                        @RequestParam(required = false) Integer ageRequirement,
+//                                                        @RequestParam(required = false) Boolean veteranStatus,
+//                                                        @RequestParam(required = false) String gender,
+//                                                        @RequestParam Double latitude,
+//                                                        @RequestParam Double longitude,
+//                                                        @RequestParam Double range) {
+//        List&lt;Listing&gt; listings = listingService.searchListings(isPublic, groupCode, itemList,
+//                ageRequirement, veteranStatus, gender,
+//                latitude, longitude, range);
+//        return ResponseEntity.ok(listings);
+//    }
 
 
     /**
@@ -225,8 +229,8 @@ import java.util.Optional;
                                                                   @RequestParam(required = false) Integer age,
                                                                   @RequestParam(required = false) Boolean veteranStatus,
                                                                   @RequestParam(required = false) String gender) {
-<span class="fc" id="L228">        List&lt;Listing&gt; listings = listingService.searchListingsWithFilter(latitude, longitude, range, itemContained, age, veteranStatus, gender);</span>
-<span class="fc" id="L229">        return ResponseEntity.ok(listings);</span>
+<span class="fc" id="L232">        List&lt;Listing&gt; listings = listingService.searchListingsWithFilter(latitude, longitude, range, itemContained, age, veteranStatus, gender);</span>
+<span class="fc" id="L233">        return ResponseEntity.ok(listings);</span>
     }
 
     /**
@@ -245,8 +249,8 @@ import java.util.Optional;
                                                                      @RequestParam Double longitude,
                                                                      @RequestParam Double range,
                                                                      @RequestParam Integer groupCode) {
-<span class="fc" id="L248">        List&lt;Listing&gt; listings = listingService.searchListingsWithGroupCode(latitude, longitude, range, groupCode);</span>
-<span class="fc" id="L249">        return ResponseEntity.ok(listings);</span>
+<span class="fc" id="L252">        List&lt;Listing&gt; listings = listingService.searchListingsWithGroupCode(latitude, longitude, range, groupCode);</span>
+<span class="fc" id="L253">        return ResponseEntity.ok(listings);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
