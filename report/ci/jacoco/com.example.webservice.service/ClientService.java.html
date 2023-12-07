@@ -25,11 +25,11 @@ public class ClientService {
     @Autowired
     public ClientService(ClientRepository clientRepository,
                          FacilityRepository facilityRepository,
-<span class="nc" id="L28">                         ListingRepository listingRepository) {</span>
-<span class="nc" id="L29">        this.clientRepository = clientRepository;</span>
-<span class="nc" id="L30">        this.facilityRepository = facilityRepository;</span>
-<span class="nc" id="L31">        this.listingRepository = listingRepository;</span>
-<span class="nc" id="L32">    }</span>
+<span class="fc" id="L28">                         ListingRepository listingRepository) {</span>
+<span class="fc" id="L29">        this.clientRepository = clientRepository;</span>
+<span class="fc" id="L30">        this.facilityRepository = facilityRepository;</span>
+<span class="fc" id="L31">        this.listingRepository = listingRepository;</span>
+<span class="fc" id="L32">    }</span>
 
 //    /**
 //     * !!deprecated!!
@@ -52,8 +52,8 @@ public class ClientService {
      */
     @Transactional
     public Client getClientById(Long id) {
-<span class="nc" id="L55">        return clientRepository.findById(id)</span>
-<span class="nc" id="L56">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Client not found with id: &quot; + id));</span>
+<span class="fc" id="L55">        return clientRepository.findById(id)</span>
+<span class="fc" id="L56">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Client not found with id: &quot; + id));</span>
     }
 
     /**
@@ -64,17 +64,17 @@ public class ClientService {
      */
     @Transactional
     public Client createClient(ClientRequestDTO client) {
-<span class="nc" id="L67">        boolean validType = ClientType.isValid(client.getType());</span>
-<span class="nc bnc" id="L68" title="All 2 branches missed.">        if (!validType) {</span>
-<span class="nc" id="L69">            throw new IllegalArgumentException(&quot;Valid type are DISTRIBUTOR and NON_DISTRIBUTOR&quot;);</span>
+<span class="fc" id="L67">        boolean validType = ClientType.isValid(client.getType());</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (!validType) {</span>
+<span class="fc" id="L69">            throw new IllegalArgumentException(&quot;Valid type are DISTRIBUTOR and NON_DISTRIBUTOR&quot;);</span>
         }
 
-<span class="nc" id="L72">        Client newClient = new Client();</span>
+<span class="fc" id="L72">        Client newClient = new Client();</span>
 //        Create facility and listing later
 //        newClient.setAssociatedFacility(createFacility());
-<span class="nc" id="L75">        newClient.setType(ClientType.fromString(client.getType()));</span>
-<span class="nc" id="L76">        newClient.setAuthentication(client.getAuthentication());</span>
-<span class="nc" id="L77">        return clientRepository.save(newClient);</span>
+<span class="fc" id="L75">        newClient.setType(ClientType.fromString(client.getType()));</span>
+<span class="fc" id="L76">        newClient.setAuthentication(client.getAuthentication());</span>
+<span class="fc" id="L77">        return clientRepository.save(newClient);</span>
     }
 
 //    // Update an existing client based on ID and new client info
@@ -100,9 +100,9 @@ public class ClientService {
     public void deleteClient(Long id) {
 //        Client client = getClientById(id);
 
-<span class="nc" id="L103">        List&lt;Facility&gt; facilityIDs = facilityRepository.findFacilitiesByClientID(id);</span>
+<span class="fc" id="L103">        List&lt;Facility&gt; facilityIDs = facilityRepository.findFacilitiesByClientID(id);</span>
 
-<span class="nc bnc" id="L105" title="All 2 branches missed.">        for (Facility f : facilityIDs) {</span>
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">        for (Facility f : facilityIDs) {</span>
 <span class="nc" id="L106">            Long facilityID = f.getFacilityID();</span>
 <span class="nc" id="L107">            List&lt;Listing&gt; listingID = listingRepository.findListingsByFacilityID(facilityID);</span>
 <span class="nc bnc" id="L108" title="All 2 branches missed.">            for (Listing l : listingID) {</span>
@@ -110,8 +110,8 @@ public class ClientService {
 <span class="nc" id="L110">            }</span>
 <span class="nc" id="L111">            facilityRepository.deleteById(facilityID);</span>
 <span class="nc" id="L112">        }</span>
-<span class="nc" id="L113">        clientRepository.deleteById(id);</span>
-<span class="nc" id="L114">    }</span>
+<span class="fc" id="L113">        clientRepository.deleteById(id);</span>
+<span class="fc" id="L114">    }</span>
 
     /**
      * Helper method to retrieve a facility based on its ID.
