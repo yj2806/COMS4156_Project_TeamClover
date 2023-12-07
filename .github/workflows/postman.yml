@@ -19,7 +19,7 @@ jobs:
       - name: Start project
         run: |
           cd web-service
-          mvn spring-boot:run
+          mvn spring-boot:run &
       - name: Sleep for 30 seconds
         uses: jakejarvis/wait-action@master
         with:
