@@ -150,14 +150,20 @@ public class FacilityController {
             @RequestParam String auth,
             @PathVariable Long facilityID,
             @RequestBody FacilityRequestDTO facility) {
+
         try {
-            Facility updatedFacility = facilityService.updateFacility(clientID, auth, facilityID, facility);
-            return new ResponseEntity<>(updatedFacility, HttpStatus.OK);
-        } catch (InvalidTokenException e) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (InvalidClientIDOrAuthException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            Client client = clientService.getClientById(clientID);
+
+            if (!auth.equals(client.getAuthentication())) {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                        "auth and id does not match");
+            }
+        } catch (ResourceNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Client Not Found");
         }
+        Facility updatedFacility = facilityService.updateFacility(clientID, auth, facilityID, facility);
+        return new ResponseEntity<>(updatedFacility, HttpStatus.OK);
     }
 
     /**
@@ -172,7 +178,7 @@ public class FacilityController {
      *         HttpStatus.NOT_FOUND (404) for invalid client ID or authentication.
      */
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteFacility(@RequestParam Long clientID,
+    public ResponseEntity<String> deleteFacility(@RequestParam Long clientID,
                                                @RequestParam String auth,
                                                @PathVariable Long id) {
 
@@ -185,14 +191,11 @@ public class FacilityController {
             }
         } catch (ResourceNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    e.getMessage());
+                    "Client Not Found");
         }
 
-
-        if (facilityService.deleteFacility(clientID, id)) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+        facilityService.deleteFacility(clientID, id);
+        return new ResponseEntity<>("facility " + id + " deleted", HttpStatus.OK);
     }
 
 
