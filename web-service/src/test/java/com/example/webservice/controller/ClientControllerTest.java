@@ -98,25 +98,6 @@ public class ClientControllerTest {
 
     }
 
-//    @Test
-//    public void testUpdateClient() throws Exception {
-//        Long clientId = 1L;
-//        ClientRequestDTO updatedClientDTO = new ClientRequestDTO();
-//        // TODO: Set properties of the updated client request DTO
-//
-//        Client updatedClient = new Client();
-//        // TODO: Set properties of the updated client
-//
-//        Mockito.when(clientService.updateClient(clientId, updatedClientDTO)).thenReturn(updatedClient);
-//
-//        mockMvc.perform(MockMvcRequestBuilders.put("/client/update/" + clientId)
-//                        .contentType("application/json")
-//                        .content("{\"property1\": \"updatedValue1\", \"property2\": \"updatedValue2\"}"))
-//                .andExpect(MockMvcResultMatchers.status().isOk());
-//
-//        // TODO: Add assertions for the response content
-//    }
-
     @Test
     public void testDeleteClient401() throws Exception {
         Long clientId = 1L;
@@ -129,7 +110,6 @@ public class ClientControllerTest {
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete("/client/delete/" + clientId).param("auth","auth"))
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized()).andReturn();
 
-        // TODO:Add assertions
     }
 
     @Test
@@ -162,6 +142,5 @@ public class ClientControllerTest {
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete("/client/delete/" + clientId).param("auth","auth"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound()).andReturn();
 
-        // TODO:Add assertions
     }
 }
