@@ -10,6 +10,9 @@ import {
     Divider,
     FormGroup,
     SelectChangeEvent,
+    Typography,
+    FormControl,
+    InputLabel,
 } from '@mui/material';
 import PageLayout from '../PageLayout';
 import { ListingCreate, listingCreate } from '../../api/ListingApi';
@@ -24,8 +27,7 @@ const CreateListing: React.FC = () => {
         gender: '',
     });
 
-    console.log(formValues);
-
+    const [listingId, setListingId] = useState<string | undefined>();
     const handleInputChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | { name: string; value: unknown }>,
     ) => {
@@ -46,7 +48,10 @@ const CreateListing: React.FC = () => {
     };
 
     const handleSubmit = async () => {
-        clientId && facilityId && (await listingCreate(clientId, authentication, facilityId, formValues));
+        setListingId(undefined);
+        const response =
+            clientId && facilityId && (await listingCreate(clientId, authentication, facilityId, formValues));
+        response && setListingId(response.listingID);
     };
 
     const [authentication, setAuthentication] = useState<string>('');
@@ -54,7 +59,7 @@ const CreateListing: React.FC = () => {
     const [facilityId, setFacilityId] = useState<string | undefined>();
 
     return (
-        <PageLayout>
+        <PageLayout title="Create Listing">
             <Stack gap={2} width={500}>
                 <TextField
                     label="Client ID"
@@ -94,11 +99,19 @@ const CreateListing: React.FC = () => {
                             value={formValues.itemList}
                             onChange={handleInputChange}
                         />
-                        <Select label="Gender" name="gender" value={formValues.gender} onChange={handleSelectChange}>
-                            <MenuItem value="male">Male</MenuItem>
-                            <MenuItem value="female">Female</MenuItem>
-                            <MenuItem value="other">Other</MenuItem>
-                        </Select>
+                        <FormControl fullWidth>
+                            <InputLabel id="gender-type">Gender</InputLabel>
+                            <Select
+                                label="Gender"
+                                name="gender"
+                                value={formValues.gender}
+                                onChange={handleSelectChange}
+                            >
+                                <MenuItem value="male">Male</MenuItem>
+                                <MenuItem value="female">Female</MenuItem>
+                                <MenuItem value="other">Other</MenuItem>
+                            </Select>
+                        </FormControl>
                         <TextField
                             label="Group Code"
                             name="groupCode"
@@ -139,6 +152,7 @@ const CreateListing: React.FC = () => {
                 >
                     Create Listing
                 </Button>
+                {listingId && <Typography>New Listing ID: {listingId}</Typography>}
             </Stack>
         </PageLayout>
     );

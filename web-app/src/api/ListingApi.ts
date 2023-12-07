@@ -14,7 +14,7 @@ export type ListingCreate = {
 };
 
 export type Listing = {
-    listingID: number;
+    listingID: string;
     associatedFacility: Facility;
     groupCode: number;
     itemList: string;
@@ -31,9 +31,9 @@ export const listingCreate = async (
     auth: string,
     facilityId: string,
     input: ListingCreate,
-): Promise<Facility | undefined> => {
+): Promise<Listing | undefined> => {
     try {
-        const response: AxiosResponse<Facility> = await axios.post(
+        const response: AxiosResponse<Listing> = await axios.post(
             ListingURL + 'create',
             input,
 

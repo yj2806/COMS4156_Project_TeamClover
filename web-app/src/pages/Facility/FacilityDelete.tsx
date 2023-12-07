@@ -9,7 +9,7 @@ const FacilityDelete: React.FC = () => {
     const [facilityId, setFacilityId] = useState<string | undefined>();
 
     return (
-        <PageLayout>
+        <PageLayout title="Facility Delete">
             <Stack gap={3}>
                 <TextField
                     label="Client ID"
