@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.util.List;
 
@@ -33,10 +34,11 @@ public class FacilityController {
      * @param facilityService the facility service
      */
     @Autowired
-<span class="fc" id="L36">    public FacilityController(FacilityService facilityService, ClientService clientService) {</span>
-<span class="fc" id="L37">        this.facilityService = facilityService;</span>
-<span class="fc" id="L38">        this.clientService = clientService;</span>
-<span class="fc" id="L39">    }</span>
+    @SuppressFBWarnings
+<span class="fc" id="L38">    public FacilityController(FacilityService facilityService, ClientService clientService) {</span>
+<span class="fc" id="L39">        this.facilityService = facilityService;</span>
+<span class="fc" id="L40">        this.clientService = clientService;</span>
+<span class="fc" id="L41">    }</span>
 
     /**
      * Retrieves a list of all public facilities.
@@ -46,8 +48,8 @@ public class FacilityController {
      */
     @GetMapping
     public ResponseEntity&lt;List&lt;Facility&gt;&gt; getAllFacilities() {
-<span class="fc" id="L49">        List&lt;Facility&gt; facilities = facilityService.getPublicFacilities();</span>
-<span class="fc" id="L50">        return new ResponseEntity&lt;&gt;(facilities, HttpStatus.OK);</span>
+<span class="fc" id="L51">        List&lt;Facility&gt; facilities = facilityService.getPublicFacilities();</span>
+<span class="fc" id="L52">        return new ResponseEntity&lt;&gt;(facilities, HttpStatus.OK);</span>
     }
 
     /**
@@ -60,19 +62,19 @@ public class FacilityController {
     public ResponseEntity&lt;List&lt;Facility&gt;&gt; getFacilityByClient(@PathVariable Long clientID,
                                                               @RequestParam String auth) {
         try {
-<span class="fc" id="L63">            Client client = clientService.getClientById(clientID);</span>
+<span class="fc" id="L65">            Client client = clientService.getClientById(clientID);</span>
 
-<span class="fc bfc" id="L65" title="All 2 branches covered.">            if (!auth.equals(client.getAuthentication())) {</span>
-<span class="fc" id="L66">                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">            if (!auth.equals(client.getAuthentication())) {</span>
+<span class="fc" id="L68">                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
                         &quot;auth and id does not match&quot;);
             }
-<span class="nc" id="L69">        } catch (ResourceNotFoundException e) {</span>
-<span class="nc" id="L70">            throw new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
-<span class="nc" id="L71">                    e.getMessage());</span>
-<span class="fc" id="L72">        }</span>
+<span class="nc" id="L71">        } catch (ResourceNotFoundException e) {</span>
+<span class="nc" id="L72">            throw new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
+<span class="nc" id="L73">                    e.getMessage());</span>
+<span class="fc" id="L74">        }</span>
 
-<span class="fc" id="L74">        List&lt;Facility&gt; facilities = facilityService.getFacilitiesByClientID(clientID);</span>
-<span class="fc" id="L75">        return new ResponseEntity&lt;&gt;(facilities, HttpStatus.OK);</span>
+<span class="fc" id="L76">        List&lt;Facility&gt; facilities = facilityService.getFacilitiesByClientID(clientID);</span>
+<span class="fc" id="L77">        return new ResponseEntity&lt;&gt;(facilities, HttpStatus.OK);</span>
     }
 
     /**
@@ -86,10 +88,10 @@ public class FacilityController {
     @GetMapping(&quot;/{id}&quot;)
     public ResponseEntity&lt;Facility&gt; getFacilityById(@PathVariable Long id) {
         try {
-<span class="fc" id="L89">            Facility facility = facilityService.getFacilityById(id);</span>
-<span class="fc" id="L90">            return new ResponseEntity&lt;&gt;(facility, HttpStatus.OK);</span>
-<span class="fc" id="L91">        } catch (ResourceNotFoundException e) {</span>
-<span class="fc" id="L92">            throw new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
+<span class="fc" id="L91">            Facility facility = facilityService.getFacilityById(id);</span>
+<span class="fc" id="L92">            return new ResponseEntity&lt;&gt;(facility, HttpStatus.OK);</span>
+<span class="fc" id="L93">        } catch (ResourceNotFoundException e) {</span>
+<span class="fc" id="L94">            throw new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
                     &quot;unknown facility&quot;);
         }
     }
@@ -112,23 +114,23 @@ public class FacilityController {
             @RequestBody FacilityRequestDTO facility) {
 
         try {
-<span class="fc" id="L115">            Client client = clientService.getClientById(clientID);</span>
+<span class="fc" id="L117">            Client client = clientService.getClientById(clientID);</span>
 
-<span class="fc bfc" id="L117" title="All 2 branches covered.">            if (!auth.equals(client.getAuthentication())) {</span>
-<span class="fc" id="L118">                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">            if (!auth.equals(client.getAuthentication())) {</span>
+<span class="fc" id="L120">                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
                         &quot;auth and id does not match&quot;);
             }
-<span class="nc" id="L121">        } catch (ResourceNotFoundException e) {</span>
-<span class="nc" id="L122">            throw new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
-<span class="nc" id="L123">                    e.getMessage());</span>
-<span class="fc" id="L124">        }</span>
+<span class="nc" id="L123">        } catch (ResourceNotFoundException e) {</span>
+<span class="nc" id="L124">            throw new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
+<span class="nc" id="L125">                    e.getMessage());</span>
+<span class="fc" id="L126">        }</span>
         try {
-<span class="fc" id="L126">            Facility newFacility = facilityService.createFacility(clientID, facility);</span>
-<span class="fc" id="L127">            return new ResponseEntity&lt;&gt;(newFacility, HttpStatus.OK);</span>
-<span class="nc" id="L128">        } catch (InvalidTokenException e) {</span>
-<span class="nc" id="L129">            return new ResponseEntity&lt;&gt;(HttpStatus.UNAUTHORIZED);</span>
-<span class="nc" id="L130">        } catch (InvalidClientIDOrAuthException e) {</span>
-<span class="nc" id="L131">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+<span class="fc" id="L128">            Facility newFacility = facilityService.createFacility(clientID, facility);</span>
+<span class="fc" id="L129">            return new ResponseEntity&lt;&gt;(newFacility, HttpStatus.OK);</span>
+<span class="nc" id="L130">        } catch (InvalidTokenException e) {</span>
+<span class="nc" id="L131">            return new ResponseEntity&lt;&gt;(HttpStatus.UNAUTHORIZED);</span>
+<span class="nc" id="L132">        } catch (InvalidClientIDOrAuthException e) {</span>
+<span class="nc" id="L133">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
         }
     }
 
@@ -152,18 +154,18 @@ public class FacilityController {
             @RequestBody FacilityRequestDTO facility) {
 
         try {
-<span class="fc" id="L155">            Client client = clientService.getClientById(clientID);</span>
+<span class="fc" id="L157">            Client client = clientService.getClientById(clientID);</span>
 
-<span class="fc bfc" id="L157" title="All 2 branches covered.">            if (!auth.equals(client.getAuthentication())) {</span>
-<span class="fc" id="L158">                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
+<span class="fc bfc" id="L159" title="All 2 branches covered.">            if (!auth.equals(client.getAuthentication())) {</span>
+<span class="fc" id="L160">                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
                         &quot;auth and id does not match&quot;);
             }
-<span class="nc" id="L161">        } catch (ResourceNotFoundException e) {</span>
-<span class="nc" id="L162">            throw new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
+<span class="nc" id="L163">        } catch (ResourceNotFoundException e) {</span>
+<span class="nc" id="L164">            throw new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
                     &quot;Client Not Found&quot;);
-<span class="fc" id="L164">        }</span>
-<span class="fc" id="L165">        Facility updatedFacility = facilityService.updateFacility(clientID, auth, facilityID, facility);</span>
-<span class="fc" id="L166">        return new ResponseEntity&lt;&gt;(updatedFacility, HttpStatus.OK);</span>
+<span class="fc" id="L166">        }</span>
+<span class="fc" id="L167">        Facility updatedFacility = facilityService.updateFacility(clientID, auth, facilityID, facility);</span>
+<span class="fc" id="L168">        return new ResponseEntity&lt;&gt;(updatedFacility, HttpStatus.OK);</span>
     }
 
     /**
@@ -183,19 +185,19 @@ public class FacilityController {
                                                @PathVariable Long id) {
 
         try {
-<span class="fc" id="L186">            Client client = clientService.getClientById(clientID);</span>
+<span class="fc" id="L188">            Client client = clientService.getClientById(clientID);</span>
 
-<span class="fc bfc" id="L188" title="All 2 branches covered.">            if (!auth.equals(client.getAuthentication())) {</span>
-<span class="fc" id="L189">                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
+<span class="fc bfc" id="L190" title="All 2 branches covered.">            if (!auth.equals(client.getAuthentication())) {</span>
+<span class="fc" id="L191">                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
                         &quot;auth and id does not match&quot;);
             }
-<span class="nc" id="L192">        } catch (ResourceNotFoundException e) {</span>
-<span class="nc" id="L193">            throw new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
+<span class="nc" id="L194">        } catch (ResourceNotFoundException e) {</span>
+<span class="nc" id="L195">            throw new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
                     &quot;Client Not Found&quot;);
-<span class="fc" id="L195">        }</span>
+<span class="fc" id="L197">        }</span>
 
-<span class="fc" id="L197">        facilityService.deleteFacility(clientID, id);</span>
-<span class="fc" id="L198">        return new ResponseEntity&lt;&gt;(&quot;facility &quot; + id + &quot; deleted&quot;, HttpStatus.OK);</span>
+<span class="fc" id="L199">        facilityService.deleteFacility(clientID, id);</span>
+<span class="fc" id="L200">        return new ResponseEntity&lt;&gt;(&quot;facility &quot; + id + &quot; deleted&quot;, HttpStatus.OK);</span>
     }
 
 

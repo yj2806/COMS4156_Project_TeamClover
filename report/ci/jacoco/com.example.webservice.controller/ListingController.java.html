@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.webservice.model.model.ListingRequestDTO;
 import org.springframework.web.server.ResponseStatusException;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +23,7 @@ import java.util.Optional;
 @RestController
 @CrossOrigin
 @RequestMapping(&quot;/listing&quot;)
-<span class="fc" id="L25">public class ListingController {</span>
+<span class="fc" id="L26">public class ListingController {</span>
 
     @Autowired
     private ListingService listingService;
@@ -52,9 +53,9 @@ import java.util.Optional;
      */
     @GetMapping(&quot;/{id}&quot;)
     public ResponseEntity&lt;Listing&gt; getListingById(@PathVariable Long id) {
-<span class="fc" id="L55">        return listingService.getListingById(id)</span>
-<span class="fc" id="L56">                .map(ResponseEntity::ok)</span>
-<span class="fc" id="L57">                .orElseGet(() -&gt; ResponseEntity.notFound().build());</span>
+<span class="fc" id="L56">        return listingService.getListingById(id)</span>
+<span class="fc" id="L57">                .map(ResponseEntity::ok)</span>
+<span class="fc" id="L58">                .orElseGet(() -&gt; ResponseEntity.notFound().build());</span>
     }
 
     /**
@@ -71,18 +72,18 @@ import java.util.Optional;
                                                       @RequestParam String auth) {
 
         try {
-<span class="nc" id="L74">            Client client = clientService.getClientById(clientID);</span>
+<span class="nc" id="L75">            Client client = clientService.getClientById(clientID);</span>
 
-<span class="nc bnc" id="L76" title="All 2 branches missed.">            if (!auth.equals(client.getAuthentication())) {</span>
-<span class="nc" id="L77">                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">            if (!auth.equals(client.getAuthentication())) {</span>
+<span class="nc" id="L78">                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
                         &quot;auth and id does not match&quot;);
             }
-<span class="nc" id="L80">        } catch (ResourceNotFoundException e) {</span>
-<span class="nc" id="L81">            throw new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
-<span class="nc" id="L82">                    e.getMessage());</span>
-<span class="nc" id="L83">        }</span>
-<span class="nc" id="L84">        List&lt;Listing&gt; listings = listingService.getListingsByClientID(clientID);</span>
-<span class="nc" id="L85">        return new ResponseEntity&lt;&gt;(listings, HttpStatus.OK);</span>
+<span class="nc" id="L81">        } catch (ResourceNotFoundException e) {</span>
+<span class="nc" id="L82">            throw new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
+<span class="nc" id="L83">                    e.getMessage());</span>
+<span class="nc" id="L84">        }</span>
+<span class="nc" id="L85">        List&lt;Listing&gt; listings = listingService.getListingsByClientID(clientID);</span>
+<span class="nc" id="L86">        return new ResponseEntity&lt;&gt;(listings, HttpStatus.OK);</span>
     }
 
     /**
@@ -98,22 +99,23 @@ import java.util.Optional;
      * 404: Invalid Client ID or authentication
      */
     @PostMapping(&quot;/create&quot;)
+    @SuppressFBWarnings
     public ResponseEntity&lt;?&gt; createListing(@RequestParam Long clientID,
                                            @RequestParam String auth,
                                            @RequestParam Long facilityID,
                                            @RequestBody ListingRequestDTO listing) {
         // Validate the listing details
-<span class="pc bpc" id="L106" title="3 of 4 branches missed.">        if (!listing.getIsPublic() &amp;&amp; listing.getGroupCode() == null) {</span>
-<span class="nc" id="L107">            return ResponseEntity.badRequest().body(&quot;Group code is required for private listings.&quot;);</span>
+<span class="pc bpc" id="L108" title="3 of 4 branches missed.">        if (!listing.getIsPublic() &amp;&amp; listing.getGroupCode() == null) {</span>
+<span class="nc" id="L109">            return ResponseEntity.badRequest().body(&quot;Group code is required for private listings.&quot;);</span>
         }
 
         // Assuming listingService.createListing returns a Listing object or null
-<span class="fc" id="L111">        Listing createdListing = listingService.createListing(clientID, auth, facilityID, listing);</span>
-<span class="pc bpc" id="L112" title="1 of 2 branches missed.">        if (createdListing != null) {</span>
-<span class="fc" id="L113">            return ResponseEntity.ok(createdListing);</span>
+<span class="fc" id="L113">        Listing createdListing = listingService.createListing(clientID, auth, facilityID, listing);</span>
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">        if (createdListing != null) {</span>
+<span class="fc" id="L115">            return ResponseEntity.ok(createdListing);</span>
         } else {
             // Handle the case where listing creation fails
-<span class="nc" id="L116">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(&quot;Error creating listing&quot;);</span>
+<span class="nc" id="L118">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(&quot;Error creating listing&quot;);</span>
         }
     }
 
@@ -136,23 +138,23 @@ import java.util.Optional;
                                            @RequestParam Long clientID,
                                            @RequestParam String auth,
                                            @RequestBody ListingRequestDTO updatedListing) {
-<span class="pc bpc" id="L139" title="1 of 2 branches missed.">        if (updatedListing.getIsPublic() == null) {</span>
-<span class="nc" id="L140">            return ResponseEntity.badRequest().body(&quot;invalid public status&quot;);</span>
+<span class="pc bpc" id="L141" title="1 of 2 branches missed.">        if (updatedListing.getIsPublic() == null) {</span>
+<span class="nc" id="L142">            return ResponseEntity.badRequest().body(&quot;invalid public status&quot;);</span>
         }
         // Validate the listing details
-<span class="pc bpc" id="L143" title="3 of 4 branches missed.">        if (!updatedListing.getIsPublic() &amp;&amp; updatedListing.getGroupCode() == null) {</span>
-<span class="nc" id="L144">            return ResponseEntity.badRequest().body(&quot;Group code is required for private listings.&quot;);</span>
+<span class="pc bpc" id="L145" title="3 of 4 branches missed.">        if (!updatedListing.getIsPublic() &amp;&amp; updatedListing.getGroupCode() == null) {</span>
+<span class="nc" id="L146">            return ResponseEntity.badRequest().body(&quot;Group code is required for private listings.&quot;);</span>
         }
 
         // Attempt to update the listing
-<span class="fc" id="L148">        Optional&lt;Listing&gt; updated = listingService.updateListing(id, clientID, auth, updatedListing);</span>
+<span class="fc" id="L150">        Optional&lt;Listing&gt; updated = listingService.updateListing(id, clientID, auth, updatedListing);</span>
 
         // Check if the update operation was successful
-<span class="fc bfc" id="L151" title="All 2 branches covered.">        if (updated.isPresent()) {</span>
-<span class="fc" id="L152">            return ResponseEntity.ok(updated.get());</span>
+<span class="fc bfc" id="L153" title="All 2 branches covered.">        if (updated.isPresent()) {</span>
+<span class="fc" id="L154">            return ResponseEntity.ok(updated.get());</span>
         } else {
             // Handle the case where listing update fails
-<span class="fc" id="L155">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;Listing not found or update failed&quot;);</span>
+<span class="fc" id="L157">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;Listing not found or update failed&quot;);</span>
         }
     }
 
@@ -173,10 +175,10 @@ import java.util.Optional;
     public ResponseEntity&lt;Void&gt; deleteListing(@RequestParam Long clientID,
                                               @RequestParam String auth,
                                               @PathVariable Long id) {
-<span class="fc bfc" id="L176" title="All 2 branches covered.">        if (listingService.deleteListing(clientID, auth, id)) {</span>
-<span class="fc" id="L177">            return ResponseEntity.noContent().build();</span>
+<span class="fc bfc" id="L178" title="All 2 branches covered.">        if (listingService.deleteListing(clientID, auth, id)) {</span>
+<span class="fc" id="L179">            return ResponseEntity.noContent().build();</span>
         }
-<span class="fc" id="L179">        return ResponseEntity.notFound().build();</span>
+<span class="fc" id="L181">        return ResponseEntity.notFound().build();</span>
     }
 
 //    Deprecated
@@ -229,8 +231,8 @@ import java.util.Optional;
                                                                   @RequestParam(required = false) Integer age,
                                                                   @RequestParam(required = false) Boolean veteranStatus,
                                                                   @RequestParam(required = false) String gender) {
-<span class="fc" id="L232">        List&lt;Listing&gt; listings = listingService.searchListingsWithFilter(latitude, longitude, range, itemContained, age, veteranStatus, gender);</span>
-<span class="fc" id="L233">        return ResponseEntity.ok(listings);</span>
+<span class="fc" id="L234">        List&lt;Listing&gt; listings = listingService.searchListingsWithFilter(latitude, longitude, range, itemContained, age, veteranStatus, gender);</span>
+<span class="fc" id="L235">        return ResponseEntity.ok(listings);</span>
     }
 
     /**
@@ -249,8 +251,8 @@ import java.util.Optional;
                                                                      @RequestParam Double longitude,
                                                                      @RequestParam Double range,
                                                                      @RequestParam Integer groupCode) {
-<span class="fc" id="L252">        List&lt;Listing&gt; listings = listingService.searchListingsWithGroupCode(latitude, longitude, range, groupCode);</span>
-<span class="fc" id="L253">        return ResponseEntity.ok(listings);</span>
+<span class="fc" id="L254">        List&lt;Listing&gt; listings = listingService.searchListingsWithGroupCode(latitude, longitude, range, groupCode);</span>
+<span class="fc" id="L255">        return ResponseEntity.ok(listings);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

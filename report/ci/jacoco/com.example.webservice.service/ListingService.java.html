@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,15 +37,16 @@ public class ListingService {
      * @param facilityRepository the facility repository
      */
     @Autowired
+    @SuppressFBWarnings
     public ListingService(ListingRepository listingRepository,
                           ClientRepository clientRepository,
                           FacilityRepository facilityRepository,
-<span class="fc" id="L42">                          FacilityService facilityService) {</span>
-<span class="fc" id="L43">        this.listingRepository = listingRepository;</span>
-<span class="fc" id="L44">        this.clientRepository = clientRepository;</span>
-<span class="fc" id="L45">        this.facilityRepository = facilityRepository;</span>
-<span class="fc" id="L46">        this.facilityService = facilityService;</span>
-<span class="fc" id="L47">    }</span>
+<span class="fc" id="L44">                          FacilityService facilityService) {</span>
+<span class="fc" id="L45">        this.listingRepository = listingRepository;</span>
+<span class="fc" id="L46">        this.clientRepository = clientRepository;</span>
+<span class="fc" id="L47">        this.facilityRepository = facilityRepository;</span>
+<span class="fc" id="L48">        this.facilityService = facilityService;</span>
+<span class="fc" id="L49">    }</span>
 
 //    /**
 //     * Retrieves a list of all listings.
@@ -62,7 +64,7 @@ public class ListingService {
      * @return an Optional containing the retrieved listing, or empty if not found
      */
     public Optional&lt;Listing&gt; getListingById(Long id) {
-<span class="fc" id="L65">        return listingRepository.findById(id);</span>
+<span class="fc" id="L67">        return listingRepository.findById(id);</span>
     }
 
     /**
@@ -72,11 +74,11 @@ public class ListingService {
      */
     @Transactional
     public List&lt;Listing&gt; getListingsByClientID(Long clientID) {
-<span class="nc" id="L75">        List&lt;Listing&gt; listings = new ArrayList&lt;&gt;();</span>
-<span class="nc bnc" id="L76" title="All 2 branches missed.">        for (Facility f : facilityService.getFacilitiesByClientID(clientID)) {</span>
-<span class="nc" id="L77">            listings.addAll(listingRepository.findListingsByFacilityID(f.getFacilityID()));</span>
-<span class="nc" id="L78">        }</span>
-<span class="nc" id="L79">        return listings;</span>
+<span class="nc" id="L77">        List&lt;Listing&gt; listings = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        for (Facility f : facilityService.getFacilitiesByClientID(clientID)) {</span>
+<span class="nc" id="L79">            listings.addAll(listingRepository.findListingsByFacilityID(f.getFacilityID()));</span>
+<span class="nc" id="L80">        }</span>
+<span class="nc" id="L81">        return listings;</span>
     }
 
 
@@ -94,34 +96,34 @@ public class ListingService {
                                  Long facilityID,
                                  ListingRequestDTO listing) {
         // Constraints and validation could be added here if necessary.
-<span class="fc" id="L97">        Client c = clientRepository.findById(clientID)</span>
-<span class="fc" id="L98">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
+<span class="fc" id="L99">        Client c = clientRepository.findById(clientID)</span>
+<span class="fc" id="L100">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
                         &quot;Client not found with id: &quot; + clientID));
-<span class="pc bpc" id="L100" title="1 of 2 branches missed.">        if (!auth.equals(c.getAuthentication())) {</span>
-<span class="nc" id="L101">            throw (new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
+<span class="pc bpc" id="L102" title="1 of 2 branches missed.">        if (!auth.equals(c.getAuthentication())) {</span>
+<span class="nc" id="L103">            throw (new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
                     &quot;wrong auth&quot;));
         }
 
-<span class="fc" id="L105">        Facility f = facilityRepository.findById(facilityID)</span>
-<span class="pc" id="L106">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Facility not found with id: &quot; + facilityID));</span>
+<span class="fc" id="L107">        Facility f = facilityRepository.findById(facilityID)</span>
+<span class="pc" id="L108">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Facility not found with id: &quot; + facilityID));</span>
 
-<span class="pc bpc" id="L108" title="1 of 2 branches missed.">        if (!clientID.equals(f.getAssociated_distributorID())) {</span>
-<span class="nc" id="L109">            throw (new ResourceNotFoundException(&quot;unmatched facilityID and client&quot;));</span>
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">        if (!clientID.equals(f.getAssociated_distributorID())) {</span>
+<span class="nc" id="L111">            throw (new ResourceNotFoundException(&quot;unmatched facilityID and client&quot;));</span>
         }
 
         try {
-<span class="fc" id="L113">            Listing newListing = new Listing();</span>
-<span class="fc" id="L114">            newListing.setAssociatedFacility(f);</span>
-<span class="fc" id="L115">            newListing.setPublic(listing.getIsPublic());</span>
-<span class="fc" id="L116">            newListing.setGroupCode(listing.getGroupCode());</span>
-<span class="fc" id="L117">            newListing.setItemList(listing.getItemList());</span>
-<span class="fc" id="L118">            newListing.setAgeRequirement(listing.getAgeRequirement());</span>
-<span class="fc" id="L119">            newListing.setVeteranStatus(listing.getVeteranStatus());</span>
-<span class="fc" id="L120">            newListing.setGender(listing.getGender());</span>
-<span class="fc" id="L121">            return listingRepository.save(newListing);</span>
-<span class="nc" id="L122">        } catch (Exception e) {</span>
-<span class="nc" id="L123">            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,</span>
-<span class="nc" id="L124">                    e.getMessage());</span>
+<span class="fc" id="L115">            Listing newListing = new Listing();</span>
+<span class="fc" id="L116">            newListing.setAssociatedFacility(f);</span>
+<span class="fc" id="L117">            newListing.setPublic(listing.getIsPublic());</span>
+<span class="fc" id="L118">            newListing.setGroupCode(listing.getGroupCode());</span>
+<span class="fc" id="L119">            newListing.setItemList(listing.getItemList());</span>
+<span class="fc" id="L120">            newListing.setAgeRequirement(listing.getAgeRequirement());</span>
+<span class="fc" id="L121">            newListing.setVeteranStatus(listing.getVeteranStatus());</span>
+<span class="fc" id="L122">            newListing.setGender(listing.getGender());</span>
+<span class="fc" id="L123">            return listingRepository.save(newListing);</span>
+<span class="nc" id="L124">        } catch (Exception e) {</span>
+<span class="nc" id="L125">            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,</span>
+<span class="nc" id="L126">                    e.getMessage());</span>
         }
 
     }
@@ -140,40 +142,40 @@ public class ListingService {
                                            Long clientID,
                                            String auth,
                                            ListingRequestDTO updatedListing) {
-<span class="fc" id="L143">        Client c = clientRepository.findById(clientID)</span>
-<span class="fc" id="L144">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
+<span class="fc" id="L145">        Client c = clientRepository.findById(clientID)</span>
+<span class="fc" id="L146">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
                         &quot;Client not found with id: &quot; + clientID));
 
-<span class="fc bfc" id="L147" title="All 2 branches covered.">        if (!auth.equals(c.getAuthentication())) {</span>
-<span class="fc" id="L148">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
+<span class="fc bfc" id="L149" title="All 2 branches covered.">        if (!auth.equals(c.getAuthentication())) {</span>
+<span class="fc" id="L150">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
                     &quot;Authentication failed&quot;);
         }
-<span class="pc bpc" id="L151" title="1 of 2 branches missed.">        if (listingRepository.existsById(id)) {</span>
-<span class="fc" id="L152">            Listing toUpdate = listingRepository.findById(id).orElseThrow(</span>
-<span class="fc" id="L153">                    () -&gt; new ResponseStatusException(HttpStatus.BAD_REQUEST,</span>
+<span class="pc bpc" id="L153" title="1 of 2 branches missed.">        if (listingRepository.existsById(id)) {</span>
+<span class="fc" id="L154">            Listing toUpdate = listingRepository.findById(id).orElseThrow(</span>
+<span class="fc" id="L155">                    () -&gt; new ResponseStatusException(HttpStatus.BAD_REQUEST,</span>
                             &quot;not exist&quot;));
-<span class="fc" id="L155">            if (!toUpdate.getAssociatedFacility().getAssociated_distributorID()</span>
-<span class="pc bpc" id="L156" title="1 of 2 branches missed.">                    .equals(clientID)) {</span>
-<span class="nc" id="L157">                throw (new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
+<span class="fc" id="L157">            if (!toUpdate.getAssociatedFacility().getAssociated_distributorID()</span>
+<span class="pc bpc" id="L158" title="1 of 2 branches missed.">                    .equals(clientID)) {</span>
+<span class="nc" id="L159">                throw (new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
                         &quot;unmatched info&quot;));
             }
 
-<span class="fc" id="L161">            return Optional.of(listingRepository.findById(id)</span>
-<span class="fc" id="L162">                    .map(listing -&gt; {</span>
-<span class="fc" id="L163">                        listing.setListingID(id);</span>
-<span class="fc" id="L164">                        listing.setAssociatedFacility(toUpdate.getAssociatedFacility());</span>
-<span class="fc" id="L165">                        listing.setPublic(updatedListing.getIsPublic());</span>
-<span class="fc" id="L166">                        listing.setGroupCode(updatedListing.getGroupCode());</span>
-<span class="fc" id="L167">                        listing.setItemList(updatedListing.getItemList());</span>
-<span class="fc" id="L168">                        listing.setAgeRequirement(updatedListing.getAgeRequirement());</span>
-<span class="fc" id="L169">                        listing.setVeteranStatus(updatedListing.getVeteranStatus());</span>
-<span class="fc" id="L170">                        listing.setGender(updatedListing.getGender());</span>
-<span class="fc" id="L171">                        return listingRepository.save(listing);</span>
+<span class="fc" id="L163">            return Optional.of(listingRepository.findById(id)</span>
+<span class="fc" id="L164">                    .map(listing -&gt; {</span>
+<span class="fc" id="L165">                        listing.setListingID(id);</span>
+<span class="fc" id="L166">                        listing.setAssociatedFacility(toUpdate.getAssociatedFacility());</span>
+<span class="fc" id="L167">                        listing.setPublic(updatedListing.getIsPublic());</span>
+<span class="fc" id="L168">                        listing.setGroupCode(updatedListing.getGroupCode());</span>
+<span class="fc" id="L169">                        listing.setItemList(updatedListing.getItemList());</span>
+<span class="fc" id="L170">                        listing.setAgeRequirement(updatedListing.getAgeRequirement());</span>
+<span class="fc" id="L171">                        listing.setVeteranStatus(updatedListing.getVeteranStatus());</span>
+<span class="fc" id="L172">                        listing.setGender(updatedListing.getGender());</span>
+<span class="fc" id="L173">                        return listingRepository.save(listing);</span>
                     })
-<span class="pc" id="L173">                    .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.BAD_REQUEST,</span>
+<span class="pc" id="L175">                    .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.BAD_REQUEST,</span>
                             &quot;not exist&quot;)));
         }
-<span class="nc" id="L176">        return Optional.empty();</span>
+<span class="nc" id="L178">        return Optional.empty();</span>
     }
 
     /**
@@ -187,28 +189,28 @@ public class ListingService {
     public boolean deleteListing(Long clientID,
                                  String auth,
                                  Long id) {
-<span class="fc" id="L190">        Client c = clientRepository.findById(clientID)</span>
-<span class="pc" id="L191">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
+<span class="fc" id="L192">        Client c = clientRepository.findById(clientID)</span>
+<span class="pc" id="L193">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
                         &quot;Client not found&quot;));
 
-<span class="pc bpc" id="L194" title="1 of 2 branches missed.">        if (!auth.equals(c.getAuthentication())) {</span>
+<span class="pc bpc" id="L196" title="1 of 2 branches missed.">        if (!auth.equals(c.getAuthentication())) {</span>
 
-<span class="nc" id="L196">            throw (new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
+<span class="nc" id="L198">            throw (new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
                     &quot;auth and id does not match&quot;));
         }
 
-<span class="fc bfc" id="L200" title="All 2 branches covered.">        if (listingRepository.existsById(id)) {</span>
-<span class="fc" id="L201">            Listing toDelete = listingRepository.findById(id).orElseThrow(</span>
-<span class="nc" id="L202">                    () -&gt; new ResourceNotFoundException(&quot;Listing not found with id: &quot; + id));</span>
-<span class="fc" id="L203">            if (!toDelete.getAssociatedFacility().getAssociated_distributorID()</span>
-<span class="pc bpc" id="L204" title="1 of 2 branches missed.">                    .equals(clientID)) {</span>
-<span class="nc" id="L205">                throw (new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
+<span class="fc bfc" id="L202" title="All 2 branches covered.">        if (listingRepository.existsById(id)) {</span>
+<span class="fc" id="L203">            Listing toDelete = listingRepository.findById(id).orElseThrow(</span>
+<span class="nc" id="L204">                    () -&gt; new ResourceNotFoundException(&quot;Listing not found with id: &quot; + id));</span>
+<span class="fc" id="L205">            if (!toDelete.getAssociatedFacility().getAssociated_distributorID()</span>
+<span class="pc bpc" id="L206" title="1 of 2 branches missed.">                    .equals(clientID)) {</span>
+<span class="nc" id="L207">                throw (new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
                         &quot;unmatched info&quot;));
             }
-<span class="fc" id="L208">            listingRepository.deleteById(id);</span>
-<span class="fc" id="L209">            return true;</span>
+<span class="fc" id="L210">            listingRepository.deleteById(id);</span>
+<span class="fc" id="L211">            return true;</span>
         }
-<span class="fc" id="L211">        return false;</span>
+<span class="fc" id="L213">        return false;</span>
     }
 
 //    Deprecated
@@ -256,14 +258,14 @@ public class ListingService {
     public List&lt;Listing&gt; searchListingsWithFilter(Double latitude, Double longitude, Double range,
                                                   String itemList, Integer age, Boolean veteranStatus, String gender) {
         // Process the itemList if it's not null or empty
-<span class="fc" id="L259">        String processedItemList = null;</span>
-<span class="pc bpc" id="L260" title="2 of 4 branches missed.">        if (itemList != null &amp;&amp; !itemList.isEmpty()) {</span>
+<span class="fc" id="L261">        String processedItemList = null;</span>
+<span class="pc bpc" id="L262" title="2 of 4 branches missed.">        if (itemList != null &amp;&amp; !itemList.isEmpty()) {</span>
             // Split the itemList by the delimiter and join with SQL wildcards
-<span class="fc" id="L262">            processedItemList = &quot;%&quot; + itemList.replace(&quot;|&quot;, &quot;%|%&quot;) + &quot;%&quot;;</span>
+<span class="fc" id="L264">            processedItemList = &quot;%&quot; + itemList.replace(&quot;|&quot;, &quot;%|%&quot;) + &quot;%&quot;;</span>
         }
 
         // Call the repository method with the processed item list and other criteria
-<span class="fc" id="L266">        return listingRepository.findListingsWithFilter(latitude, longitude, range, processedItemList, age, veteranStatus, gender);</span>
+<span class="fc" id="L268">        return listingRepository.findListingsWithFilter(latitude, longitude, range, processedItemList, age, veteranStatus, gender);</span>
     }
 
 
@@ -278,7 +280,7 @@ public class ListingService {
      */
     public List&lt;Listing&gt; searchListingsWithGroupCode(Double latitude, Double longitude, Double range, Integer groupCode) {
         // Call the repository method with group code and location criteria
-<span class="fc" id="L281">        return listingRepository.findListingsWithGroupCode(latitude, longitude, range, groupCode);</span>
+<span class="fc" id="L283">        return listingRepository.findListingsWithGroupCode(latitude, longitude, range, groupCode);</span>
     }
 
 

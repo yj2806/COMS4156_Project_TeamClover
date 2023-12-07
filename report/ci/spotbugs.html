@@ -65,7 +65,7 @@ web-service
 <th>Missing Classes</th></tr>
 <tr class="b">
 <td>22</td>
-<td>7</td>
+<td>0</td>
 <td>0</td>
 <td>0</td></tr></table></div>
 <div class="section">
@@ -73,109 +73,7 @@ web-service
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>Class</th>
-<th>Bugs</th></tr>
-<tr class="b">
-<td><a href="#com.example.webservice.controller.ClientController">com.example.webservice.controller.ClientController</a></td>
-<td>1</td></tr>
-<tr class="a">
-<td><a href="#com.example.webservice.controller.FacilityController">com.example.webservice.controller.FacilityController</a></td>
-<td>2</td></tr>
-<tr class="b">
-<td><a href="#com.example.webservice.controller.ListingController">com.example.webservice.controller.ListingController</a></td>
-<td>1</td></tr>
-<tr class="a">
-<td><a href="#com.example.webservice.model.Listing">com.example.webservice.model.Listing</a></td>
-<td>2</td></tr>
-<tr class="b">
-<td><a href="#com.example.webservice.service.ListingService">com.example.webservice.service.ListingService</a></td>
-<td>1</td></tr></table></div><a name="com.example.webservice.controller.ClientController"></a>
-<div class="section">
-<h3><a name="com.example.webservice.controller.ClientController"></a>com.example.webservice.controller.ClientController</h3>
-<table border="0" class="bodyTable">
-<tr class="a">
-<th>Bug</th>
-<th>Category</th>
-<th>Details</th>
-<th>Line</th>
-<th>Priority</th></tr>
-<tr class="b">
-<td>new com.example.webservice.controller.ClientController(ClientService) may expose internal representation by storing an externally mutable object into ClientController.clientService</td>
-<td>MALICIOUS_CODE</td>
-<td><a class="externalLink" href="https://spotbugs.readthedocs.io/en/latest/bugDescriptions.html#EI_EXPOSE_REP2">EI_EXPOSE_REP2</a></td>
-<td>31</td>
-<td>Medium</td></tr></table></div><a name="com.example.webservice.controller.FacilityController"></a>
-<div class="section">
-<h3><a name="com.example.webservice.controller.FacilityController"></a>com.example.webservice.controller.FacilityController</h3>
-<table border="0" class="bodyTable">
-<tr class="a">
-<th>Bug</th>
-<th>Category</th>
-<th>Details</th>
-<th>Line</th>
-<th>Priority</th></tr>
-<tr class="b">
-<td>new com.example.webservice.controller.FacilityController(FacilityService, ClientService) may expose internal representation by storing an externally mutable object into FacilityController.clientService</td>
-<td>MALICIOUS_CODE</td>
-<td><a class="externalLink" href="https://spotbugs.readthedocs.io/en/latest/bugDescriptions.html#EI_EXPOSE_REP2">EI_EXPOSE_REP2</a></td>
-<td>38</td>
-<td>Medium</td></tr>
-<tr class="a">
-<td>new com.example.webservice.controller.FacilityController(FacilityService, ClientService) may expose internal representation by storing an externally mutable object into FacilityController.facilityService</td>
-<td>MALICIOUS_CODE</td>
-<td><a class="externalLink" href="https://spotbugs.readthedocs.io/en/latest/bugDescriptions.html#EI_EXPOSE_REP2">EI_EXPOSE_REP2</a></td>
-<td>37</td>
-<td>Medium</td></tr></table></div><a name="com.example.webservice.controller.ListingController"></a>
-<div class="section">
-<h3><a name="com.example.webservice.controller.ListingController"></a>com.example.webservice.controller.ListingController</h3>
-<table border="0" class="bodyTable">
-<tr class="a">
-<th>Bug</th>
-<th>Category</th>
-<th>Details</th>
-<th>Line</th>
-<th>Priority</th></tr>
-<tr class="b">
-<td>Redundant nullcheck of createdListing, which is known to be non-null in com.example.webservice.controller.ListingController.createListing(Long, String, Long, ListingRequestDTO)</td>
-<td>STYLE</td>
-<td><a class="externalLink" href="https://spotbugs.readthedocs.io/en/latest/bugDescriptions.html#RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE">RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE</a></td>
-<td>112</td>
-<td>Medium</td></tr></table></div><a name="com.example.webservice.model.Listing"></a>
-<div class="section">
-<h3><a name="com.example.webservice.model.Listing"></a>com.example.webservice.model.Listing</h3>
-<table border="0" class="bodyTable">
-<tr class="a">
-<th>Bug</th>
-<th>Category</th>
-<th>Details</th>
-<th>Line</th>
-<th>Priority</th></tr>
-<tr class="b">
-<td>com.example.webservice.model.Listing.getAssociatedFacility() may expose internal representation by returning Listing.associatedFacility</td>
-<td>MALICIOUS_CODE</td>
-<td><a class="externalLink" href="https://spotbugs.readthedocs.io/en/latest/bugDescriptions.html#EI_EXPOSE_REP">EI_EXPOSE_REP</a></td>
-<td>54</td>
-<td>Medium</td></tr>
-<tr class="a">
-<td>com.example.webservice.model.Listing.setAssociatedFacility(Facility) may expose internal representation by storing an externally mutable object into Listing.associatedFacility</td>
-<td>MALICIOUS_CODE</td>
-<td><a class="externalLink" href="https://spotbugs.readthedocs.io/en/latest/bugDescriptions.html#EI_EXPOSE_REP2">EI_EXPOSE_REP2</a></td>
-<td>58</td>
-<td>Medium</td></tr></table></div><a name="com.example.webservice.service.ListingService"></a>
-<div class="section">
-<h3><a name="com.example.webservice.service.ListingService"></a>com.example.webservice.service.ListingService</h3>
-<table border="0" class="bodyTable">
-<tr class="a">
-<th>Bug</th>
-<th>Category</th>
-<th>Details</th>
-<th>Line</th>
-<th>Priority</th></tr>
-<tr class="b">
-<td>new com.example.webservice.service.ListingService(ListingRepository, ClientRepository, FacilityRepository, FacilityService) may expose internal representation by storing an externally mutable object into ListingService.facilityService</td>
-<td>MALICIOUS_CODE</td>
-<td><a class="externalLink" href="https://spotbugs.readthedocs.io/en/latest/bugDescriptions.html#EI_EXPOSE_REP2">EI_EXPOSE_REP2</a></td>
-<td>46</td>
-<td>Medium</td></tr></table></div>
+<th>Bugs</th></tr></table></div>
       </div>
     </div>
     <div class="clear">
