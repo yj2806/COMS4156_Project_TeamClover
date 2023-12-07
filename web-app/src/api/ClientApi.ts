@@ -1,4 +1,4 @@
-import axios from 'axios'; // If you're using Axios
+import axios, { AxiosResponse } from 'axios'; // If you're using Axios
 
 export const baseURL = 'http://localhost:8080/';
 const clientURL = baseURL + 'client/';
@@ -8,19 +8,32 @@ export type ClientType = {
     type: string;
 };
 
-export const createClient = async (input: ClientType) => {
-    axios
-        .post(clientURL + 'create', input, {
+export type ClientResponse = {
+    clientID: string;
+    authentication: string;
+    type: string;
+    // associatedFacility: Facility;
+};
+
+export const createClient = async (input: ClientType): Promise<ClientResponse | undefined> => {
+    try {
+        const response: AxiosResponse<ClientResponse> = await axios.post(clientURL + 'create', input, {
             headers: {
                 'Content-Type': 'application/json',
             },
-        })
-        .then(() => {
-            // return response;
-        })
-        .catch(() => {
-            // Handle errors.
         });
+
+        console.log(response.data);
+
+        // Return the data as a resolved promise
+        return response.data;
+    } catch (error) {
+        // Handle errors
+        console.error('Error creating client:', error);
+
+        // Return undefined in case of an error
+        return undefined;
+    }
 };
 
 export const deleteClient = async (id: string, auth: string) => {

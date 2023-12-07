@@ -1,4 +1,14 @@
-import { Stack, TextField, FormControl, InputLabel, Select, MenuItem, Button, SelectChangeEvent } from '@mui/material';
+import {
+    Stack,
+    TextField,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    Button,
+    SelectChangeEvent,
+    Typography,
+} from '@mui/material';
 import React, { useState } from 'react';
 import PageLayout from '../PageLayout';
 import { createClient } from '../../api/ClientApi';
@@ -6,6 +16,7 @@ import { createClient } from '../../api/ClientApi';
 const ClientCreate: React.FC = () => {
     const [clientType, setClientType] = useState<string>('DISTRIBUTOR');
     const [authentication, setAuthentication] = useState<string>('');
+    const [clientId, setClientId] = useState<string | undefined>();
     const handleChange = (event: SelectChangeEvent) => {
         setClientType(event.target.value as string);
     };
@@ -29,10 +40,13 @@ const ClientCreate: React.FC = () => {
                         <MenuItem value={'NON_DISTRIBUTOR'}>NON DISTRIBUTOR</MenuItem>
                     </Select>
                 </FormControl>
+                {clientId && <Typography>{clientId}</Typography>}
                 <Button
                     disabled={!authentication}
                     onClick={async () => {
-                        await createClient({ authentication: authentication || '', type: clientType });
+                        setClientId(undefined);
+                        const response = await createClient({ authentication: authentication || '', type: clientType });
+                        response && setClientId(response.clientID);
                     }}
                     variant="contained"
                 >
