@@ -31,9 +31,9 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-    # - name: Build with Maven
-    #   run: |
-            # mvn -B package --file web-service/pom.xml
+    - name: Build with Maven
+      run: |
+            mvn -B package --file web-service/pom.xml -Dmaven.test.skip=true
             # cp -r web-service/target/site/jacoco report/branch-coverage
     - name: Generate CI Report
       run: |
