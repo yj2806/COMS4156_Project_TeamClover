@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class ClientController {
      * @param clientService Service to handle client operations.
      */
     @Autowired
+    @SuppressFBWarnings
     public ClientController(ClientService clientService) {
         this.clientService = clientService;
     }

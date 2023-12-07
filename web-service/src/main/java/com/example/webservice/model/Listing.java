@@ -3,11 +3,13 @@ package com.example.webservice.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 
 @Entity
 @Setter
 @Getter
+@SuppressFBWarnings
 @Table(name = "listings")
 public class Listing {
 

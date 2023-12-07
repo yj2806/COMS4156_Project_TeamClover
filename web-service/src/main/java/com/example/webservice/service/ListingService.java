@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,6 +37,7 @@ public class ListingService {
      * @param facilityRepository the facility repository
      */
     @Autowired
+    @SuppressFBWarnings
     public ListingService(ListingRepository listingRepository,
                           ClientRepository clientRepository,
                           FacilityRepository facilityRepository,

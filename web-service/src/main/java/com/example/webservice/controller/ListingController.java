@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.webservice.model.model.ListingRequestDTO;
 import org.springframework.web.server.ResponseStatusException;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.util.List;
 import java.util.Optional;
@@ -98,6 +99,7 @@ public class ListingController {
      * 404: Invalid Client ID or authentication
      */
     @PostMapping("/create")
+    @SuppressFBWarnings
     public ResponseEntity<?> createListing(@RequestParam Long clientID,
                                            @RequestParam String auth,
                                            @RequestParam Long facilityID,

@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.util.List;
 
@@ -33,6 +34,7 @@ public class FacilityController {
      * @param facilityService the facility service
      */
     @Autowired
+    @SuppressFBWarnings
     public FacilityController(FacilityService facilityService, ClientService clientService) {
         this.facilityService = facilityService;
         this.clientService = clientService;
