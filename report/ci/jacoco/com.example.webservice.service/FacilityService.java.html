@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FacilityService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">web-service</a> &gt; <a href="index.source.html" class="el_package">com.example.webservice.service</a> &gt; <span class="el_source">FacilityService.java</span></div><h1>FacilityService.java</h1><pre class="source lang-java linenums">package com.example.webservice.service;
+
+import com.example.webservice.model.Client;
+import com.example.webservice.model.Facility;
+import com.example.webservice.model.Listing;
+import com.example.webservice.model.model.FacilityRequestDTO;
+import com.example.webservice.repository.ClientRepository;
+import com.example.webservice.repository.FacilityRepository;
+import com.example.webservice.repository.ListingRepository;
+import org.apache.velocity.exception.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+
+@Service
+public class FacilityService {
+
+    private final ClientRepository clientRepository;
+    private final FacilityRepository facilityRepository;
+    private final ListingRepository listingRepository;
+
+    /**
+     * Constructs a new FacilityService with the specified repositories.
+     *
+     * @param clientRepository   the client repository
+     * @param facilityRepository the facility repository
+     */
+    @Autowired
+    public FacilityService(ClientRepository clientRepository,
+                           FacilityRepository facilityRepository,
+<span class="fc" id="L35">                           ListingRepository listingRepository) {</span>
+<span class="fc" id="L36">        this.clientRepository = clientRepository;</span>
+<span class="fc" id="L37">        this.facilityRepository = facilityRepository;</span>
+<span class="fc" id="L38">        this.listingRepository = listingRepository;</span>
+<span class="fc" id="L39">    }</span>
+
+    /**
+     * Retrieves a list of all public facilities.
+     *
+     * @return the list of all public facilities
+     */
+    @Transactional
+    public List&lt;Facility&gt; getPublicFacilities() {
+<span class="fc" id="L48">        return facilityRepository.findPublicFacilities();</span>
+    }
+
+    /**
+     * Retrieves a list facilities by clientID.
+     * @param clientID   the client ID
+     *
+     * @return the list of all public facilities
+     */
+    @Transactional
+    public List&lt;Facility&gt; getFacilitiesByClientID(Long clientID) {
+<span class="fc" id="L59">        return facilityRepository.findFacilitiesByClientID(clientID);</span>
+    }
+
+    /**
+     * Retrieves a facility based on the given ID.
+     *
+     * @param id the ID of the facility to retrieve
+     * @return the facility with the given ID
+     * @throws ResourceNotFoundException if no facility is found with the given ID
+     */
+    @Transactional
+    public Facility getFacilityById(Long id) {
+<span class="fc" id="L71">        return facilityRepository.findById(id)</span>
+<span class="fc" id="L72">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Facility not found with id: &quot; + id));</span>
+    }
+
+    /**
+     * Creates a facility with the given data. Requires authentication.
+     *
+     * @param clientId         the ID of the client making the update request
+     * @param facility  the data transfer object containing new facility details
+     * @return the updated facility
+     * @throws ResourceNotFoundException if no client or facility is found with the given IDs or if authentication fails
+     */
+    @Transactional
+    public Facility createFacility(Long clientId,
+                                   FacilityRequestDTO facility) {
+<span class="fc" id="L86">        Client c = clientRepository.findById(clientId)</span>
+<span class="fc" id="L87">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Client not found with id: &quot; + clientId));</span>
+
+        try {
+<span class="fc" id="L90">            Facility newFacility = new Facility();</span>
+<span class="fc" id="L91">            newFacility.setAssociated_distributorID(c.getClientID());</span>
+<span class="fc" id="L92">            newFacility.setLatitude(facility.getLatitude());</span>
+<span class="fc" id="L93">            newFacility.setLongitude(facility.getLongitude());</span>
+<span class="fc" id="L94">            newFacility.setPublic(facility.getIsPublic());</span>
+<span class="fc" id="L95">            newFacility.setEmail(facility.getEmail());</span>
+<span class="fc" id="L96">            newFacility.setPhone(facility.getPhone());</span>
+<span class="fc" id="L97">            newFacility.setHours(facility.getHours());</span>
+<span class="fc" id="L98">            return facilityRepository.save(newFacility);</span>
+<span class="nc" id="L99">        } catch (Exception e) {</span>
+<span class="nc" id="L100">            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,</span>
+<span class="nc" id="L101">                    e.getMessage());</span>
+        }
+    }
+
+    /**
+     * Updates a facility with the given data. Requires authentication.
+     *
+     * @param clientId         the ID of the client making the update request
+     * @param auth             the authentication token/string of the client
+     * @param id               the ID of the facility to update
+     * @param updatedFacility  the data transfer object containing updated facility details
+     * @return the updated facility
+     * @throws ResourceNotFoundException if no client or facility is found with the given IDs or if authentication fails
+     */
+    @Transactional
+    public Facility updateFacility(Long clientId,
+                                   String auth,
+                                   Long id,
+                                   FacilityRequestDTO updatedFacility) {
+<span class="fc" id="L120">        Facility f = facilityRepository.findById(id)</span>
+<span class="pc" id="L121">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
+                        &quot;Facility Not Found&quot;));
+
+<span class="fc bfc" id="L124" title="All 2 branches covered.">        if (!clientId.equals(f.getAssociated_distributorID())) {</span>
+<span class="fc" id="L125">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
+                    &quot;unmatched client and facility&quot;);
+        }
+
+<span class="fc" id="L129">        return facilityRepository.findById(id)</span>
+<span class="fc" id="L130">                .map(facility -&gt; {</span>
+<span class="fc" id="L131">                    facility.setFacilityID(id);</span>
+<span class="fc" id="L132">                    facility.setAssociated_distributorID(clientId);</span>
+<span class="fc" id="L133">                    facility.setLatitude(updatedFacility.getLatitude());</span>
+<span class="fc" id="L134">                    facility.setLongitude(updatedFacility.getLongitude());</span>
+<span class="fc" id="L135">                    facility.setPublic(updatedFacility.getIsPublic());</span>
+<span class="fc" id="L136">                    facility.setEmail(updatedFacility.getEmail());</span>
+<span class="fc" id="L137">                    facility.setPhone(updatedFacility.getPhone());</span>
+<span class="fc" id="L138">                    facility.setHours(updatedFacility.getHours());</span>
+<span class="fc" id="L139">                    return facilityRepository.save(facility);</span>
+                })
+<span class="pc" id="L141">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
+                        &quot;Facility Not Found&quot;));
+    }
+
+    /**
+     * Deletes a facility based on its ID.
+     *
+     * @param clientId the ID of the client associated with the facility
+     * @param id the ID of the facility to delete
+     * @return true if the facility was found and deleted, false otherwise
+     */
+    public void deleteFacility(Long clientId, Long id) {
+<span class="fc" id="L153">        Facility f = facilityRepository.findById(id)</span>
+<span class="pc" id="L154">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND,</span>
+                        &quot;Facility Not Found&quot;));
+
+<span class="fc bfc" id="L157" title="All 2 branches covered.">        if (!clientId.equals(f.getAssociated_distributorID())) {</span>
+<span class="fc" id="L158">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,</span>
+                    &quot;unmatched client and facility&quot;);
+        }
+<span class="fc" id="L161">        List&lt;Listing&gt; listingID = listingRepository.findListingsByFacilityID(id);</span>
+<span class="pc bpc" id="L162" title="1 of 2 branches missed.">        for (Listing l : listingID) {</span>
+<span class="nc" id="L163">            listingRepository.deleteById(l.getListingID());</span>
+<span class="nc" id="L164">        }</span>
+<span class="fc" id="L165">        facilityRepository.deleteById(id);</span>
+<span class="fc" id="L166">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
