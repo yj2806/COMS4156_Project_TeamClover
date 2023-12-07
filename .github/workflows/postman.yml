@@ -24,7 +24,6 @@ jobs:
       - name: Run API tests
         run: |
           cd web-service
-          # mvn spring-boot:run -Dmaven.test.skip package
-          postman collection run "26640460-d59c3b6a-6aa4-4b21-bfdf-a3ff4181a444" --integration-id "154095-${{ github.run_id }}"
+          mvn spring-boot:run -Dmaven.test.skip package & postman collection run "26640460-d59c3b6a-6aa4-4b21-bfdf-a3ff4181a444" --integration-id "154095-${{ github.run_id }}"
           # Lint your API using Postman CLI
           postman api lint 1f216e5f-e4cd-4d13-b0f0-b5ed163f92b9 --integration-id 154095
