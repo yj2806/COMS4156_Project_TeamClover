@@ -20,9 +20,10 @@ public class Facility implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-
+    @SuppressWarnings("CheckStyle")
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "facilityID")
     private Long facilityID;
 
     @Column(name = "associated_distributorID")
