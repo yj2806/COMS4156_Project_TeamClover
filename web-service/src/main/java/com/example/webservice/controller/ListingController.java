@@ -1,12 +1,17 @@
 package com.example.webservice.controller;
 
+import com.example.webservice.model.Client;
+import com.example.webservice.model.Facility;
 import com.example.webservice.model.Listing;
 import com.example.webservice.service.ListingService;
+import com.example.webservice.service.ClientService;
+import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.webservice.model.model.ListingRequestDTO;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,18 +26,19 @@ public class ListingController {
 
     @Autowired
     private ListingService listingService;
+    private ClientService clientService;
 
-    /**
-     * Retrieves a list of all listings.
-     *
-     * @return {@link ResponseEntity} containing a list of all listings.
-     * Response Codes:
-     * 200: Success
-     */
-    @GetMapping
-    public ResponseEntity<List<Listing>> getAllListings() {
-        return ResponseEntity.ok(listingService.getAllListings());
-    }
+//    /**
+//     * Retrieves a list of all listings.
+//     *
+//     * @return {@link ResponseEntity} containing a list of all listings.
+//     * Response Codes:
+//     * 200: Success
+//     */
+//    @GetMapping
+//    public ResponseEntity<List<Listing>> getAllListings() {
+//        return ResponseEntity.ok(listingService.getAllListings());
+//    }
 
     /**
      * Retrieves a specific listing by its ID.
@@ -48,6 +54,34 @@ public class ListingController {
         return listingService.getListingById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Retrieves listing created by client.
+     *
+     * @param clientID The ID of the client.
+     * @param auth authentication.
+     * Response Codes:
+     * 200: Success
+     * 404: Invalid Token
+     */
+    @GetMapping("/by_client/{clientID}")
+    public ResponseEntity<List<Listing>> getListingByClient(@PathVariable Long clientID,
+                                                      @RequestParam String auth) {
+
+        try {
+            Client client = clientService.getClientById(clientID);
+
+            if (!auth.equals(client.getAuthentication())) {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                        "auth and id does not match");
+            }
+        } catch (ResourceNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    e.getMessage());
+        }
+        List<Listing> listings = listingService.getListingsByClientID(clientID);
+        return new ResponseEntity<>(listings, HttpStatus.OK);
     }
 
     /**

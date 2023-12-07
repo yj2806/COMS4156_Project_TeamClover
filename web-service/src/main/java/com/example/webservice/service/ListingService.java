@@ -7,12 +7,15 @@ import com.example.webservice.model.model.ListingRequestDTO;
 import com.example.webservice.repository.ListingRepository;
 import com.example.webservice.repository.ClientRepository;
 import com.example.webservice.repository.FacilityRepository;
+import com.example.webservice.service.FacilityService;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +26,7 @@ public class ListingService {
     private final ListingRepository listingRepository;
     private final ClientRepository clientRepository;
     private final FacilityRepository facilityRepository;
+    private final FacilityService facilityService;
 
     /**
      * Constructs a new ListingService with the specified repositories.
@@ -34,20 +38,22 @@ public class ListingService {
     @Autowired
     public ListingService(ListingRepository listingRepository,
                           ClientRepository clientRepository,
-                          FacilityRepository facilityRepository) {
+                          FacilityRepository facilityRepository,
+                          FacilityService facilityService) {
         this.listingRepository = listingRepository;
         this.clientRepository = clientRepository;
         this.facilityRepository = facilityRepository;
+        this.facilityService = facilityService;
     }
 
-    /**
-     * Retrieves a list of all listings.
-     *
-     * @return the list of all listings
-     */
-    public List<Listing> getAllListings() {
-        return listingRepository.findAll();
-    }
+//    /**
+//     * Retrieves a list of all listings.
+//     *
+//     * @return the list of all listings
+//     */
+//    public List<Listing> getAllListings() {
+//        return listingRepository.findAll();
+//    }
 
     /**
      * Retrieves a listing by its ID.
@@ -58,6 +64,21 @@ public class ListingService {
     public Optional<Listing> getListingById(Long id) {
         return listingRepository.findById(id);
     }
+
+    /**
+     * Retrieves a list of listings by clientID.
+     * @param clientID   the client ID
+     * @return the list of all public listings
+     */
+    @Transactional
+    public List<Listing> getListingsByClientID(Long clientID) {
+        List<Listing> listings = new ArrayList<>();
+        for (Facility f : facilityService.getFacilitiesByClientID(clientID)) {
+            listings.addAll(listingRepository.findListingsByFacilityID(f.getFacilityID()));
+        }
+        return listings;
+    }
+
 
     /**
      * Creates a new listing with the provided details.
