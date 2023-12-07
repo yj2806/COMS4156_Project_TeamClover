@@ -15,6 +15,7 @@ import java.util.Optional;
  * Controller for handling operations related to the {@link Listing} entity.
  */
 @RestController
+@CrossOrigin
 @RequestMapping("/listing")
 public class ListingController {
 
@@ -164,4 +165,50 @@ public class ListingController {
         return ResponseEntity.ok(listings);
     }
 
+
+    /**
+     * Searches for listings based on various filters.
+     *
+     * @param latitude       Latitude of the search center.
+     * @param longitude      Longitude of the search center.
+     * @param range          Range (in specified units) to search for listings.
+     * @param itemContained  Items contained in the listing (separated by '|').
+     * @param age            Age requirement for the listing.
+     * @param veteranStatus  Veteran status requirement.
+     * @param gender         Gender requirement.
+     * @return {@link ResponseEntity} containing a list of listings matching the filters.
+     * Response Codes:
+     * 200: Success
+     */
+    @GetMapping("/search_with_filter")
+    public ResponseEntity<List<Listing>> searchListingsWithFilter(@RequestParam Double latitude,
+                                                                  @RequestParam Double longitude,
+                                                                  @RequestParam Double range,
+                                                                  @RequestParam(required = false) String itemContained,
+                                                                  @RequestParam(required = false) Integer age,
+                                                                  @RequestParam(required = false) Boolean veteranStatus,
+                                                                  @RequestParam(required = false) String gender) {
+        List<Listing> listings = listingService.searchListingsWithFilter(latitude, longitude, range, itemContained, age, veteranStatus, gender);
+        return ResponseEntity.ok(listings);
+    }
+
+    /**
+     * Searches for listings based on a group code.
+     *
+     * @param latitude   Latitude of the search center.
+     * @param longitude  Longitude of the search center.
+     * @param range      Range (in specified units) to search for listings.
+     * @param groupCode  Group code for the listings.
+     * @return {@link ResponseEntity} containing a list of listings matching the group code.
+     * Response Codes:
+     * 200: Success
+     */
+    @GetMapping("/search_with_group_code")
+    public ResponseEntity<List<Listing>> searchListingsWithGroupCode(@RequestParam Double latitude,
+                                                                     @RequestParam Double longitude,
+                                                                     @RequestParam Double range,
+                                                                     @RequestParam Integer groupCode) {
+        List<Listing> listings = listingService.searchListingsWithGroupCode(latitude, longitude, range, groupCode);
+        return ResponseEntity.ok(listings);
+    }
 }
