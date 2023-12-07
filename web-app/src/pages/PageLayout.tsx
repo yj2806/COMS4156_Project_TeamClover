@@ -97,7 +97,7 @@ const PageLayout: React.FC<Props> = ({ children }) => {
                         ))}
                     </List>
                 </Drawer>
-                <Box sx={{ mt: '70px', pt: 2 }}>{children}</Box>
+                <Box sx={{ mt: '70px', p: 2 }}>{children}</Box>
             </Box>
         </CssBaseline>
     );

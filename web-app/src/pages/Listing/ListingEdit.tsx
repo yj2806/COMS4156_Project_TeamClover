@@ -26,7 +26,7 @@ const ListingEdit: React.FC = () => {
     console.log(isPublic, isVeteran);
     return (
         <PageLayout>
-            <Stack gap={2} width={500} p={2}>
+            <Stack gap={2} width={500}>
                 <TextField label="Group Code" type="number" />
                 <TextField label="Item List" />
                 <FormControl fullWidth>

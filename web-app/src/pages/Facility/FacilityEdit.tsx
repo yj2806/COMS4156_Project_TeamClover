@@ -30,7 +30,7 @@ const FacilityEdit: React.FC = () => {
 
     return (
         <PageLayout>
-            <Stack gap={2} p={2}>
+            <Stack gap={2}>
                 <TextField
                     label="Facility ID"
                     type="string"
@@ -60,7 +60,7 @@ const FacilityEdit: React.FC = () => {
                 </Button>
             </Stack>
             <Divider />
-            <Stack gap={2} width={500} p={2}>
+            <Stack gap={2} width={500} pt={2}>
                 <TextField
                     label="Client ID"
                     type="string"
