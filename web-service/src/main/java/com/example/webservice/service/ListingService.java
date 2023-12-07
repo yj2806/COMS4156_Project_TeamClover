@@ -240,16 +240,14 @@ public class ListingService {
 
     public List<Listing> searchListingsWithFilter(Double latitude, Double longitude, Double range,
                                                   String itemList, Integer age, Boolean veteranStatus, String gender) {
-        // Process the itemList if it's not null or empty
         String processedItemList = null;
         if (itemList != null && !itemList.isEmpty()) {
-            // Split the itemList by the delimiter and join with SQL wildcards
             processedItemList = "%" + itemList.replace("|", "%|%") + "%";
         }
 
-        // Call the repository method with the processed item list and other criteria
         return listingRepository.findListingsWithFilter(latitude, longitude, range, processedItemList, age, veteranStatus, gender);
     }
+
 
     public List<Listing> searchListingsWithGroupCode(Double latitude, Double longitude, Double range, Integer groupCode) {
         // Call the repository method with group code and location criteria

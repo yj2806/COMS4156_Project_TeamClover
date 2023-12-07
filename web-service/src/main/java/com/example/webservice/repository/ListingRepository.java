@@ -54,6 +54,7 @@ public interface ListingRepository extends JpaRepository<Listing, Long> {
 
 
 
+
     @Query(value = "SELECT l.* FROM listings l JOIN facility f ON l.associated_facilityID = f.facilityID " +
             "WHERE l.group_code = :groupCode " +
             "AND ABS(f.latitude - :latitude) < :range AND ABS(f.longitude - :longitude) < :range",
