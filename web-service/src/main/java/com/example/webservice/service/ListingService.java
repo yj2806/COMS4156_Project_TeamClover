@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -215,5 +216,24 @@ public class ListingService {
                 ageRequirement, veteranStatus, gender,
                 latitude, longitude, range);
     }
+
+    public List<Listing> searchListingsWithFilter(Double latitude, Double longitude, Double range,
+                                                  String itemList, Integer age, Boolean veteranStatus, String gender) {
+        // Process the itemList if it's not null or empty
+        String processedItemList = null;
+        if (itemList != null && !itemList.isEmpty()) {
+            // Split the itemList by the delimiter and join with SQL wildcards
+            processedItemList = "%" + itemList.replace("|", "%|%") + "%";
+        }
+
+        // Call the repository method with the processed item list and other criteria
+        return listingRepository.findListingsWithFilter(latitude, longitude, range, processedItemList, age, veteranStatus, gender);
+    }
+
+    public List<Listing> searchListingsWithGroupCode(Double latitude, Double longitude, Double range, Integer groupCode) {
+        // Call the repository method with group code and location criteria
+        return listingRepository.findListingsWithGroupCode(latitude, longitude, range, groupCode);
+    }
+
 
 }

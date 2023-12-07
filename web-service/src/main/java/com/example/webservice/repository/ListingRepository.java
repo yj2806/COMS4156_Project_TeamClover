@@ -36,4 +36,32 @@ public interface ListingRepository extends JpaRepository<Listing, Long> {
                                          @Param("longitude") Double longitude,
                                          @Param("range") Double range);
 
+    @Query(value = "SELECT l.* FROM listings l JOIN facility f ON l.associated_facilityID = f.facilityID " +
+            "WHERE (:itemList IS NULL OR l.item_list LIKE :itemList) " +
+            "AND (:ageRequirement IS NULL OR l.age_requirement >= :ageRequirement) " +
+            "AND (:veteranStatus IS NULL OR l.veteran_status = :veteranStatus) " +
+            "AND (:gender IS NULL OR l.gender = :gender) " +
+            "AND ABS(f.latitude - :latitude) < :range AND ABS(f.longitude - :longitude) < :range",
+            nativeQuery = true)
+    List<Listing> findListingsWithFilter(@Param("latitude") Double latitude,
+                                         @Param("longitude") Double longitude,
+                                         @Param("range") Double range,
+                                         @Param("itemList") String itemList,
+                                         @Param("ageRequirement") Integer ageRequirement,
+                                         @Param("veteranStatus") Boolean veteranStatus,
+                                         @Param("gender") String gender);
+
+
+
+    @Query(value = "SELECT l.* FROM listings l JOIN facility f ON l.associated_facilityID = f.facilityID " +
+            "WHERE l.group_code = :groupCode " +
+            "AND ABS(f.latitude - :latitude) < :range AND ABS(f.longitude - :longitude) < :range",
+            nativeQuery = true)
+    List<Listing> findListingsWithGroupCode(@Param("latitude") Double latitude,
+                                            @Param("longitude") Double longitude,
+                                            @Param("range") Double range,
+                                            @Param("groupCode") Integer groupCode);
+
+
+
 }
