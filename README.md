@@ -23,6 +23,8 @@ clients can empower their end-users to create care package listings and contribu
 ```bash
 .
 ├── report # -> reports including external api test and style report
+├── .github/workflows
+├── web-app # front-end code
 ├── web-service 
 │   └── src # -> source code
 │       ├── main # -> source code
@@ -61,7 +63,7 @@ mvn install -Dmaven.test.skip=true
 - Contact any team member to add IP address to AWS RDS
 - run the service on `localhost:8080`:
 ```
-mvn spring-boot:run -Dmaven.test.skip=true
+mvn spring-boot:run 
 ```
 - read the API documentation after running the service: http://localhost:8080/swagger-ui/index.html#/ 
 
@@ -103,9 +105,20 @@ mvn test
 
 - `GET /facility`
   - Description:
-    Retrive list of all facilities
+    Retrive list of all public facilities
+  - Response Codes:
+    - ```200: Success``` 
+
+- `GET /facility/by_client/{client_id}`
+  - Description:
+    Retrieve information on facility with client_id
+  - Parameters:
+    - path: `client_id:integer`
+    - query: `auth:string`
   - Response Codes:
     - ```200: Success```
+    - ```401: Invalid authentication code```
+    -  ```404: Client does not exist```
 
 - `GET /facility/{id}`
   - Description:
@@ -115,6 +128,38 @@ mvn test
   - Response Codes:
     - ```200: Success```
     - ```401: Invalid Token```
+
+- `POST /facility/update/{facilityID}`
+  - Description:
+    Create facility info, authentication of the client is needed
+  - Parameters:
+    - query: `clientID:integer`
+    - query: `auth:string`
+    - Request Body:
+      - Fields:
+        - `latitude:number`
+        - `longitude:number`
+        - `email:string`
+        - `phone:string`
+        - `hours:string`
+        - `public:boolean`
+      - Example:
+        ```
+        {
+        "latitude": 0,
+        "longitude": 0,
+        "email": "string",
+        "phone": "string",
+        "hours": "string",
+        "public": true
+        }
+        ```
+  - Response Codes:
+    - ```200: Success```
+    - ```400: Bad Request - invalid phone```
+    - ```400: Bad Request - invalid email```
+    - ```401: Invalid Token```
+    - ```401: unauthorized - prevent non distributor client from creating facility```
 
 - `PUT /facility/update/{facilityID}`
   - Description:
@@ -144,21 +189,41 @@ mvn test
         ```
   - Response Codes:
     - ```200: Success```
+    - ```400: Bad Request - invalid phone```
+    - ```400: Bad Request - invalid email```
+    - ```400: Invalid Input```
     - ```401: Invalid Token: facility ID```
    
-- `GET /listing/search`
+- `GET /listing/search_with_filter`
   - Description:
-    Get all listings (To-Do: search by distance in next iteration)
+    Get listings using filter
   - Parameters:
     - query: `latitude:number`
     - query: `longitude:number`
     - query: `range:number`
+    - query: `item_list:string` 
+    - query: `age:integer`
+    - query: `veteran_status:boolean`
+    - query: `gender:string`
   - Response Codes:
     - ```200: Success```
-      
-- `GET /listing`
+
+- `GET /listing/search_with_group_code`
   - Description:
-    Get all listings
+    Get listings using group code
+  - Parameters:
+    - query: `latitude:number`
+    - query: `longitude:number`
+    - query: `range:number`
+    - query: `group_code:integer`
+  - Response Codes:
+    - ```200: Success```
+
+- `GET /listing/by_client/{client_id}`
+  - Description:
+    Get listings using client id
+  - Parameters:
+    - path: `client_id:integer`
   - Response Codes:
     - ```200: Success```
 
@@ -177,6 +242,7 @@ mvn test
   - Parameters:
     - query: `clientID:integer`  
     - query: `auth:string`
+    - query: `facilityID:string`
   - Request Body:
     - Fields: 
       - `isPublic:boolean`
