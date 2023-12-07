@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PageLayout from '../PageLayout';
 import { Listing, getAllListing } from '../../api/ListingApi';
-import { Button, Stack, TextField, Typography } from '@mui/material';
+import { Button, Divider, Stack, TextField, Typography } from '@mui/material';
 
 const ListingView: React.FC = () => {
     const [clientId, setClientId] = useState<string>('');
@@ -10,7 +10,7 @@ const ListingView: React.FC = () => {
     const [data, setData] = useState<Listing[]>([]);
 
     return (
-        <PageLayout>
+        <PageLayout title="View Listings">
             <Stack gap={2}>
                 <TextField
                     label="Client ID"
@@ -42,8 +42,7 @@ const ListingView: React.FC = () => {
             </Stack>
             {data.map((listing) => (
                 <Stack gap={2}>
-                    <Typography variant="h4">Listing Information</Typography>
-                    <Typography variant="body1">Listing ID: {listing.listingID}</Typography>
+                    <Typography variant="h4">Listing ID: {listing.listingID}</Typography>
                     <Typography variant="body1">Group Code: {listing.groupCode}</Typography>
                     <Typography variant="body1">Item List: {listing.itemList}</Typography>
                     <Typography variant="body1">Age Requirement: {listing.ageRequirement}</Typography>
@@ -60,6 +59,7 @@ const ListingView: React.FC = () => {
                     <Typography variant="body1">Phone: {listing.associatedFacility.phone}</Typography>
                     <Typography variant="body1">Hours: {listing.associatedFacility.hours}</Typography>
                     <Typography variant="body1">Public: {listing.associatedFacility.public ? 'Yes' : 'No'}</Typography>
+                    <Divider />
                 </Stack>
             ))}
         </PageLayout>

@@ -8,7 +8,7 @@ const ClientDelete: React.FC = () => {
     const [authentication, setAuthentication] = useState<string>('');
 
     return (
-        <PageLayout>
+        <PageLayout title="Client Delete">
             <Stack gap={2} width={500}>
                 <TextField
                     label="Client ID"

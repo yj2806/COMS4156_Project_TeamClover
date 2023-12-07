@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, TextField, Typography, Stack } from '@mui/material';
+import { Button, TextField, Typography, Stack, Divider } from '@mui/material';
 import PageLayout from '../../PageLayout';
 import { Listing, searchByGroupCode } from '../../../api/ListingApi';
 
@@ -36,11 +36,9 @@ const ListingSearchGroupCode: React.FC = () => {
     };
 
     return (
-        <PageLayout>
-            <Typography variant="h4" gutterBottom>
-                Search Listings
-            </Typography>
+        <PageLayout title="Search Listings">
             <TextField
+                required
                 label="Latitude"
                 type="number"
                 value={userInput.latitude}
@@ -49,6 +47,7 @@ const ListingSearchGroupCode: React.FC = () => {
                 margin="normal"
             />
             <TextField
+                required
                 label="Longitude"
                 type="number"
                 value={userInput.longitude}
@@ -57,6 +56,7 @@ const ListingSearchGroupCode: React.FC = () => {
                 margin="normal"
             />
             <TextField
+                required
                 label="Range"
                 type="number"
                 value={userInput.range}
@@ -65,6 +65,7 @@ const ListingSearchGroupCode: React.FC = () => {
                 margin="normal"
             />
             <TextField
+                required
                 label="Group Code"
                 type="number"
                 value={userInput.groupCode}
@@ -77,8 +78,7 @@ const ListingSearchGroupCode: React.FC = () => {
             </Button>
             {data.map((listing) => (
                 <Stack gap={2}>
-                    <Typography variant="h4">Listing Information</Typography>
-                    <Typography variant="body1">Listing ID: {listing.listingID}</Typography>
+                    <Typography variant="h4">Listing ID: {listing.listingID}</Typography>
                     <Typography variant="body1">Group Code: {listing.groupCode}</Typography>
                     <Typography variant="body1">Item List: {listing.itemList}</Typography>
                     <Typography variant="body1">Age Requirement: {listing.ageRequirement}</Typography>
@@ -95,6 +95,7 @@ const ListingSearchGroupCode: React.FC = () => {
                     <Typography variant="body1">Phone: {listing.associatedFacility.phone}</Typography>
                     <Typography variant="body1">Hours: {listing.associatedFacility.hours}</Typography>
                     <Typography variant="body1">Public: {listing.associatedFacility.public ? 'Yes' : 'No'}</Typography>
+                    <Divider />
                 </Stack>
             ))}
         </PageLayout>
