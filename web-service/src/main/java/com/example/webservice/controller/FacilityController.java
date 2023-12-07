@@ -88,8 +88,8 @@ public class FacilityController {
             Facility facility = facilityService.getFacilityById(id);
             return new ResponseEntity<>(facility, HttpStatus.OK);
         } catch (ResourceNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
-                    "auth and id does not match");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "unknown facility");
         }
     }
 
