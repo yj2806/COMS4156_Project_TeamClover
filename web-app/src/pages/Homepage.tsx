@@ -2,7 +2,7 @@ import React from 'react';
 import PageLayout from './PageLayout';
 
 const Homepage: React.FC = () => {
-    return <PageLayout></PageLayout>;
+    return <PageLayout title="Homepage"></PageLayout>;
 };
 
 export default Homepage;
