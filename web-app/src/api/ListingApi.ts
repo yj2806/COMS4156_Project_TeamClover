@@ -158,3 +158,20 @@ export const searchByFilter = async (userInput: ListingSearchByFilter): Promise<
         return undefined;
     }
 };
+
+export const deleteListing = async (clientId: string, auth: string, listingId: string) => {
+    try {
+        // Replace 'your-api-url' with your actual API endpoint
+        const response = await axios.delete(`${ListingURL}delete/${listingId}`, {
+            params: {
+                clientID: clientId,
+                auth: auth,
+            },
+        });
+        // Set the retrieved data to the state
+        return response.data;
+    } catch (error) {
+        // Handle errors
+        console.error('API Error:', error);
+    }
+};

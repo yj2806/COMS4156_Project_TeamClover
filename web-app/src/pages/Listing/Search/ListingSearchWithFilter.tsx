@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Button, TextField, Typography, Container, Checkbox, FormControlLabel, Stack } from '@mui/material';
-import axios from 'axios';
+import { Button, TextField, Typography, Checkbox, FormControlLabel, Stack } from '@mui/material';
 import PageLayout from '../../PageLayout';
 import { Listing, searchByFilter } from '../../../api/ListingApi';
 
