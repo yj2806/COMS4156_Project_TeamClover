@@ -1,22 +1,22 @@
 # COMS4156_Project_TeamClover
 Project: COMS 4156 Course Project  
-Team: TeamClover   
+Team: TeamClover
 
 ## Project Introduction
-This project supports a service that facilitates care package search and listing. 
-It provides an API for clients to query the database and retrieve information about available packages based on 
-location. Additionally, clients can upload information about package availability to the database. 
-The target clients for this service include apps designed for the elderly, apps for elder care organizations, 
-homeless shelters, as well as apps for first responders and authorities. Through our service, 
+This project supports a service that facilitates care package search and listing.
+It provides an API for clients to query the database and retrieve information about available packages based on
+location. Additionally, clients can upload information about package availability to the database.
+The target clients for this service include apps designed for the elderly, apps for elder care organizations,
+homeless shelters, as well as apps for first responders and authorities. Through our service,
 clients can empower their end-users to create care package listings and contribute to community assistance.
 
 ## Tech Stack
 - IDE: IntelliJ IDEA
 - Cloud server: AWS EC2
 - Back-end: SpringBoot 3.1.4
-    - Java: 17
-    - Database: AWS RDS - Mysql
-    - Test: Junit
+  - Java: 17
+  - Database: AWS RDS - Mysql
+  - Test: Junit
 
 ## Project Structure
 
@@ -45,7 +45,7 @@ clients can empower their end-users to create care package listings and contribu
 └── README.md
 ```
 
-## Build  
+## Build
 - git clone the repository
 - set up environment dependencies (install `maven` and `java 17` first):
 ```
@@ -65,7 +65,7 @@ mvn install -Dmaven.test.skip=true
 ```
 mvn spring-boot:run 
 ```
-- read the API documentation after running the service: http://localhost:8080/swagger-ui/index.html#/ 
+- read the API documentation after running the service: http://localhost:8080/swagger-ui/index.html#/
 
 ## Test
 - run tests for the service:
@@ -96,7 +96,7 @@ mvn test
   - Description
     Deletes a client from database, the associated facility and listings will be deleted as well
   - Parameters:
-    - path: `id:integer`    
+    - path: `id:integer`
     - query: `authentication:string`
   - Response Codes:
     - ```200: Success```
@@ -107,7 +107,7 @@ mvn test
   - Description:
     Retrive list of all public facilities
   - Response Codes:
-    - ```200: Success``` 
+    - ```200: Success```
 
 - `GET /facility/by_client/{client_id}`
   - Description:
@@ -168,7 +168,7 @@ mvn test
     - path: `facilityID:integer`
     - query: `clientID:integer`
     - query: `auth:string`
-    - Request Body: 
+    - Request Body:
       - Fields:
         - `latitude:number`
         - `longitude:number`
@@ -193,7 +193,19 @@ mvn test
     - ```400: Bad Request - invalid email```
     - ```400: Invalid Input```
     - ```401: Invalid Token: facility ID```
-   
+
+- `DELETE /facility/delete/{facilityID}`
+  - Description:
+    Deletes facility and associated listings
+  - Parameters:
+    - query: `clientID:integer`
+    - query: `auth:string`
+    - path:`id:integer`
+  - Response Codes:
+    - ```204: Success```
+    - ```401: unauthorized```
+    - ```404: not found```
+
 - `GET /listing/search_with_filter`
   - Description:
     Get listings using filter
@@ -201,7 +213,7 @@ mvn test
     - query: `latitude:number`
     - query: `longitude:number`
     - query: `range:number`
-    - query: `item_list:string` 
+    - query: `item_list:string`
     - query: `age:integer`
     - query: `veteran_status:boolean`
     - query: `gender:string`
@@ -229,27 +241,27 @@ mvn test
 
 - `GET /listing/{id}`
   - Description:
-    Retrieve information on listing with certain ID 
+    Retrieve information on listing with certain ID
   - Parameters:
     - path: `id:integer`
   - Response Codes:
     - ```200: Success```
     - ```404: Invalid Token```
-   
+
 - `POST /listing/create`
   - Description:
     Creates a listing, authentication of the client is needed
   - Parameters:
-    - query: `clientID:integer`  
+    - query: `clientID:integer`
     - query: `auth:string`
     - query: `facilityID:string`
   - Request Body:
-    - Fields: 
+    - Fields:
       - `isPublic:boolean`
-      - `groupCode:integer`  
-      - `itemList:string`    
+      - `groupCode:integer`
+      - `itemList:string`
       - `ageRequirement:integer`
-      - `veteranStatus:boolean`  
+      - `veteranStatus:boolean`
       - `gender:string`
     - Example:
       ```
@@ -266,7 +278,7 @@ mvn test
     - ```200: Success```
     - ```400: Invalid Input```
     - ```404: Invalid Client ID or authentication```
-   
+
 - `PUT /listing/update/{id}`
   - Description:
     Update listing info, authentication of the client is needed
@@ -276,12 +288,12 @@ mvn test
     - query: `auth:string`
   - Request Body:
 
-    - Fields 
+    - Fields
       - `isPublic:boolean`
-      - `groupCode:integer`  
-      - `itemList:string`    
+      - `groupCode:integer`
+      - `itemList:string`
       - `ageRequirement:integer`
-      - `veteranStatus:boolean`  
+      - `veteranStatus:boolean`
       - `gender:string`
     - Example:
       ```
