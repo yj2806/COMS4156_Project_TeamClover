@@ -1,5 +1,5 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
 web-service,com.example.webservice.controller,ClientController,0,50,0,2,0,16,0,4,0,3
 web-service,com.example.webservice.controller,FacilityController,42,154,0,8,14,34,0,11,0,7
-web-service,com.example.webservice.service,ListingService,91,271,10,12,15,58,14,13,5,11
+web-service,com.example.webservice.service,ListingService,103,277,12,14,17,60,16,13,5,11
 web-service,com.example.webservice.service,FacilityService,122,217,20,12,18,51,17,12,3,10
