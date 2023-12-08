@@ -111,11 +111,6 @@ public class ListingService {
             throw (new ResourceNotFoundException("unmatched facilityID and client"));
         }
 
-        if (listing.getIsPublic() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "invalid public status");
-        }
-
         try {
             Listing newListing = new Listing();
             newListing.setAssociatedFacility(f);
@@ -155,13 +150,6 @@ public class ListingService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
                     "Authentication failed");
         }
-
-
-        if (updatedListing.getIsPublic() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "invalid public status");
-        }
-
 
         if (listingRepository.existsById(id)) {
             Listing toUpdate = listingRepository.findById(id).orElseThrow(

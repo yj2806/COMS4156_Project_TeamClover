@@ -104,6 +104,12 @@ public class ListingController {
                                            @RequestParam String auth,
                                            @RequestParam Long facilityID,
                                            @RequestBody ListingRequestDTO listing) {
+
+        if (listing.getIsPublic() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "invalid public status");
+        }
+
         // Validate the listing details
         if (!listing.getIsPublic() && listing.getGroupCode() == null) {
             return ResponseEntity.badRequest().body("Group code is required for private listings.");
