@@ -193,6 +193,18 @@ mvn test
     - ```400: Bad Request - invalid email```
     - ```400: Invalid Input```
     - ```401: Invalid Token: facility ID```
+
+- `DELETE /facility/delete/{facilityID}`
+  - Description:
+    Deletes facility and associated listings
+  - Parameters:
+    - query: `clientID:integer`
+    - query: `auth:string`
+    - path:`id:integer`
+  - Response Codes:
+    - ```204: Success```
+    - ```401: unauthorized```
+    - ```404: not found```
    
 - `GET /listing/search_with_filter`
   - Description:
