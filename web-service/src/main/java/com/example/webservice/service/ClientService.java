@@ -10,13 +10,23 @@ import com.example.webservice.repository.FacilityRepository;
 import com.example.webservice.repository.ListingRepository;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+
 @Service
-public class ClientService {
+public class ClientService implements UserDetailsService {
 
     private final ClientRepository clientRepository;
     private final FacilityRepository facilityRepository;
@@ -131,6 +141,20 @@ public class ClientService {
     private Facility createFacility() {
         Facility newFacility = new Facility();
         return facilityRepository.save(newFacility);
+    }
+
+
+    @Override
+    @Transactional
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Client client = clientRepository.findById(Long.valueOf(username))
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+
+        // Assign a generic role or no authorities
+        return new org.springframework.security.core.userdetails.User(
+                String.valueOf(client.getClientID()), // Assuming this is the username
+                client.getAuthentication(),
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))); // Generic role
     }
 
 }
