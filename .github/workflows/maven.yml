@@ -35,7 +35,7 @@ jobs:
       run: |
             mvn -B package --file web-service/pom.xml 
             cp -r web-service/target/site/jacoco report/branch-coverage
-    - name: This criterion is linked to a Learning OutcomeInternal Integration Tests
+    - name: Internal Integration Tests
       run: mvn test -Dtest="APITests"
     - name: Generate CI Report
       run: |
