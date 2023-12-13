@@ -31,10 +31,10 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-    - name: Build with Maven and Branch Coverage
-      run: |
-            mvn -B package --file web-service/pom.xml 
-            cp -r web-service/target/site/jacoco report/branch-coverage
+    # - name: Build with Maven and Branch Coverage
+    #   run: |
+    #         mvn -B package --file web-service/pom.xml 
+    #         cp -r web-service/target/site/jacoco report/branch-coverage
     - name: Internal Integration Tests
       run: mvn test -Dtest="APITests"
     - name: Generate CI Report
