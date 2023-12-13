@@ -42,7 +42,7 @@ public class APITests {
 
     @Test
     @DisplayName("GET /facility")
-    void getMessage() throws Exception {
+    void getFacilities() throws Exception {
         given()
                 .when()
                 .get("/facility")
@@ -50,4 +50,23 @@ public class APITests {
                 .status(OK);
     }
 
+    @Test
+    @DisplayName("GET /facility/{id}")
+    void getAFacility() throws Exception {
+        given()
+                .when()
+                .get("/facility/5")
+                .then()
+                .status(OK);
+    }
+
+    @Test
+    @DisplayName("GET /facility/by_client/{client_id}")
+    void getFacilitiesByClient() throws Exception {
+        given()
+                .when()
+                .get("facility/by_client/361?auth=abc")
+                .then()
+                .status(OK);
+    }
 }
