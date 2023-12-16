@@ -17,6 +17,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
+
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+
 
 @Configuration
 @EnableWebSecurity
@@ -26,22 +31,29 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthFilter authFilter;
 
+    @Autowired
+    MvcRequestMatcher.Builder mvc;
+
     // User Creation
     @Bean
     public UserDetailsService userDetailsService() {
         return new UserInfoService();
     }
 
+    @Bean
+    MvcRequestMatcher.Builder mvc(HandlerMappingIntrospector introspector) {
+        return new MvcRequestMatcher.Builder(introspector);
+    }
     // Configuring HttpSecurity
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/auth/welcome", "/auth/addNewUser", "/auth/generateToken").permitAll()
+                .requestMatchers(mvc.pattern("/auth/welcome"), mvc.pattern("/auth/addNewUser"), mvc.pattern("/auth/generateToken")).permitAll()
                 .and()
-                .authorizeHttpRequests().requestMatchers("/auth/user/**").authenticated()
+                .authorizeHttpRequests().requestMatchers(mvc.pattern("/auth/user/**")).authenticated()
                 .and()
-                .authorizeHttpRequests().requestMatchers("/auth/admin/**").authenticated()
+                .authorizeHttpRequests().requestMatchers(mvc.pattern("/auth/admin/**")).authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
