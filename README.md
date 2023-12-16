@@ -88,7 +88,7 @@ mvn test
 - `POST /client/create`
 
   - Description:
-    Creates a client, if it is a distributor client, a new facitliy is also created and associated with the client (each client associated with one facility)
+    Creates a client
   - Request Body:
     - Fields:
       - `authentication:string`
