@@ -322,3 +322,38 @@ mvn test
     - ```204: Success```
     - ```401: Invalid Client ID or authentication```
     - ```404: Listing not found```
+
+# Client App
+
+This is a React web application built with Vite and TypeScript.
+
+## Prerequisites
+
+Make sure you have Node.js and npm installed on your machine.
+
+- [Node.js](https://nodejs.org/) (version 18)
+- [npm](https://www.npmjs.com/)
+
+## Installation
+
+1. Clone this repository:
+
+```bash
+  cd web-app
+```
+
+2. Install dependencies:
+
+```bash
+  npm install
+```
+
+## Development
+
+To run the application in development mode, use the following command:
+
+```bash
+  npm run dev
+```
+
+This will start the development server, and you can view the application at http://localhost:5173/
