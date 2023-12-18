@@ -15,7 +15,7 @@ import React from 'react';
 
 type Props = {
     children?: React.ReactNode;
-    title: string;
+    title?: string;
 };
 
 type MenuListing = {
@@ -49,7 +49,7 @@ const PageLayout: React.FC<Props> = ({ title, children }) => {
             <Box sx={{ display: 'flex' }}>
                 <AppBar position="fixed" sx={{ height: '70px', width: `calc(100% - ${drawerWidth}px)` }}>
                     <Typography variant="h5" sx={{ p: 2 }}>
-                        Team Clove - Front End
+                        Eldercare Connect
                     </Typography>
                 </AppBar>
                 <Drawer
@@ -64,6 +64,11 @@ const PageLayout: React.FC<Props> = ({ title, children }) => {
                     variant="permanent"
                     anchor="left"
                 >
+                    <List>
+                        <ListItemButton href={'/'} sx={{ p: 0, m: 0 }}>
+                            <ListItem sx={{ fontWeight: 'bold' }}>Homepage</ListItem>
+                        </ListItemButton>
+                    </List>
                     <List>
                         <ListItem sx={{ fontWeight: 'bold' }}>Client</ListItem>
                         {clientMenuItems.map((item) => (
@@ -101,7 +106,7 @@ const PageLayout: React.FC<Props> = ({ title, children }) => {
                     </List>
                 </Drawer>
                 <Box sx={{ mt: '70px', p: 2 }}>
-                    <Typography sx={{ fontSize: '24px', fontWeight: 'bold', pb: 3 }}>{title}</Typography>
+                    {title && <Typography sx={{ fontSize: '24px', fontWeight: 'bold', pb: 3 }}>{title}</Typography>}
                     {children}
                 </Box>
             </Box>
